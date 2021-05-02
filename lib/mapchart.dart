@@ -1,3 +1,9 @@
 library mapchart;
 
+export 'src/error.dart';
+export 'src/matrices.dart';
+export 'src/theme.dart';
+export 'src/simplifier.dart';
+export 'src/map_resolution.dart';
+export 'src/data_source.dart';
 export 'src/mapchart.dart';
