@@ -1,4 +1,4 @@
-[![pub](https://img.shields.io/pub/v/tabbed_view.svg)](https://pub.dev/packages/mapchart)
+[![pub](https://img.shields.io/pub/v/mapchart.svg)](https://pub.dev/packages/mapchart)
 
 # Map Chart
 

@@ -34,20 +34,23 @@ class MapResolution {
 
 class MapResolutionBuilder {
   MapResolutionBuilder(
-      {required this.theme,
+      {required this.dataSource,
+      required this.theme,
       required this.mapMatrices,
       required this.simplifier,
       required this.onFinish});
 
+  final MapChartDataSource dataSource;
   final MapChartTheme theme;
   final MapMatrices mapMatrices;
   final GeometrySimplifier simplifier;
 
   final OnFinish onFinish;
   final Map<int, Path> _paths = Map<int, Path>();
+  final Map<int, Color> _colors = Map<int, Color>();
 
   _State _state = _State.waiting;
-  Map<int, MapChartFeature> _pendingFeatures = Map<int, MapChartFeature>();
+  Map<int, MapFeature> _pendingFeatures = Map<int, MapFeature>();
 
   DateTime? _initialTime;
 
@@ -55,12 +58,11 @@ class MapResolutionBuilder {
     _state = _State.stopped;
   }
 
-  start(Map<int, MapChartFeature> features) async {
+  start() async {
     _initialTime = DateTime.now();
-
     if (_state == _State.waiting) {
       _state = _State.running;
-      _pendingFeatures.addAll(features);
+      _pendingFeatures.addAll(dataSource.features);
       _nextPath();
     }
   }
@@ -86,12 +88,13 @@ class MapResolutionBuilder {
     int pointsCount = 0;
     while (_pendingFeatures.length > 0) {
       final int id = _pendingFeatures.keys.first;
-      final MapChartFeature feature = _pendingFeatures.remove(id)!;
+      final MapFeature feature = _pendingFeatures.remove(id)!;
       MapGeometry geometry = feature.geometry;
       SimplifiedPath simplifiedPath =
           geometry.toPath(mapMatrices.canvasMatrix, simplifier);
       pointsCount += simplifiedPath.pointsCount;
       _paths[id] = simplifiedPath.path;
+      _colors[id] = theme.getColor(feature);
     }
 
     Duration duration = DateTime.now().difference(_initialTime!);
@@ -119,23 +122,24 @@ class MapResolutionBuilder {
         bufferCreationMatrix.translateX, bufferCreationMatrix.translateY);
     canvas.scale(bufferCreationMatrix.scale, -bufferCreationMatrix.scale);
 
-    var paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = theme.foregoundColor
-      ..isAntiAlias = true;
-
-    for (Path path in _paths.values) {
+    _paths.entries.forEach((element) {
+      int id = element.key;
+      Path path = element.value;
       if (_state == _State.stopped) {
         return;
       }
+      var paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = _colors[id]!
+        ..isAntiAlias = true;
       canvas.drawPath(path, paint);
-    }
+    });
 
-    if (theme.contourColor != null) {
-      paint = Paint()
+    if (theme.drawContour) {
+      var paint = Paint()
         ..style = PaintingStyle.stroke
-        ..color = theme.contourColor!
-        ..strokeWidth = 1 / bufferCreationMatrix.scale
+        ..color = theme.contourColor
+        ..strokeWidth = 2 / bufferCreationMatrix.scale
         ..isAntiAlias = true;
 
       for (Path path in _paths.values) {

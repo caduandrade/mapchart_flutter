@@ -15,13 +15,8 @@ class MapChart extends StatefulWidget {
       {Key? key,
       required this.dataSource,
       this.delayToRefreshResolution = 1000,
-      Color? backgroundColor = Colors.blue,
-      Color foregoundColor = Colors.green,
-      Color? contourColor = Colors.black})
-      : this.theme = MapChartTheme(
-            foregoundColor: foregoundColor,
-            backgroundColor: backgroundColor,
-            contourColor: contourColor),
+      MapChartTheme? theme})
+      : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
   final MapChartDataSource dataSource;
@@ -46,11 +41,12 @@ class MapChartState extends State<MapChart> {
         _mapResolutionBuilder!.stop();
       }
       _mapResolutionBuilder = MapResolutionBuilder(
+          dataSource: widget.dataSource,
           theme: widget.theme,
           mapMatrices: mapMatrices,
           simplifier: IntegerSimplifier(),
           onFinish: _onFinish);
-      _mapResolutionBuilder!.start(widget.dataSource.features);
+      _mapResolutionBuilder!.start();
     }
   }
 
@@ -67,7 +63,7 @@ class MapChartState extends State<MapChart> {
 
   @override
   Widget build(BuildContext context) {
-    LayoutBuilder layoutBuilder = LayoutBuilder(
+    return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       int? bufferWidth;
       int? bufferHeight;
@@ -105,7 +101,6 @@ class MapChartState extends State<MapChart> {
 
       MapPainter mapPainter = MapPainter(
           mapResolution: _mapResolution!,
-          getHover: getHover,
           hoverId: hoverId,
           mapMatrices: mapMatrices,
           theme: widget.theme);
@@ -114,12 +109,6 @@ class MapChartState extends State<MapChart> {
           child: CustomPaint(painter: mapPainter, child: Container()),
           onHover: (event) => _onHover(event, mapMatrices));
     });
-
-    return Container(child: layoutBuilder, color: widget.theme.backgroundColor);
-  }
-
-  int? getHover() {
-    return hoverId;
   }
 
   _onHover(PointerHoverEvent event, MapMatrices mapMatrices) {
@@ -152,17 +141,13 @@ class MapChartState extends State<MapChart> {
   }
 }
 
-typedef GetHover = int? Function();
-
 class MapPainter extends CustomPainter {
   MapPainter(
       {required this.mapResolution,
-      required this.getHover,
       required this.mapMatrices,
       required this.theme,
       this.hoverId});
 
-  final GetHover getHover;
   final MapMatrices mapMatrices;
   final MapChartTheme theme;
   final int? hoverId;
@@ -182,28 +167,26 @@ class MapPainter extends CustomPainter {
     canvas.restore();
 
     // drawing the selection
-
-    canvas.save();
-
-    CanvasMatrix canvasMatrix = mapMatrices.canvasMatrix;
-    canvas.translate(canvasMatrix.translateX, canvasMatrix.translateY);
-    canvas.scale(canvasMatrix.scale, -canvasMatrix.scale);
-
-    var hoverPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = Colors.red
-      ..isAntiAlias = true;
-
-    int? hoverId = getHover();
     if (hoverId != null) {
+      canvas.save();
+
+      CanvasMatrix canvasMatrix = mapMatrices.canvasMatrix;
+      canvas.translate(canvasMatrix.translateX, canvasMatrix.translateY);
+      canvas.scale(canvasMatrix.scale, -canvasMatrix.scale);
+
+      var hoverPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = Colors.red
+        ..isAntiAlias = true;
+
       if (mapResolution.paths.containsKey(hoverId) == false) {
         throw MapChartError('No path for id: $hoverId');
       }
       Path path = mapResolution.paths[hoverId]!;
       canvas.drawPath(path, hoverPaint);
-    }
 
-    canvas.restore();
+      canvas.restore();
+    }
 
     DateTime end = DateTime.now();
     Duration duration = end.difference(start);

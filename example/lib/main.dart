@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:mapchart/mapchart.dart';
@@ -14,22 +15,46 @@ class ExampleWidget extends StatefulWidget {
 
 class ExampleState extends State<ExampleWidget> {
   MapChartDataSource? _dataSource;
+  MapChartTheme? _theme;
 
   @override
   void initState() {
     super.initState();
     String asset = 'geojson/brazil_uf.json';
+    asset = 'geojson/example.json';
     rootBundle.loadString(asset).then((json) {
-      _loadMapChartDataSource(json);
+      _loadGeoJSON2(json);
     });
   }
 
-  _loadMapChartDataSource(String geojson) async {
-    List<MapGeometry> geometries = await MapGeometry.fromGeoJSON(geojson);
-    MapChartDataSource dataSource = MapChartDataSource(geometries);
+  _loadGeoJSON(String json) async {
+    MapGeometryReader reader = MapGeometryReader();
+    List<MapGeometry> geometries = await reader.geoJSON(json);
+    MapChartDataSource dataSource = MapChartDataSource.geometries(geometries);
 
     setState(() {
       _dataSource = dataSource;
+    });
+  }
+
+  _loadGeoJSON2(String json) async {
+    List<MapFeature> features = await MapFeatureReader.geoJSON(
+        geojson: json,
+        identifierField: "Id",
+        nameField: "Name",
+        valueFields: ["Distance"]);
+
+    MapChartTheme theme = MapChartTheme(colors: {
+      "earth": Colors.green,
+      "mars": Colors.red,
+      "venus": Colors.orange
+    });
+
+    MapChartDataSource dataSource = MapChartDataSource.features(features);
+
+    setState(() {
+      _dataSource = dataSource;
+      _theme = theme;
     });
   }
 
@@ -38,10 +63,13 @@ class ExampleState extends State<ExampleWidget> {
     if (_dataSource != null) {
       double divider = 10;
 
+      Widget map = Container(
+          child: MapChart(dataSource: _dataSource!, theme: _theme),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          padding: EdgeInsets.all(8));
+
       Widget mapArea = Padding(
-        child: Container(
-            child: MapChart(dataSource: _dataSource!),
-            decoration: BoxDecoration(border: Border.all(color: Colors.black))),
+        child: map,
         padding: EdgeInsets.fromLTRB(divider, divider, 0, divider),
       );
       Widget emptyArea = Container(color: Colors.white);

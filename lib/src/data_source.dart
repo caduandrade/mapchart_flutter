@@ -1,10 +1,73 @@
 import 'dart:collection';
 import 'dart:ui';
 import 'dart:math' as math;
-import 'dart:convert';
-import 'package:mapchart/src/error.dart';
 import 'package:mapchart/src/matrices.dart';
 import 'package:mapchart/src/simplifier.dart';
+
+class MapFeature {
+  final int id;
+  final FeatureProperties? properties;
+  final MapGeometry geometry;
+
+  MapFeature({required this.id, required this.geometry, this.properties});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MapFeature && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+class MapChartDataSource {
+  final UnmodifiableMapView<int, MapFeature> features;
+  final Rect bounds;
+  final int pointsCount;
+
+  MapChartDataSource._(this.features, this.bounds, this.pointsCount);
+
+  factory MapChartDataSource.features(List<MapFeature> features) {
+    Rect boundsFromGeometry = Rect.zero;
+    int pointsCount = 0;
+    if (features.isNotEmpty) {
+      boundsFromGeometry = features.first.geometry.bounds;
+    }
+    Map<int, MapFeature> featuresMap = Map<int, MapFeature>();
+    for (MapFeature feature in features) {
+      featuresMap[feature.id] = feature;
+      pointsCount += feature.geometry.pointsCount;
+      boundsFromGeometry =
+          boundsFromGeometry.expandToInclude(feature.geometry.bounds);
+    }
+
+    return MapChartDataSource._(
+        UnmodifiableMapView<int, MapFeature>(featuresMap),
+        boundsFromGeometry,
+        pointsCount);
+  }
+
+  factory MapChartDataSource.geometries(List<MapGeometry> geometries) {
+    Rect boundsFromGeometry = Rect.zero;
+    int pointsCount = 0;
+    if (geometries.isNotEmpty) {
+      boundsFromGeometry = geometries.first.bounds;
+    }
+    Map<int, MapFeature> featuresMap = Map<int, MapFeature>();
+    int id = 1;
+    for (MapGeometry geometry in geometries) {
+      featuresMap[id] = MapFeature(id: id, geometry: geometry);
+      pointsCount += geometry.pointsCount;
+      boundsFromGeometry = boundsFromGeometry.expandToInclude(geometry.bounds);
+      id++;
+    }
+
+    return MapChartDataSource._(
+        UnmodifiableMapView<int, MapFeature>(featuresMap),
+        boundsFromGeometry,
+        pointsCount);
+  }
+}
 
 class SimplifiedPath {
   final Path path;
@@ -13,126 +76,22 @@ class SimplifiedPath {
   SimplifiedPath(this.path, this.pointsCount);
 }
 
+
+class FeatureProperties {
+  FeatureProperties({this.identifier, this.name, this.values, this.value, this.color});
+
+  final dynamic? identifier;
+  final dynamic? name;
+  final Map<String, dynamic>? values;
+  final dynamic? value;
+  final Color? color;
+}
+
 abstract class MapGeometry {
   SimplifiedPath toPath(
       CanvasMatrix canvasMatrix, GeometrySimplifier simplifier);
   Rect get bounds;
   int get pointsCount;
-
-  static _checkKeyOn(Map<String, dynamic> map, String key) {
-    if (map.containsKey(key) == false) {
-      throw MapChartError.keyNotFound(key);
-    }
-  }
-
-  static Future<List<MapGeometry>> fromGeoJSON(String geojson) async {
-    return await MapGeometry._fetchGeometries(geojson).toList();
-  }
-
-  static Stream<MapGeometry> _fetchGeometries(String geojson) async* {
-    Map<String, dynamic> map = json.decode(geojson);
-
-    MapGeometry._checkKeyOn(map, 'type');
-
-    final type = map['type'];
-
-    if (type == 'FeatureCollection') {
-      MapGeometry._checkKeyOn(map, 'features');
-      //TODO verificar se é um map?
-      for (Map<String, dynamic> featureMap in map['features']) {
-        MapGeometry._checkKeyOn(featureMap, 'geometry');
-        Map<String, dynamic> geometryMap = featureMap['geometry'];
-        MapGeometry._checkKeyOn(geometryMap, 'type');
-        final geometryType = geometryMap['type'];
-        MapGeometry geometry = _fetchGeometry(true, geometryMap, geometryType);
-        yield geometry;
-      }
-    } else if (type == 'GeometryCollection') {
-    } else if (type == 'Feature') {
-    } else {
-      MapGeometry geometry = _fetchGeometry(false, map, type);
-      yield geometry;
-    }
-  }
-
-  static MapGeometry _fetchGeometry(
-      bool hasParent, Map<String, dynamic> map, String type) {
-    switch (type) {
-      //TODO other geometries
-      case 'Point':
-        return MapGeometry._fetchPolygon(map);
-      case 'MultiPoint':
-        return MapGeometry._fetchPolygon(map);
-      case 'LineString':
-        return MapGeometry._fetchPolygon(map);
-      case 'MultiLineString':
-        return MapGeometry._fetchPolygon(map);
-      case 'Polygon':
-        return MapGeometry._fetchPolygon(map);
-      case 'MultiPolygon':
-        return MapGeometry._fetchMultiPolygon(map);
-      default:
-        if (hasParent) {
-          throw MapChartError.invalidGeometryType(type);
-        } else {
-          throw MapChartError.invalidType(type);
-        }
-    }
-  }
-
-  static MapGeometry _fetchPolygon(Map<String, dynamic> map) {
-    late MapLinearRing externalRing;
-    List<MapLinearRing> internalRings = [];
-
-    MapGeometry._checkKeyOn(map, 'coordinates');
-    List rings = map['coordinates'];
-    for (int i = 0; i < rings.length; i++) {
-      List<MapPoint> points = [];
-      List ring = rings[i];
-      for (List xy in ring) {
-        double x = xy[0];
-        double y = xy[1];
-        points.add(MapPoint(x, y));
-      }
-      if (i == 0) {
-        externalRing = MapLinearRing(points);
-      } else {
-        internalRings.add(MapLinearRing(points));
-      }
-    }
-
-    return MapPolygon(externalRing, internalRings);
-  }
-
-  static MapGeometry _fetchMultiPolygon(Map<String, dynamic> map) {
-    MapGeometry._checkKeyOn(map, 'coordinates');
-    List polygons = map['coordinates'];
-
-    List<MapPolygon> mapPolygons = [];
-    for (List rings in polygons) {
-      late MapLinearRing externalRing;
-      List<MapLinearRing> internalRings = [];
-
-      for (int i = 0; i < rings.length; i++) {
-        List<MapPoint> points = [];
-        List ring = rings[i];
-        for (List xy in ring) {
-          double x = xy[0];
-          double y = xy[1];
-          points.add(MapPoint(x, y));
-        }
-        if (i == 0) {
-          externalRing = MapLinearRing(points);
-        } else {
-          internalRings.add(MapLinearRing(points));
-        }
-      }
-      MapPolygon polygon = MapPolygon(externalRing, internalRings);
-      mapPolygons.add(polygon);
-    }
-
-    return MapMultiPolygon(mapPolygons);
-  }
 }
 
 class MapPoint extends Offset {
@@ -274,51 +233,5 @@ class MapMultiPolygon extends MapGeometry {
       count += polygon.pointsCount;
     }
     return count;
-  }
-}
-
-class MapChartFeature {
-  final int id;
-  final MapGeometry geometry;
-
-  MapChartFeature(this.id, this.geometry);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MapChartFeature &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
-}
-
-class MapChartDataSource {
-  final UnmodifiableMapView<int, MapChartFeature> features;
-  final Rect bounds;
-  final int pointsCount;
-
-  MapChartDataSource._(this.features, this.bounds, this.pointsCount);
-
-  factory MapChartDataSource(List<MapGeometry> geometries) {
-    Rect boundsFromGeometry = Rect.zero;
-    int pointsCount = 0;
-    if (geometries.isNotEmpty) {
-      boundsFromGeometry = geometries.first.bounds;
-    }
-    Map<int, MapChartFeature> features = Map<int, MapChartFeature>();
-    int id = 1;
-    for (MapGeometry geometry in geometries) {
-      features[id] = MapChartFeature(id, geometry);
-      pointsCount += geometry.pointsCount;
-      boundsFromGeometry = boundsFromGeometry.expandToInclude(geometry.bounds);
-      id++;
-    }
-
-    return MapChartDataSource._(
-        UnmodifiableMapView<int, MapChartFeature>(features),
-        boundsFromGeometry,
-        pointsCount);
   }
 }
