@@ -23,22 +23,12 @@ class ExampleState extends State<ExampleWidget> {
     String asset = 'geojson/brazil_uf.json';
     asset = 'geojson/example.json';
     rootBundle.loadString(asset).then((json) {
-      _loadGeoJSON2(json);
+      _loadGeoJSON(json);
     });
   }
 
   _loadGeoJSON(String json) async {
-    MapGeometryReader reader = MapGeometryReader();
-    List<MapGeometry> geometries = await reader.geoJSON(json);
-    MapChartDataSource dataSource = MapChartDataSource.geometries(geometries);
-
-    setState(() {
-      _dataSource = dataSource;
-    });
-  }
-
-  _loadGeoJSON2(String json) async {
-    List<MapFeature> features = await MapFeatureReader.geoJSON(
+    MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
         geojson: json,
         identifierField: "Id",
         nameField: "Name",
@@ -49,8 +39,6 @@ class ExampleState extends State<ExampleWidget> {
       "mars": Colors.red,
       "venus": Colors.orange
     });
-
-    MapChartDataSource dataSource = MapChartDataSource.features(features);
 
     setState(() {
       _dataSource = dataSource;

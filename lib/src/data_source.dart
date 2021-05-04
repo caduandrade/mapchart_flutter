@@ -1,6 +1,8 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:ui';
 import 'dart:math' as math;
+import 'package:mapchart/src/data_reader.dart';
 import 'package:mapchart/src/matrices.dart';
 import 'package:mapchart/src/simplifier.dart';
 
@@ -27,7 +29,7 @@ class MapChartDataSource {
 
   MapChartDataSource._(this.features, this.bounds, this.pointsCount);
 
-  factory MapChartDataSource.features(List<MapFeature> features) {
+  static  MapChartDataSource fromFeatures(List<MapFeature> features) {
     Rect boundsFromGeometry = Rect.zero;
     int pointsCount = 0;
     if (features.isNotEmpty) {
@@ -45,6 +47,25 @@ class MapChartDataSource {
         UnmodifiableMapView<int, MapFeature>(featuresMap),
         boundsFromGeometry,
         pointsCount);
+  }
+
+  static Future<MapChartDataSource> fromGeoJSON(
+      {required String geojson,
+        String? identifierField,
+        String? nameField,
+        List<String>? valueFields,
+        String? colorField,
+        ColorFieldFormat colorFieldFormat = ColorFieldFormat.hex}) async {
+
+    MapFeatureReader reader = MapFeatureReader(
+        identifierField: identifierField,
+        nameField: nameField,
+        valueFields: valueFields,
+        colorField: colorField,
+        colorFieldFormat: colorFieldFormat);
+
+    List<MapFeature> features= await reader.read(geojson);
+    return fromFeatures(features);
   }
 
   factory MapChartDataSource.geometries(List<MapGeometry> geometries) {

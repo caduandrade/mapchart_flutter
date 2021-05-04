@@ -176,7 +176,7 @@ class MapPainter extends CustomPainter {
 
       var hoverPaint = Paint()
         ..style = PaintingStyle.fill
-        ..color = Colors.red
+        ..color = theme.highlightColor
         ..isAntiAlias = true;
 
       if (mapResolution.paths.containsKey(hoverId) == false) {

@@ -95,36 +95,25 @@ class MapDataReader {
 enum ColorFieldFormat { hex }
 
 class MapFeatureReader extends MapDataReader {
-  MapFeatureReader._(
+  MapFeatureReader(
       {this.identifierField,
       this.nameField,
       this.valueFields,
       this.colorField,
-      required this.colorFieldFormat});
+       this.colorFieldFormat=ColorFieldFormat.hex});
 
   final List<MapFeature> _list = [];
+
   final String? identifierField;
   final String? nameField;
   final List<String>? valueFields;
   final String? colorField;
   final ColorFieldFormat colorFieldFormat;
 
-  static Future<List<MapFeature>> geoJSON(
-      {required String geojson,
-      String? identifierField,
-      String? nameField,
-      List<String>? valueFields,
-      String? colorField,
-      ColorFieldFormat colorFieldFormat = ColorFieldFormat.hex}) async {
+  Future<List<MapFeature>> read(String geojson) async{
     Map<String, dynamic> map = json.decode(geojson);
-    MapFeatureReader reader = MapFeatureReader._(
-        identifierField: identifierField,
-        nameField: nameField,
-        valueFields: valueFields,
-        colorField: colorField,
-        colorFieldFormat: colorFieldFormat);
-    await reader._readMap(map);
-    return reader._list;
+    await _readMap(map);
+    return _list;
   }
 
   _readMap(Map<String, dynamic> map) async {
