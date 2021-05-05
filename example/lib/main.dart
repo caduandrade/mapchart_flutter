@@ -15,61 +15,52 @@ class ExampleWidget extends StatefulWidget {
 
 class ExampleState extends State<ExampleWidget> {
   MapChartDataSource? _dataSource;
-  MapChartTheme? _theme;
 
   @override
   void initState() {
     super.initState();
-    String asset = 'geojson/brazil_uf.json';
-    asset = 'geojson/example.json';
-    rootBundle.loadString(asset).then((json) {
-      _loadGeoJSON(json);
+    rootBundle.loadString('brazil_uf.json').then((geojson) {
+      _loadDataSource(geojson);
     });
   }
 
-  _loadGeoJSON(String json) async {
-    MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
-        geojson: json,
-        identifierField: "Id",
-        nameField: "Name",
-        valueFields: ["Distance"]);
-
-    MapChartTheme theme = MapChartTheme(colors: {
-      "earth": Colors.green,
-      "mars": Colors.red,
-      "venus": Colors.orange
-    },
-    highlightColor: Colors.yellow);
-
+  _loadDataSource(String geojson) async {
+    MapChartDataSource dataSource =
+        await MapChartDataSource.fromGeoJSON(geojson: geojson);
     setState(() {
       _dataSource = dataSource;
-      _theme = theme;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget? content;
     if (_dataSource != null) {
-      double divider = 10;
-
-      Widget map = Container(
-          child: MapChart(dataSource: _dataSource!, theme: _theme),
-          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          padding: EdgeInsets.all(8));
-
-      Widget mapArea = Padding(
-        child: map,
-        padding: EdgeInsets.fromLTRB(divider, divider, 0, divider),
-      );
-      Widget emptyArea = Container(color: Colors.white);
-
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            body: MultiSplitView(
-                children: [mapArea, emptyArea], dividerThickness: divider)),
-      );
+      content = _buildMapContainer();
+    } else {
+      content = Text('Loading...');
     }
-    return Center();
+
+    MultiSplitView multiSplitView = MultiSplitView(
+        children: [content, Container(width: 50)]);
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+          body: Center(
+              child: SizedBox(width: 600, height: 500, child: multiSplitView))),
+    );
+  }
+
+  Widget _buildMapContainer() {
+    return Container(
+        child: MapChart(
+            dataSource: _dataSource!,
+            theme: MapChartTheme(
+                color: Colors.green,
+                contourColor: Colors.green[900],
+                highlightColor: Colors.green[800])),
+        decoration: BoxDecoration(border: Border.all()),
+        padding: EdgeInsets.all(16));
   }
 }

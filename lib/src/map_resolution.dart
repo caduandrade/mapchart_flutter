@@ -139,7 +139,7 @@ class MapResolutionBuilder {
       var paint = Paint()
         ..style = PaintingStyle.stroke
         ..color = theme.contourColor
-        ..strokeWidth = 2 / bufferCreationMatrix.scale
+        ..strokeWidth = 1 / bufferCreationMatrix.scale
         ..isAntiAlias = true;
 
       for (Path path in _paths.values) {

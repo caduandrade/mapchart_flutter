@@ -22,6 +22,9 @@ class MenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> children = [];
     for (MenuItem menuItem in menuItems) {
+      if (children.isNotEmpty) {
+        children.add(SizedBox(height: 8));
+      }
       children.add(_buildButton(menuItem));
     }
     return SingleChildScrollView(child: Column(children: children));

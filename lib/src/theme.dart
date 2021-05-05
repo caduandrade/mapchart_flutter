@@ -19,7 +19,8 @@ class MapChartTheme {
         color: color != null ? color : Colors.grey[300]!,
         contourColor: contourColor != null ? contourColor : Colors.grey[500]!,
         drawContour: drawContour,
-        highlightColor: highlightColor != null ? highlightColor : Colors.red,
+        highlightColor:
+            highlightColor != null ? highlightColor : Colors.grey[700]!,
         colors: colors);
   }
 

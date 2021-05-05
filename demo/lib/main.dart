@@ -1,3 +1,4 @@
+import 'package:demo/color_by_id_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,10 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
   @override
   void initState() {
     super.initState();
-    _menuItems = [MenuItem('Get Started', _getStartedPage)];
+    _menuItems = [
+      MenuItem('Get Started', _getStartedPage),
+      MenuItem('Color by id', _colorByIdPage)
+    ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
     }
@@ -88,5 +92,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   GetStartedPage _getStartedPage(BuildContext context) {
     return GetStartedPage();
+  }
+
+  ColorByIdPage _colorByIdPage(BuildContext context) {
+    return ColorByIdPage();
   }
 }
