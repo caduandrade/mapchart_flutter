@@ -3,6 +3,7 @@ import 'package:demo/get_started_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'default_colors_page.dart';
 import 'menu.dart';
 
 void main() {
@@ -38,7 +39,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     super.initState();
     _menuItems = [
       MenuItem('Get Started', _getStartedPage),
-      MenuItem('Color by id', _colorByIdPage)
+      MenuItem('Color by id', _colorByIdPage),
+      MenuItem('Default colors', _defaultColorsPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -96,5 +98,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ColorByIdPage _colorByIdPage(BuildContext context) {
     return ColorByIdPage();
+  }
+
+  DefaultColorsPage _defaultColorsPage(BuildContext context) {
+    return DefaultColorsPage();
   }
 }
