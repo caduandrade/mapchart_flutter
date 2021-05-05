@@ -38,7 +38,8 @@ class ExampleState extends State<ExampleWidget> {
       "earth": Colors.green,
       "mars": Colors.red,
       "venus": Colors.orange
-    });
+    },
+    highlightColor: Colors.yellow);
 
     setState(() {
       _dataSource = dataSource;
