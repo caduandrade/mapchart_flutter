@@ -7,21 +7,24 @@ class MapChartTheme {
       required this.contourColor,
       required this.drawContour,
       required this.highlightColor,
-      this.colors});
+      this.colors,
+      this.highlightColors});
 
   factory MapChartTheme(
       {Color? color,
       Color? contourColor,
       bool drawContour = true,
       Color? highlightColor,
-      Map<dynamic, Color>? colors}) {
+      Map<dynamic, Color>? colors,
+        Map<dynamic, Color>? highlightColors}) {
     return MapChartTheme._(
         color: color != null ? color : Colors.grey[300]!,
         contourColor: contourColor != null ? contourColor : Colors.grey[500]!,
         drawContour: drawContour,
         highlightColor:
             highlightColor != null ? highlightColor : Colors.grey[700]!,
-        colors: colors);
+        colors: colors,
+    highlightColors: highlightColors);
   }
 
   final Color color;
@@ -29,6 +32,7 @@ class MapChartTheme {
   final bool drawContour;
   final Color highlightColor;
   final Map<dynamic, Color>? colors;
+  final Map<dynamic, Color>? highlightColors;
 
   Color getColor(MapFeature feature) {
     if (colors != null &&
@@ -38,5 +42,15 @@ class MapChartTheme {
       return colors![feature.properties!.identifier]!;
     }
     return color;
+  }
+
+  Color getHighlightColor(MapFeature feature) {
+    if (highlightColors != null &&
+        feature.properties != null &&
+        feature.properties!.identifier != null &&
+        highlightColors!.containsKey(feature.properties!.identifier)) {
+      return highlightColors![feature.properties!.identifier]!;
+    }
+    return highlightColor;
   }
 }

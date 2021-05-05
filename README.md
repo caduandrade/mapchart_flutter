@@ -26,7 +26,7 @@ Creating the Widget
 
 ![getstarted](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/get_started.gif)
 
-## Default colors
+## Changing the default colors
 
 ```dart
     MapChart map = MapChart(
@@ -40,6 +40,8 @@ Creating the Widget
 ![defaultcolors](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/default_colors.png)
 
 ## Color by id
+
+It allows mapping colors for each identifier in Json. The default color will be used if the color has not been mapped.
 
 ```dart
     MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(

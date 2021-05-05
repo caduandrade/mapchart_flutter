@@ -32,6 +32,10 @@ class ColorByIdPageState extends ExamplePageState {
       "earth": Colors.green,
       "mars": Colors.red,
       "venus": Colors.orange
+    }, highlightColors: {
+      "earth": Colors.green[900]!,
+      "mars": Colors.red[900]!,
+      "venus": Colors.orange[900]!
     });
 
     MapChart map = MapChart(dataSource: _dataSource, theme: theme);
