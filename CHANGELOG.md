@@ -1,3 +1,8 @@
+## [0.2.0] - ?
+
+* Thematization
+* Reading properties
+
 ## [0.1.0] - May 2, 2021
 
 * GeoJSON loader

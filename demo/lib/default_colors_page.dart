@@ -28,17 +28,13 @@ class DefaultColorsPageState extends ExamplePageState {
 
   @override
   Widget buildContent(BuildContext context) {
-    if (_dataSource != null) {
-      return Container(
-          child: MapChart(
-              dataSource: _dataSource!,
-              theme: MapChartTheme(
-                  color: Colors.yellow,
-                  contourColor: Colors.red,
-                  highlightColor: Colors.orange)),
-          decoration: BoxDecoration(border: Border.all()),
-          padding: EdgeInsets.all(16));
-    }
-    return Text('Loading...');
+    MapChart map = MapChart(
+        dataSource: _dataSource,
+        theme: MapChartTheme(
+            color: Colors.yellow,
+            contourColor: Colors.red,
+            highlightColor: Colors.orange));
+
+    return map;
   }
 }

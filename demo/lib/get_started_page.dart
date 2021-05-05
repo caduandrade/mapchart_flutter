@@ -28,12 +28,7 @@ class GetStartedPageState extends ExamplePageState {
 
   @override
   Widget buildContent(BuildContext context) {
-    if (_dataSource != null) {
-      return Container(
-          child: MapChart(dataSource: _dataSource!),
-          decoration: BoxDecoration(border: Border.all()),
-          padding: EdgeInsets.all(16));
-    }
-    return Text('Loading...');
+    MapChart map = MapChart(dataSource: _dataSource);
+    return map;
   }
 }

@@ -2,8 +2,6 @@
 
 # Map Chart
 
-This package is still in alpha, but I will release a usable version in the next few days. Don't worry, it won't be long! ;-)
-
 * Displays GeoJSON geometries
 * Multi resolution with geometry simplification
 
@@ -13,16 +11,52 @@ This package is still in alpha, but I will release a usable version in the next 
 
 Reading GeoJSON from String
 ```dart
-    List<MapGeometry> geometries = await MapGeometry.fromGeoJSON(geojson);
-    MapChartDataSource dataSource = MapChartDataSource(geometries);
+    MapChartDataSource dataSource =
+        await MapChartDataSource.fromGeoJSON(geojson: geojson);
+
+    setState(() {
+      _dataSource = dataSource;
+    });
 ```
 
 Creating the Widget
 ```dart
-    Container(
-        child: MapChart(dataSource: dataSource),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black);
+    MapChart map = MapChart(dataSource: _dataSource);
 ```
+
+![getstarted](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/get_started.gif)
+
+## Default colors
+
+```dart
+    MapChart map = MapChart(
+        dataSource: _dataSource,
+        theme: MapChartTheme(
+            color: Colors.yellow,
+            contourColor: Colors.red,
+            highlightColor: Colors.orange));
+```
+
+![defaultcolors](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/default_colors.png)
+
+## Color by id
+
+```dart
+    MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
+        geojson: geojson, identifierField: "Id");
+```
+
+```dart
+    MapChartTheme theme = MapChartTheme(colors: {
+      "earth": Colors.green,
+      "mars": Colors.red,
+      "venus": Colors.orange
+    });
+
+    MapChart map = MapChart(dataSource: _dataSource, theme: theme);
+```
+
+![colorbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_id.png)
 
 ## Agenda for the next few days
 

@@ -13,15 +13,21 @@ import 'package:mapchart/src/theme.dart';
 class MapChart extends StatefulWidget {
   MapChart(
       {Key? key,
-      required this.dataSource,
+      this.dataSource,
       this.delayToRefreshResolution = 1000,
-      MapChartTheme? theme})
+      MapChartTheme? theme,
+      this.borderColor = Colors.black54,
+      this.borderThickness = 1,
+      this.padding = 8})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
-  final MapChartDataSource dataSource;
+  final MapChartDataSource? dataSource;
   final MapChartTheme theme;
   final int delayToRefreshResolution;
+  final Color? borderColor;
+  final double? borderThickness;
+  final double? padding;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
@@ -41,7 +47,7 @@ class MapChartState extends State<MapChart> {
         _mapResolutionBuilder!.stop();
       }
       _mapResolutionBuilder = MapResolutionBuilder(
-          dataSource: widget.dataSource,
+          dataSource: widget.dataSource!,
           theme: widget.theme,
           mapMatrices: mapMatrices,
           simplifier: IntegerSimplifier(),
@@ -54,7 +60,7 @@ class MapChartState extends State<MapChart> {
     print('simplified points: ' +
         newMapResolution.pointsCount.toString() +
         ' of ' +
-        widget.dataSource.pointsCount.toString());
+        widget.dataSource!.pointsCount.toString());
     setState(() {
       _mapResolution = newMapResolution;
       _mapResolutionBuilder = null;
@@ -63,52 +69,69 @@ class MapChartState extends State<MapChart> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      int? bufferWidth;
-      int? bufferHeight;
-      if (_mapResolution != null) {
-        bufferWidth = _mapResolution!.mapBuffer.width;
-        bufferHeight = _mapResolution!.mapBuffer.height;
-      }
-      MapMatrices mapMatrices = MapMatrices(
-          widgetWidth: constraints.maxWidth,
-          widgetHeight: constraints.maxHeight,
-          geometryBounds: widget.dataSource.bounds,
-          bufferWidth: bufferWidth,
-          bufferHeight: bufferHeight);
+    Decoration? decoration;
+    if (widget.borderColor != null &&
+        widget.borderThickness != null &&
+        widget.borderThickness! > 0) {
+      decoration = BoxDecoration(
+          border: Border.all(
+              color: widget.borderColor!, width: widget.borderThickness!));
+    }
+    EdgeInsetsGeometry? padding;
+    if (widget.padding != null && widget.padding! > 0) {
+      padding = EdgeInsets.all(widget.padding!);
+    }
 
-      final Size size = Size(constraints.maxWidth, constraints.maxHeight);
-
-      if (_lastBuildSize != size) {
-        _lastBuildSize = size;
-        if (_mapResolution == null) {
-          if (_mapResolutionBuilder == null) {
-            // first build without delay
-            Future.microtask(() => _updateMapResolution(mapMatrices, size));
-          }
-          return Center(
-            child: Text('updating...'),
-          );
-        } else {
-          // updating map resolution
-          Future.delayed(
-              Duration(milliseconds: widget.delayToRefreshResolution), () {
-            _updateMapResolution(mapMatrices, size);
-          });
+    Widget? content;
+    if (widget.dataSource != null) {
+      content = LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        int? bufferWidth;
+        int? bufferHeight;
+        if (_mapResolution != null) {
+          bufferWidth = _mapResolution!.mapBuffer.width;
+          bufferHeight = _mapResolution!.mapBuffer.height;
         }
-      }
+        MapMatrices mapMatrices = MapMatrices(
+            widgetWidth: constraints.maxWidth,
+            widgetHeight: constraints.maxHeight,
+            geometryBounds: widget.dataSource!.bounds,
+            bufferWidth: bufferWidth,
+            bufferHeight: bufferHeight);
 
-      MapPainter mapPainter = MapPainter(
-          mapResolution: _mapResolution!,
-          hoverId: hoverId,
-          mapMatrices: mapMatrices,
-          theme: widget.theme);
+        final Size size = Size(constraints.maxWidth, constraints.maxHeight);
 
-      return MouseRegion(
-          child: CustomPaint(painter: mapPainter, child: Container()),
-          onHover: (event) => _onHover(event, mapMatrices));
-    });
+        if (_lastBuildSize != size) {
+          _lastBuildSize = size;
+          if (_mapResolution == null) {
+            if (_mapResolutionBuilder == null) {
+              // first build without delay
+              Future.microtask(() => _updateMapResolution(mapMatrices, size));
+            }
+            return Center(
+              child: Text('updating...'),
+            );
+          } else {
+            // updating map resolution
+            Future.delayed(
+                Duration(milliseconds: widget.delayToRefreshResolution), () {
+              _updateMapResolution(mapMatrices, size);
+            });
+          }
+        }
+
+        MapPainter mapPainter = MapPainter(
+            mapResolution: _mapResolution!,
+            hoverId: hoverId,
+            mapMatrices: mapMatrices,
+            theme: widget.theme);
+
+        return MouseRegion(
+            child: CustomPaint(painter: mapPainter, child: Container()),
+            onHover: (event) => _onHover(event, mapMatrices));
+      });
+    }
+    return Container(child: content, decoration: decoration, padding: padding);
   }
 
   _onHover(PointerHoverEvent event, MapMatrices mapMatrices) {
@@ -117,7 +140,7 @@ class MapChartState extends State<MapChart> {
           mapMatrices.canvasMatrix.screenToGeometry, event.localPosition);
 
       bool found = false;
-      for (int id in widget.dataSource.features.keys) {
+      for (int id in widget.dataSource!.features.keys) {
         if (_mapResolution!.paths.containsKey(id) == false) {
           throw MapChartError('No path for id: $id');
         }

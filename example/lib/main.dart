@@ -36,31 +36,29 @@ class ExampleState extends State<ExampleWidget> {
   Widget build(BuildContext context) {
     Widget? content;
     if (_dataSource != null) {
-      content = _buildMapContainer();
+      content = _buildMapChart();
     } else {
       content = Text('Loading...');
     }
 
-    MultiSplitView multiSplitView = MultiSplitView(
-        children: [content, Container(width: 50)]);
+    MultiSplitView multiSplitView =
+        MultiSplitView(children: [content, Container(width: 50)]);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       home: Scaffold(
           body: Center(
               child: SizedBox(width: 600, height: 500, child: multiSplitView))),
     );
   }
 
-  Widget _buildMapContainer() {
-    return Container(
-        child: MapChart(
-            dataSource: _dataSource!,
-            theme: MapChartTheme(
-                color: Colors.green,
-                contourColor: Colors.green[900],
-                highlightColor: Colors.green[800])),
-        decoration: BoxDecoration(border: Border.all()),
-        padding: EdgeInsets.all(16));
+  Widget _buildMapChart() {
+    return MapChart(
+        dataSource: _dataSource,
+        theme: MapChartTheme(
+            color: Colors.green,
+            contourColor: Colors.green[900],
+            highlightColor: Colors.green[800]));
   }
 }

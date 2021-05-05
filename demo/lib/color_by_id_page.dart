@@ -28,18 +28,14 @@ class ColorByIdPageState extends ExamplePageState {
 
   @override
   Widget buildContent(BuildContext context) {
-    if (_dataSource != null) {
-      MapChartTheme theme = MapChartTheme(colors: {
-        "earth": Colors.green,
-        "mars": Colors.red,
-        "venus": Colors.orange
-      });
+    MapChartTheme theme = MapChartTheme(colors: {
+      "earth": Colors.green,
+      "mars": Colors.red,
+      "venus": Colors.orange
+    });
 
-      return Container(
-          child: MapChart(dataSource: _dataSource!, theme: theme),
-          decoration: BoxDecoration(border: Border.all()),
-          padding: EdgeInsets.all(16));
-    }
-    return Text('Loading...');
+    MapChart map = MapChart(dataSource: _dataSource, theme: theme);
+
+    return map;
   }
 }
