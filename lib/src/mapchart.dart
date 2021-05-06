@@ -18,7 +18,8 @@ class MapChart extends StatefulWidget {
       MapChartTheme? theme,
       this.borderColor = Colors.black54,
       this.borderThickness = 1,
-      this.padding = 8})
+      this.padding = 8,
+      this.onHighlightFeature})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
@@ -28,10 +29,13 @@ class MapChart extends StatefulWidget {
   final Color? borderColor;
   final double? borderThickness;
   final double? padding;
+  final OnHighlightFeature? onHighlightFeature;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
 }
+
+typedef OnHighlightFeature = Function(MapFeature? highlightedFeature);
 
 class MapChartState extends State<MapChart> {
   MapFeature? _highlightedFeature;
@@ -131,9 +135,7 @@ class MapChartState extends State<MapChart> {
           onHover: (event) => _onHover(event, mapMatrices),
           onExit: (event) {
             if (_highlightedFeature != null) {
-              setState(() {
-                _highlightedFeature = null;
-              });
+              _updateHighlightedFeature(null);
             }
           },
         );
@@ -156,18 +158,23 @@ class MapChartState extends State<MapChart> {
         found = path.contains(o);
         if (found) {
           if (_highlightedFeature != feature) {
-            setState(() {
-              _highlightedFeature = feature;
-            });
+            _updateHighlightedFeature(feature);
           }
           break;
         }
       }
       if (found == false && _highlightedFeature != null) {
-        setState(() {
-          _highlightedFeature = null;
-        });
+        _updateHighlightedFeature(null);
       }
+    }
+  }
+
+  _updateHighlightedFeature(MapFeature? newHighlightedFeature) {
+    setState(() {
+      _highlightedFeature = newHighlightedFeature;
+    });
+    if (widget.onHighlightFeature != null) {
+      widget.onHighlightFeature!(newHighlightedFeature);
     }
   }
 }

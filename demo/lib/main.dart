@@ -1,6 +1,7 @@
 import 'package:demo/color_by_id_page.dart';
 import 'package:demo/contour_page.dart';
 import 'package:demo/get_started_page.dart';
+import 'package:demo/on_highlight_feature_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +43,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Get Started', _getStartedPage),
       MenuItem('Color by id', _colorByIdPage),
       MenuItem('Default colors', _defaultColorsPage),
-      MenuItem('Contour', _contourPage)
+      MenuItem('Contour', _contourPage),
+      MenuItem('On highlight feature', _onHighlightFeaturePage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -108,5 +110,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ContourPage _contourPage(BuildContext context) {
     return ContourPage();
+  }
+
+  OnHighlightFeaturePage _onHighlightFeaturePage(BuildContext context) {
+    return OnHighlightFeaturePage();
   }
 }
