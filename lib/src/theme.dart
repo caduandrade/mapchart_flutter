@@ -19,7 +19,7 @@ class MapChartTheme {
   final Map<dynamic, Color>? colors;
   final Map<dynamic, Color>? hoverColors;
 
-  bool isHoverEnabled() {
+  bool hasAnyHoverColor() {
     return hoverContourColor != null ||
         hoverColor != null ||
         (hoverColors != null && hoverColors!.isNotEmpty);

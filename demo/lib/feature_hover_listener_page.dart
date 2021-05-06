@@ -5,11 +5,10 @@ import 'example_page.dart';
 
 class FeatureHoverListenerPage extends StatefulWidget {
   @override
-  FeatureHoverListenerPageState createState() =>
-      FeatureHoverListenerPageState();
+  HoverListenerPageState createState() => HoverListenerPageState();
 }
 
-class FeatureHoverListenerPageState extends ExamplePageState {
+class HoverListenerPageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
@@ -22,7 +21,7 @@ class FeatureHoverListenerPageState extends ExamplePageState {
     MapChart map = MapChart(
         dataSource: dataSource,
         theme: MapChartTheme(hoverColor: Colors.grey[700]),
-        featureHoverListener: (MapFeature? feature) {
+        hoverListener: (MapFeature? feature) {
           if (feature != null) {
             int id = feature.id;
             print('Hover - Feature id: $id');

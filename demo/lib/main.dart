@@ -1,5 +1,6 @@
 import 'package:demo/color_by_id_page.dart';
 import 'package:demo/contour_page.dart';
+import 'package:demo/enable_hover_by_id_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,7 +45,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Color by id', _colorByIdPage),
       MenuItem('Default colors', _defaultColorsPage),
       MenuItem('Contour', _contourPage),
-      MenuItem('Feature hover listener', _featureHoverListenerPage)
+      MenuItem('Hover listener', _hoverListenerPage),
+      MenuItem('Enable hover by id', _enableHoverByIdPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -112,7 +114,11 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     return ContourPage();
   }
 
-  FeatureHoverListenerPage _featureHoverListenerPage() {
+  FeatureHoverListenerPage _hoverListenerPage() {
     return FeatureHoverListenerPage();
+  }
+
+  EnableHoverByIdPage _enableHoverByIdPage() {
+    return EnableHoverByIdPage();
   }
 }

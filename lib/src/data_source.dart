@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:convert';
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:mapchart/src/data_reader.dart';
@@ -96,7 +95,6 @@ class SimplifiedPath {
 
   SimplifiedPath(this.path, this.pointsCount);
 }
-
 
 class FeatureProperties {
   FeatureProperties({this.identifier, this.name, this.values, this.value, this.color});

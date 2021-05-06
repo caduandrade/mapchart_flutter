@@ -19,7 +19,8 @@ class MapChart extends StatefulWidget {
       this.borderColor = Colors.black54,
       this.borderThickness = 1,
       this.padding = 8,
-      this.featureHoverListener})
+      this.hoverRule,
+      this.hoverListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
@@ -29,13 +30,16 @@ class MapChart extends StatefulWidget {
   final Color? borderColor;
   final double? borderThickness;
   final double? padding;
-  final FeatureHoverListener? featureHoverListener;
+  final HoverRule? hoverRule;
+  final HoverListener? hoverListener;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
 }
 
-typedef FeatureHoverListener = Function(MapFeature? feature);
+typedef HoverRule = bool Function(MapFeature feature);
+
+typedef HoverListener = Function(MapFeature? feature);
 
 class MapChartState extends State<MapChart> {
   MapFeature? _hover;
@@ -133,7 +137,7 @@ class MapChartState extends State<MapChart> {
         CustomPaint customPaint =
             CustomPaint(painter: mapPainter, child: Container());
 
-        if (widget.theme.isHoverEnabled()) {
+        if (widget.theme.hasAnyHoverColor() || widget.hoverListener != null) {
           return MouseRegion(
             child: customPaint,
             onHover: (event) => _onHover(event, mapMatrices),
@@ -157,6 +161,9 @@ class MapChartState extends State<MapChart> {
 
       bool found = false;
       for (MapFeature feature in widget.dataSource!.features.values) {
+        if (widget.hoverRule != null && widget.hoverRule!(feature) == false) {
+          continue;
+        }
         if (_mapResolution!.paths.containsKey(feature.id) == false) {
           throw MapChartError('No path for id: ' + feature.id.toString());
         }
@@ -179,8 +186,8 @@ class MapChartState extends State<MapChart> {
     setState(() {
       _hover = newHover;
     });
-    if (widget.featureHoverListener != null) {
-      widget.featureHoverListener!(newHover);
+    if (widget.hoverListener != null) {
+      widget.hoverListener!(newHover);
     }
   }
 }
