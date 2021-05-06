@@ -206,37 +206,42 @@ class MapPainter extends CustomPainter {
 
     // drawing the selection
     if (highlightedFeature != null) {
-      canvas.save();
+      Color? hoverColor = theme.getHighlightColor(highlightedFeature!);
+      if (hoverColor != null || theme.hoverContourColor != null) {
+        canvas.save();
 
-      CanvasMatrix canvasMatrix = mapMatrices.canvasMatrix;
-      canvas.translate(canvasMatrix.translateX, canvasMatrix.translateY);
-      canvas.scale(canvasMatrix.scale, -canvasMatrix.scale);
+        CanvasMatrix canvasMatrix = mapMatrices.canvasMatrix;
+        canvas.translate(canvasMatrix.translateX, canvasMatrix.translateY);
+        canvas.scale(canvasMatrix.scale, -canvasMatrix.scale);
 
-      int highlightedFeatureId = highlightedFeature!.id;
-      if (mapResolution.paths.containsKey(highlightedFeatureId) == false) {
-        throw MapChartError('No path for id: $highlightedFeatureId');
+        int highlightedFeatureId = highlightedFeature!.id;
+        if (mapResolution.paths.containsKey(highlightedFeatureId) == false) {
+          throw MapChartError('No path for id: $highlightedFeatureId');
+        }
+
+        Path path = mapResolution.paths[highlightedFeatureId]!;
+
+        if (hoverColor != null) {
+          var paint = Paint()
+            ..style = PaintingStyle.fill
+            ..color = hoverColor
+            ..isAntiAlias = true;
+
+          canvas.drawPath(path, paint);
+        }
+
+        if (theme.contourThickness > 0 && theme.hoverContourColor != null) {
+          var paint = Paint()
+            ..style = PaintingStyle.stroke
+            ..color = theme.hoverContourColor!
+            ..strokeWidth = theme.contourThickness / canvasMatrix.scale
+            ..isAntiAlias = true;
+
+          canvas.drawPath(path, paint);
+        }
+
+        canvas.restore();
       }
-
-      Path path = mapResolution.paths[highlightedFeatureId]!;
-
-      var paint = Paint()
-        ..style = PaintingStyle.fill
-        ..color = theme.getHighlightColor(highlightedFeature!)
-        ..isAntiAlias = true;
-
-      canvas.drawPath(path, paint);
-
-      if (theme.contourThickness > 0 && theme.hoverContourColor != null) {
-        paint = Paint()
-          ..style = PaintingStyle.stroke
-          ..color = theme.hoverContourColor!
-          ..strokeWidth = theme.contourThickness / canvasMatrix.scale
-          ..isAntiAlias = true;
-
-        canvas.drawPath(path, paint);
-      }
-
-      canvas.restore();
     }
 
     DateTime end = DateTime.now();

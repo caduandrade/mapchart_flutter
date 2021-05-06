@@ -2,39 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:mapchart/src/data_source.dart';
 
 class MapChartTheme {
-  MapChartTheme._(
-      {required this.color,
-      required this.contourColor,
+  MapChartTheme(
+      {this.color = const Color(0xFFE0E0E0), //grey 300
+      this.contourColor = const Color(0xFF9E9E9E), // grey 500
       this.hoverContourColor,
-      required this.contourThickness,
-      required this.highlightColor,
+      this.contourThickness = 1,
+      this.highlightColor = const Color(0xFF616161), // grey 700
       this.colors,
       this.highlightColors});
 
-  factory MapChartTheme(
-      {Color? color,
-      Color? contourColor,
-      double contourThickness = 1,
-      Color? hoverContourColor,
-      Color? highlightColor,
-      Map<dynamic, Color>? colors,
-      Map<dynamic, Color>? highlightColors}) {
-    return MapChartTheme._(
-        color: color != null ? color : Colors.grey[300]!,
-        contourColor: contourColor != null ? contourColor : Colors.grey[500]!,
-        hoverContourColor: hoverContourColor,
-        contourThickness: contourThickness,
-        highlightColor:
-            highlightColor != null ? highlightColor : Colors.grey[700]!,
-        colors: colors,
-        highlightColors: highlightColors);
-  }
-
   final Color color;
-  final Color contourColor;
+  final Color? contourColor;
   final Color? hoverContourColor;
   final double contourThickness;
-  final Color highlightColor;
+  final Color? highlightColor;
   final Map<dynamic, Color>? colors;
   final Map<dynamic, Color>? highlightColors;
 
@@ -48,7 +29,7 @@ class MapChartTheme {
     return color;
   }
 
-  Color getHighlightColor(MapFeature feature) {
+  Color? getHighlightColor(MapFeature feature) {
     if (highlightColors != null &&
         feature.properties != null &&
         feature.properties!.identifier != null &&
