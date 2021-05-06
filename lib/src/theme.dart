@@ -5,6 +5,7 @@ class MapChartTheme {
   MapChartTheme._(
       {required this.color,
       required this.contourColor,
+      this.hoverContourColor,
       required this.contourThickness,
       required this.highlightColor,
       this.colors,
@@ -14,12 +15,14 @@ class MapChartTheme {
       {Color? color,
       Color? contourColor,
       double contourThickness = 1,
+      Color? hoverContourColor,
       Color? highlightColor,
       Map<dynamic, Color>? colors,
       Map<dynamic, Color>? highlightColors}) {
     return MapChartTheme._(
         color: color != null ? color : Colors.grey[300]!,
         contourColor: contourColor != null ? contourColor : Colors.grey[500]!,
+        hoverContourColor: hoverContourColor,
         contourThickness: contourThickness,
         highlightColor:
             highlightColor != null ? highlightColor : Colors.grey[700]!,
@@ -29,6 +32,7 @@ class MapChartTheme {
 
   final Color color;
   final Color contourColor;
+  final Color? hoverContourColor;
   final double contourThickness;
   final Color highlightColor;
   final Map<dynamic, Color>? colors;

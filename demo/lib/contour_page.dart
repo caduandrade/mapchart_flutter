@@ -21,7 +21,8 @@ class ContourPageState extends ExamplePageState {
   List<MenuItem> buildMenuItems() {
     return [
       MenuItem('Thickness', _thickness),
-      MenuItem('No contour', _noContour)
+      MenuItem('No contour', _noContour),
+      MenuItem('Hover contour', _hoverContourColor)
     ];
   }
 
@@ -35,6 +36,14 @@ class ContourPageState extends ExamplePageState {
   Widget _noContour() {
     MapChart map = MapChart(
         dataSource: dataSource, theme: MapChartTheme(contourThickness: 0));
+
+    return map;
+  }
+
+  Widget _hoverContourColor() {
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(hoverContourColor: Colors.red));
 
     return map;
   }

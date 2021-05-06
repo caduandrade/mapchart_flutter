@@ -212,17 +212,29 @@ class MapPainter extends CustomPainter {
       canvas.translate(canvasMatrix.translateX, canvasMatrix.translateY);
       canvas.scale(canvasMatrix.scale, -canvasMatrix.scale);
 
-      var hoverPaint = Paint()
-        ..style = PaintingStyle.fill
-        ..color = theme.getHighlightColor(highlightedFeature!)
-        ..isAntiAlias = true;
-
       int highlightedFeatureId = highlightedFeature!.id;
       if (mapResolution.paths.containsKey(highlightedFeatureId) == false) {
         throw MapChartError('No path for id: $highlightedFeatureId');
       }
+
       Path path = mapResolution.paths[highlightedFeatureId]!;
-      canvas.drawPath(path, hoverPaint);
+
+      var paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = theme.getHighlightColor(highlightedFeature!)
+        ..isAntiAlias = true;
+
+      canvas.drawPath(path, paint);
+
+      if (theme.contourThickness > 0 && theme.hoverContourColor != null) {
+        paint = Paint()
+          ..style = PaintingStyle.stroke
+          ..color = theme.hoverContourColor!
+          ..strokeWidth = theme.contourThickness / canvasMatrix.scale
+          ..isAntiAlias = true;
+
+        canvas.drawPath(path, paint);
+      }
 
       canvas.restore();
     }
