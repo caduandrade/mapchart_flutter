@@ -17,7 +17,7 @@ class DefaultColorsPageState extends ExamplePageState {
   }
 
   @override
-  Widget buildContent(BuildContext context) {
+  Widget buildContent() {
     MapChart map = MapChart(
         dataSource: dataSource,
         theme: MapChartTheme(

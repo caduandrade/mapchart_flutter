@@ -17,7 +17,7 @@ class GetStartedPageState extends ExamplePageState {
   }
 
   @override
-  Widget buildContent(BuildContext context) {
+  Widget buildContent() {
     MapChart map = MapChart(dataSource: dataSource);
     return map;
   }

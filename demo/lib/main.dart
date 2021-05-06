@@ -33,7 +33,7 @@ class MapChartDemoPage extends StatefulWidget {
 
 class MapChartDemoPageState extends State<MapChartDemoPage> {
   late List<MenuItem> _menuItems;
-  WidgetBuilder? _currentExampleBuilder;
+  ContentBuilder? _currentExampleBuilder;
   String? geojson;
 
   @override
@@ -60,7 +60,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
   Widget build(BuildContext context) {
     Widget exampleMenu = Container(
       child: MenuWidget(
-          widgetBuilderUpdater: _updateExampleWidgetBuilder,
+          contentBuilderUpdater: _updateExampleContentBuilder,
           menuItems: _menuItems),
       padding: EdgeInsets.all(8),
       decoration:
@@ -72,7 +72,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       body = Center(child: Text('Loading...'));
     } else {
       body = Row(
-          children: [exampleMenu, Expanded(child: _buildExample(context))],
+          children: [exampleMenu, Expanded(child: _buildExample())],
           crossAxisAlignment: CrossAxisAlignment.stretch);
     }
 
@@ -83,36 +83,36 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
         body: body);
   }
 
-  _updateExampleWidgetBuilder(WidgetBuilder widgetBuilder) {
+  _updateExampleContentBuilder(ContentBuilder contentBuilder) {
     setState(() {
-      _currentExampleBuilder = widgetBuilder;
+      _currentExampleBuilder = contentBuilder;
     });
   }
 
-  Widget _buildExample(BuildContext context) {
+  Widget _buildExample() {
     if (_currentExampleBuilder != null) {
-      return _currentExampleBuilder!(context);
+      return _currentExampleBuilder!();
     }
     return Center();
   }
 
-  GetStartedPage _getStartedPage(BuildContext context) {
+  GetStartedPage _getStartedPage() {
     return GetStartedPage();
   }
 
-  ColorByIdPage _colorByIdPage(BuildContext context) {
+  ColorByIdPage _colorByIdPage() {
     return ColorByIdPage();
   }
 
-  DefaultColorsPage _defaultColorsPage(BuildContext context) {
+  DefaultColorsPage _defaultColorsPage() {
     return DefaultColorsPage();
   }
 
-  ContourPage _contourPage(BuildContext context) {
+  ContourPage _contourPage() {
     return ContourPage();
   }
 
-  OnHighlightFeaturePage _onHighlightFeaturePage(BuildContext context) {
+  OnHighlightFeaturePage _onHighlightFeaturePage() {
     return OnHighlightFeaturePage();
   }
 }

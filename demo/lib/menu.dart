@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef WidgetBuilderUpdater = Function(WidgetBuilder widgetBuilder);
+typedef ContentBuilder = Widget Function();
+
+typedef ContentBuilderUpdater = Function(ContentBuilder contentBuilder);
 
 class MenuItem {
   MenuItem(this.name, this.builder);
 
   final String name;
-  final WidgetBuilder builder;
+  final ContentBuilder builder;
 }
 
 class MenuWidget extends StatelessWidget {
   const MenuWidget(
-      {Key? key, required this.widgetBuilderUpdater, required this.menuItems})
+      {Key? key, required this.contentBuilderUpdater, required this.menuItems})
       : super(key: key);
 
-  final WidgetBuilderUpdater widgetBuilderUpdater;
+  final ContentBuilderUpdater contentBuilderUpdater;
   final List<MenuItem> menuItems;
 
   @override
@@ -32,7 +34,7 @@ class MenuWidget extends StatelessWidget {
 
   ElevatedButton _buildButton(MenuItem menuItem) {
     return ElevatedButton(
-        onPressed: () => widgetBuilderUpdater(menuItem.builder),
+        onPressed: () => contentBuilderUpdater(menuItem.builder),
         child: Text(menuItem.name));
   }
 }

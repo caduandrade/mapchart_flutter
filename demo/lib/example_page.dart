@@ -7,7 +7,7 @@ import 'menu.dart';
 
 abstract class ExamplePageState extends State<StatefulWidget> {
   late List<MenuItem> _menuItems;
-  WidgetBuilder? _currentBuilder;
+  ContentBuilder? _currentBuilder;
 
   late MultiSplitViewController _horizontalController;
   late MultiSplitViewController _verticalController;
@@ -38,16 +38,16 @@ abstract class ExamplePageState extends State<StatefulWidget> {
 
   Future<MapChartDataSource> loadDataSource(String geojson);
 
-  _updateWidgetBuilder(WidgetBuilder widgetBuilder) {
+  _updateContentBuilder(ContentBuilder contentBuilder) {
     setState(() {
-      _currentBuilder = widgetBuilder;
+      _currentBuilder = contentBuilder;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     Scaffold scaffold =
-        Scaffold(key: UniqueKey(), body: Center(child: buildContent(context)));
+        Scaffold(key: UniqueKey(), body: Center(child: buildContent()));
 
     MaterialApp materialApp = MaterialApp(
         theme: buildThemeData(),
@@ -72,7 +72,7 @@ abstract class ExamplePageState extends State<StatefulWidget> {
 
     Widget contentMenu = Container(
       child: MenuWidget(
-          widgetBuilderUpdater: _updateWidgetBuilder, menuItems: _menuItems),
+          contentBuilderUpdater: _updateContentBuilder, menuItems: _menuItems),
       padding: EdgeInsets.all(8),
       decoration:
           BoxDecoration(border: Border(left: BorderSide(color: Colors.blue))),
@@ -94,9 +94,9 @@ abstract class ExamplePageState extends State<StatefulWidget> {
     return [];
   }
 
-  Widget buildContent(BuildContext context) {
+  Widget buildContent() {
     if (_currentBuilder != null) {
-      return _currentBuilder!(context);
+      return _currentBuilder!();
     }
     return Center();
   }

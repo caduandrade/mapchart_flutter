@@ -17,7 +17,7 @@ class OnHighlightFeaturePageState extends ExamplePageState {
   }
 
   @override
-  Widget buildContent(BuildContext context) {
+  Widget buildContent() {
     MapChart map = MapChart(
         dataSource: dataSource,
         onHighlightFeature: (MapFeature? feature) {
