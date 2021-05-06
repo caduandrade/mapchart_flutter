@@ -135,11 +135,11 @@ class MapResolutionBuilder {
       canvas.drawPath(path, paint);
     });
 
-    if (theme.drawContour) {
+    if (theme.contourThickness > 0) {
       var paint = Paint()
         ..style = PaintingStyle.stroke
         ..color = theme.contourColor
-        ..strokeWidth = 1 / bufferCreationMatrix.scale
+        ..strokeWidth = theme.contourThickness / bufferCreationMatrix.scale
         ..isAntiAlias = true;
 
       for (Path path in _paths.values) {

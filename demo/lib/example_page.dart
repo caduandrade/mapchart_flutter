@@ -35,7 +35,7 @@ abstract class ExamplePageState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Scaffold scaffold = Scaffold(body: Center(child: buildContent(context)));
+    Scaffold scaffold = Scaffold(key:UniqueKey(),body: Center(child: buildContent(context)));
 
     MaterialApp materialApp = MaterialApp(
         theme: buildThemeData(),
@@ -58,8 +58,13 @@ abstract class ExamplePageState extends State<StatefulWidget> {
     SizedBox sizedBox = SizedBox(child: vertical, width: 590, height: 412);
     Center center = Center(child: sizedBox);
 
-    MenuWidget contentMenu = MenuWidget(
-        widgetBuilderUpdater: _updateWidgetBuilder, menuItems: _menuItems);
+    Widget contentMenu = Container(
+      child: MenuWidget(
+          widgetBuilderUpdater: _updateWidgetBuilder, menuItems: _menuItems),
+      padding: EdgeInsets.all(8),
+      decoration:
+          BoxDecoration(border: Border(left: BorderSide(color: Colors.blue))),
+    );
 
     Row row = Row(children: [Expanded(child: center), contentMenu]);
     return Container(child: row, color: Colors.white);
