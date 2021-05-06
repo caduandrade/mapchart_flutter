@@ -10,21 +10,11 @@ class ContourPage extends StatefulWidget {
 }
 
 class ContourPageState extends ExamplePageState {
-  MapChartDataSource? _dataSource;
-
   @override
-  void initState() {
-    super.initState();
-    _loadDataSource(geojson);
-  }
-
-  _loadDataSource(String geojson) async {
+  Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
         await MapChartDataSource.fromGeoJSON(geojson: geojson);
-
-    setState(() {
-      _dataSource = dataSource;
-    });
+    return dataSource;
   }
 
   @override
@@ -37,14 +27,14 @@ class ContourPageState extends ExamplePageState {
 
   Widget _thickness(BuildContext context) {
     MapChart map = MapChart(
-        dataSource: _dataSource, theme: MapChartTheme(contourThickness: 3));
+        dataSource: dataSource, theme: MapChartTheme(contourThickness: 3));
 
     return map;
   }
 
   Widget _noContour(BuildContext context) {
     MapChart map = MapChart(
-        dataSource: _dataSource, theme: MapChartTheme(contourThickness: 0));
+        dataSource: dataSource, theme: MapChartTheme(contourThickness: 0));
 
     return map;
   }

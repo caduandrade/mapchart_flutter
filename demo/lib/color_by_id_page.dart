@@ -9,21 +9,11 @@ class ColorByIdPage extends StatefulWidget {
 }
 
 class ColorByIdPageState extends ExamplePageState {
-  MapChartDataSource? _dataSource;
-
   @override
-  void initState() {
-    super.initState();
-    _loadDataSource(geojson);
-  }
-
-  _loadDataSource(String geojson) async {
+  Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
         geojson: geojson, identifierField: "Id");
-
-    setState(() {
-      _dataSource = dataSource;
-    });
+    return dataSource;
   }
 
   @override
@@ -38,7 +28,7 @@ class ColorByIdPageState extends ExamplePageState {
       "venus": Colors.orange[900]!
     });
 
-    MapChart map = MapChart(dataSource: _dataSource, theme: theme);
+    MapChart map = MapChart(dataSource: dataSource, theme: theme);
 
     return map;
   }

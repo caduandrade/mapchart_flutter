@@ -1,5 +1,6 @@
 import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
+import 'package:mapchart/mapchart.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 
 import 'menu.dart';
@@ -13,6 +14,8 @@ abstract class ExamplePageState extends State<StatefulWidget> {
 
   late String geojson;
 
+  MapChartDataSource? dataSource;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +28,15 @@ abstract class ExamplePageState extends State<StatefulWidget> {
     MapChartDemoPageState? state =
         context.findAncestorStateOfType<MapChartDemoPageState>();
     geojson = state!.geojson!;
+
+    loadDataSource(geojson).then((value) {
+      setState(() {
+        dataSource = value;
+      });
+    });
   }
+
+  Future<MapChartDataSource> loadDataSource(String geojson);
 
   _updateWidgetBuilder(WidgetBuilder widgetBuilder) {
     setState(() {
@@ -35,7 +46,8 @@ abstract class ExamplePageState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Scaffold scaffold = Scaffold(key:UniqueKey(),body: Center(child: buildContent(context)));
+    Scaffold scaffold =
+        Scaffold(key: UniqueKey(), body: Center(child: buildContent(context)));
 
     MaterialApp materialApp = MaterialApp(
         theme: buildThemeData(),

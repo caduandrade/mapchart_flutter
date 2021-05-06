@@ -9,27 +9,17 @@ class OnHighlightFeaturePage extends StatefulWidget {
 }
 
 class OnHighlightFeaturePageState extends ExamplePageState {
-  MapChartDataSource? _dataSource;
-
   @override
-  void initState() {
-    super.initState();
-    _loadDataSource(geojson);
-  }
-
-  _loadDataSource(String geojson) async {
-    MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
-        geojson: geojson, identifierField: "Id");
-
-    setState(() {
-      _dataSource = dataSource;
-    });
+  Future<MapChartDataSource> loadDataSource(String geojson) async {
+    MapChartDataSource dataSource =
+        await MapChartDataSource.fromGeoJSON(geojson: geojson);
+    return dataSource;
   }
 
   @override
   Widget buildContent(BuildContext context) {
     MapChart map = MapChart(
-        dataSource: _dataSource,
+        dataSource: dataSource,
         onHighlightFeature: (MapFeature? feature) {
           if (feature != null) {
             int id = feature.id;
