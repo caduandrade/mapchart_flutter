@@ -3,12 +3,13 @@ import 'package:mapchart/mapchart.dart';
 
 import 'example_page.dart';
 
-class OnHighlightFeaturePage extends StatefulWidget {
+class FeatureHoverListenerPage extends StatefulWidget {
   @override
-  OnHighlightFeaturePageState createState() => OnHighlightFeaturePageState();
+  FeatureHoverListenerPageState createState() =>
+      FeatureHoverListenerPageState();
 }
 
-class OnHighlightFeaturePageState extends ExamplePageState {
+class FeatureHoverListenerPageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
@@ -20,12 +21,10 @@ class OnHighlightFeaturePageState extends ExamplePageState {
   Widget buildContent() {
     MapChart map = MapChart(
         dataSource: dataSource,
-        onHighlightFeature: (MapFeature? feature) {
+        featureHoverListener: (MapFeature? feature) {
           if (feature != null) {
             int id = feature.id;
-            print('Highlighted feature id: $id');
-          } else {
-            print('No highlighted feature');
+            print('Hover - Feature id: $id');
           }
         });
 

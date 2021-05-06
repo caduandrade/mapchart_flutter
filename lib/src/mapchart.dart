@@ -19,7 +19,7 @@ class MapChart extends StatefulWidget {
       this.borderColor = Colors.black54,
       this.borderThickness = 1,
       this.padding = 8,
-      this.onHighlightFeature})
+      this.featureHoverListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
@@ -29,16 +29,16 @@ class MapChart extends StatefulWidget {
   final Color? borderColor;
   final double? borderThickness;
   final double? padding;
-  final OnHighlightFeature? onHighlightFeature;
+  final FeatureHoverListener? featureHoverListener;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
 }
 
-typedef OnHighlightFeature = Function(MapFeature? highlightedFeature);
+typedef FeatureHoverListener = Function(MapFeature? feature);
 
 class MapChartState extends State<MapChart> {
-  MapFeature? _highlightedFeature;
+  MapFeature? _hover;
 
   MapResolution? _mapResolution;
 
@@ -126,19 +126,25 @@ class MapChartState extends State<MapChart> {
 
         MapPainter mapPainter = MapPainter(
             mapResolution: _mapResolution!,
-            highlightedFeature: _highlightedFeature,
+            hover: _hover,
             mapMatrices: mapMatrices,
             theme: widget.theme);
 
-        return MouseRegion(
-          child: CustomPaint(painter: mapPainter, child: Container()),
-          onHover: (event) => _onHover(event, mapMatrices),
-          onExit: (event) {
-            if (_highlightedFeature != null) {
-              _updateHighlightedFeature(null);
-            }
-          },
-        );
+        CustomPaint customPaint =
+            CustomPaint(painter: mapPainter, child: Container());
+
+        if (widget.theme.isHoverEnabled()) {
+          return MouseRegion(
+            child: customPaint,
+            onHover: (event) => _onHover(event, mapMatrices),
+            onExit: (event) {
+              if (_hover != null) {
+                _updateHover(null);
+              }
+            },
+          );
+        }
+        return customPaint;
       });
     }
     return Container(child: content, decoration: decoration, padding: padding);
@@ -157,24 +163,24 @@ class MapChartState extends State<MapChart> {
         Path path = _mapResolution!.paths[feature.id]!;
         found = path.contains(o);
         if (found) {
-          if (_highlightedFeature != feature) {
-            _updateHighlightedFeature(feature);
+          if (_hover != feature) {
+            _updateHover(feature);
           }
           break;
         }
       }
-      if (found == false && _highlightedFeature != null) {
-        _updateHighlightedFeature(null);
+      if (found == false && _hover != null) {
+        _updateHover(null);
       }
     }
   }
 
-  _updateHighlightedFeature(MapFeature? newHighlightedFeature) {
+  _updateHover(MapFeature? newHover) {
     setState(() {
-      _highlightedFeature = newHighlightedFeature;
+      _hover = newHover;
     });
-    if (widget.onHighlightFeature != null) {
-      widget.onHighlightFeature!(newHighlightedFeature);
+    if (widget.featureHoverListener != null) {
+      widget.featureHoverListener!(newHover);
     }
   }
 }
@@ -184,11 +190,11 @@ class MapPainter extends CustomPainter {
       {required this.mapResolution,
       required this.mapMatrices,
       required this.theme,
-      this.highlightedFeature});
+      this.hover});
 
   final MapMatrices mapMatrices;
   final MapChartTheme theme;
-  final MapFeature? highlightedFeature;
+  final MapFeature? hover;
   final MapResolution mapResolution;
 
   @override
@@ -205,8 +211,8 @@ class MapPainter extends CustomPainter {
     canvas.restore();
 
     // drawing the selection
-    if (highlightedFeature != null) {
-      Color? hoverColor = theme.getHighlightColor(highlightedFeature!);
+    if (hover != null) {
+      Color? hoverColor = theme.getHoverColor(hover!);
       if (hoverColor != null || theme.hoverContourColor != null) {
         canvas.save();
 
@@ -214,12 +220,12 @@ class MapPainter extends CustomPainter {
         canvas.translate(canvasMatrix.translateX, canvasMatrix.translateY);
         canvas.scale(canvasMatrix.scale, -canvasMatrix.scale);
 
-        int highlightedFeatureId = highlightedFeature!.id;
-        if (mapResolution.paths.containsKey(highlightedFeatureId) == false) {
-          throw MapChartError('No path for id: $highlightedFeatureId');
+        int featureId = hover!.id;
+        if (mapResolution.paths.containsKey(featureId) == false) {
+          throw MapChartError('No path for id: $featureId');
         }
 
-        Path path = mapResolution.paths[highlightedFeatureId]!;
+        Path path = mapResolution.paths[featureId]!;
 
         if (hoverColor != null) {
           var paint = Paint()

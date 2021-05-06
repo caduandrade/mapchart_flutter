@@ -23,7 +23,7 @@ class DefaultColorsPageState extends ExamplePageState {
         theme: MapChartTheme(
             color: Colors.yellow,
             contourColor: Colors.red,
-            highlightColor: Colors.orange));
+            hoverColor: Colors.orange));
 
     return map;
   }

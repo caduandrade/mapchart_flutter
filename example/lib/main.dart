@@ -59,6 +59,6 @@ class ExampleState extends State<ExampleWidget> {
         theme: MapChartTheme(
             color: Colors.green,
             contourColor: Colors.green[900],
-            highlightColor: Colors.green[800]));
+            hoverColor: Colors.green[800]));
   }
 }

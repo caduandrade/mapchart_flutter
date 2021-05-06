@@ -7,17 +7,23 @@ class MapChartTheme {
       this.contourColor = const Color(0xFF9E9E9E), // grey 500
       this.hoverContourColor,
       this.contourThickness = 1,
-      this.highlightColor = const Color(0xFF616161), // grey 700
+      this.hoverColor = const Color(0xFF616161), // grey 700
       this.colors,
-      this.highlightColors});
+      this.hoverColors});
 
   final Color color;
   final Color? contourColor;
   final Color? hoverContourColor;
   final double contourThickness;
-  final Color? highlightColor;
+  final Color? hoverColor;
   final Map<dynamic, Color>? colors;
-  final Map<dynamic, Color>? highlightColors;
+  final Map<dynamic, Color>? hoverColors;
+
+  bool isHoverEnabled() {
+    return hoverContourColor != null ||
+        hoverColor != null ||
+        (hoverColors != null && hoverColors!.isNotEmpty);
+  }
 
   Color getColor(MapFeature feature) {
     if (colors != null &&
@@ -29,13 +35,13 @@ class MapChartTheme {
     return color;
   }
 
-  Color? getHighlightColor(MapFeature feature) {
-    if (highlightColors != null &&
+  Color? getHoverColor(MapFeature feature) {
+    if (hoverColors != null &&
         feature.properties != null &&
         feature.properties!.identifier != null &&
-        highlightColors!.containsKey(feature.properties!.identifier)) {
-      return highlightColors![feature.properties!.identifier]!;
+        hoverColors!.containsKey(feature.properties!.identifier)) {
+      return hoverColors![feature.properties!.identifier]!;
     }
-    return highlightColor;
+    return hoverColor;
   }
 }
