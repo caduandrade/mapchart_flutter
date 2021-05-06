@@ -67,7 +67,7 @@ abstract class ExamplePageState extends State<StatefulWidget> {
         minimalWeight: .1,
         controller: _verticalController);
 
-    SizedBox sizedBox = SizedBox(child: vertical, width: 591, height: 390);
+    SizedBox sizedBox = SizedBox(child: vertical, width: 591, height: 350);
     Center center = Center(child: sizedBox);
 
     Widget contentMenu = Container(
