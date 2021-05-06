@@ -127,8 +127,16 @@ class MapChartState extends State<MapChart> {
             theme: widget.theme);
 
         return MouseRegion(
-            child: CustomPaint(painter: mapPainter, child: Container()),
-            onHover: (event) => _onHover(event, mapMatrices));
+          child: CustomPaint(painter: mapPainter, child: Container()),
+          onHover: (event) => _onHover(event, mapMatrices),
+          onExit: (event) {
+            if (_highlightedFeature != null) {
+              setState(() {
+                _highlightedFeature = null;
+              });
+            }
+          },
+        );
       });
     }
     return Container(child: content, decoration: decoration, padding: padding);
