@@ -210,7 +210,7 @@ class MapPainter extends CustomPainter {
     canvas.drawImage(mapResolution.mapBuffer, Offset.zero, Paint());
     canvas.restore();
 
-    // drawing the selection
+    // drawing the hover
     if (hover != null) {
       Color? hoverColor = theme.getHoverColor(hover!);
       if (hoverColor != null || theme.hoverContourColor != null) {

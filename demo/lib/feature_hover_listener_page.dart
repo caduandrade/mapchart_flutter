@@ -21,6 +21,7 @@ class FeatureHoverListenerPageState extends ExamplePageState {
   Widget buildContent() {
     MapChart map = MapChart(
         dataSource: dataSource,
+        theme: MapChartTheme(hoverColor: Colors.grey[700]),
         featureHoverListener: (MapFeature? feature) {
           if (feature != null) {
             int id = feature.id;

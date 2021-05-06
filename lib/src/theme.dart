@@ -7,7 +7,7 @@ class MapChartTheme {
       this.contourColor = const Color(0xFF9E9E9E), // grey 500
       this.hoverContourColor,
       this.contourThickness = 1,
-      this.hoverColor = const Color(0xFF616161), // grey 700
+      this.hoverColor,
       this.colors,
       this.hoverColors});
 
