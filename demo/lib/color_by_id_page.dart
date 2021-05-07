@@ -19,7 +19,7 @@ class ColorByIdPageState extends ExamplePageState {
   @override
   Widget buildContent() {
     MapChartTheme theme =
-        MapChartTheme.byId(contourColor: Colors.white, colors: {
+        MapChartTheme.id(contourColor: Colors.white, colors: {
       'earth': Colors.green,
       'mars': Colors.red,
       'venus': Colors.orange

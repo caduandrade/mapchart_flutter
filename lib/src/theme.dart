@@ -35,7 +35,7 @@ class MapChartTheme {
   }
 
   /// Creates a theme with colors by identifier.
-  factory MapChartTheme.byId(
+  factory MapChartTheme.id(
       {Color? color,
       Color? contourColor,
       Color? hoverContourColor,
