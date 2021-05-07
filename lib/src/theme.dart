@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapchart/mapchart.dart';
 import 'package:mapchart/src/data_source.dart';
 
 class MapChartTheme {
@@ -9,7 +10,8 @@ class MapChartTheme {
       double? contourThickness,
       Color? hoverColor,
       Map<dynamic, Color>? colors,
-      Map<dynamic, Color>? hoverColors})
+      Map<dynamic, Color>? hoverColors,
+      List<Color>? gradientColors})
       : this._color = color != null ? color : Color(0xFFE0E0E0),
         this.contourColor =
             contourColor != null ? contourColor : Color(0xFF9E9E9E),
@@ -17,7 +19,8 @@ class MapChartTheme {
         this.contourThickness = contourThickness != null ? contourThickness : 1,
         this._hoverColor = hoverColor,
         this._colors = colors,
-        this._hoverColors = hoverColors;
+        this._hoverColors = hoverColors,
+        this.gradientColors = gradientColors;
 
   /// Creates a theme with default colors.
   factory MapChartTheme(
@@ -53,6 +56,27 @@ class MapChartTheme {
         hoverColors: hoverColors);
   }
 
+  /// Creates a theme with gradient colors.
+  factory MapChartTheme.gradient(
+      {Color? color,
+      Color? contourColor,
+      Color? hoverContourColor,
+      double? contourThickness,
+      Color? hoverColor,
+      required String valueField,
+      required List<Color> gradientColors}) {
+    if (gradientColors.length < 2) {
+      throw MapChartError('At least 2 colors are required for the gradient.');
+    }
+    return MapChartTheme._(
+        color: color,
+        contourColor: contourColor,
+        hoverContourColor: hoverContourColor,
+        contourThickness: contourThickness,
+        hoverColor: hoverColor,
+        gradientColors: gradientColors);
+  }
+
   final Color _color;
   final Color? contourColor;
   final Color? hoverContourColor;
@@ -60,6 +84,7 @@ class MapChartTheme {
   final Color? _hoverColor;
   final Map<dynamic, Color>? _colors;
   final Map<dynamic, Color>? _hoverColors;
+  final List<Color>? gradientColors;
 
   bool hasAnyHoverColor() {
     return hoverContourColor != null ||
