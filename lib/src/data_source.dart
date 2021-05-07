@@ -21,12 +21,34 @@ class MapFeature {
   int get hashCode => id.hashCode;
 }
 
+class ValueLimits {
+  double _max;
+  double _min;
+
+  ValueLimits(double value)
+      : this._max = value,
+        this._min = value;
+
+  double get max => _max;
+  double get min => _min;
+
+  expand(double value) {
+    _max = math.max(_max, value);
+    _min = math.min(_min, value);
+  }
+}
+
 class MapChartDataSource {
+  MapChartDataSource._(
+      {required this.features,
+      required this.bounds,
+      required this.pointsCount,
+      this.limits});
+
   final UnmodifiableMapView<int, MapFeature> features;
   final Rect bounds;
   final int pointsCount;
-
-  MapChartDataSource._(this.features, this.bounds, this.pointsCount);
+  final Map<String, ValueLimits>? limits;
 
   static MapChartDataSource fromFeatures(List<MapFeature> features) {
     Rect boundsFromGeometry = Rect.zero;
@@ -34,18 +56,41 @@ class MapChartDataSource {
     if (features.isNotEmpty) {
       boundsFromGeometry = features.first.geometry.bounds;
     }
+    Map<String, ValueLimits> limits = Map<String, ValueLimits>();
     Map<int, MapFeature> featuresMap = Map<int, MapFeature>();
     for (MapFeature feature in features) {
       featuresMap[feature.id] = feature;
       pointsCount += feature.geometry.pointsCount;
       boundsFromGeometry =
           boundsFromGeometry.expandToInclude(feature.geometry.bounds);
+      if (feature.properties != null && feature.properties!.values != null) {
+        feature.properties!.values!.entries.forEach((entry) {
+          dynamic value = entry.value;
+          double? doubleValue;
+          if (value is int) {
+            int intValue = value;
+            doubleValue = intValue.toDouble();
+          } else if (value is double) {
+            doubleValue = value;
+          }
+          if (doubleValue != null) {
+            String fieldName = entry.key;
+            if (limits.containsKey(fieldName)) {
+              ValueLimits valueLimits = limits[fieldName]!;
+              valueLimits.expand(doubleValue);
+            } else {
+              limits[fieldName] = ValueLimits(doubleValue);
+            }
+          }
+        });
+      }
     }
 
     return MapChartDataSource._(
-        UnmodifiableMapView<int, MapFeature>(featuresMap),
-        boundsFromGeometry,
-        pointsCount);
+        features: UnmodifiableMapView<int, MapFeature>(featuresMap),
+        bounds: boundsFromGeometry,
+        pointsCount: pointsCount,
+        limits: limits.isNotEmpty ? limits : null);
   }
 
   static Future<MapChartDataSource> fromGeoJSON(
@@ -82,9 +127,9 @@ class MapChartDataSource {
     }
 
     return MapChartDataSource._(
-        UnmodifiableMapView<int, MapFeature>(featuresMap),
-        boundsFromGeometry,
-        pointsCount);
+        features: UnmodifiableMapView<int, MapFeature>(featuresMap),
+        bounds: boundsFromGeometry,
+        pointsCount: pointsCount);
   }
 }
 
