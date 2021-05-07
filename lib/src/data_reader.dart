@@ -100,7 +100,7 @@ class MapFeatureReader extends MapDataReader {
       this.nameField,
       this.valueFields,
       this.colorField,
-       this.colorFieldFormat=ColorFieldFormat.hex});
+      this.colorFieldFormat = ColorFieldFormat.hex});
 
   final List<MapFeature> _list = [];
 
@@ -110,7 +110,7 @@ class MapFeatureReader extends MapDataReader {
   final String? colorField;
   final ColorFieldFormat colorFieldFormat;
 
-  Future<List<MapFeature>> read(String geojson) async{
+  Future<List<MapFeature>> read(String geojson) async {
     Map<String, dynamic> map = json.decode(geojson);
     await _readMap(map);
     return _list;
@@ -155,7 +155,6 @@ class MapFeatureReader extends MapDataReader {
   FeatureProperties _readProperties(Map<String, dynamic> map) {
     dynamic? identifier;
     dynamic? name;
-    dynamic? value;
     Map<String, dynamic>? values;
     Color? color;
     if (identifierField != null && map.containsKey(identifierField)) {
@@ -165,7 +164,7 @@ class MapFeatureReader extends MapDataReader {
       name = map[nameField];
     }
     if (valueFields != null) {
-      if (valueFields!.length > 1) {
+      if (valueFields!.isNotEmpty) {
         Map<String, dynamic> valuesTmp = Map<String, dynamic>();
         for (String valueField in valueFields!) {
           if (map.containsKey(valueField)) {
@@ -175,19 +174,10 @@ class MapFeatureReader extends MapDataReader {
         if (valuesTmp.isNotEmpty) {
           values = valuesTmp;
         }
-      } else if (valueFields!.length == 1) {
-        String valueField = valueFields!.first;
-        if (map.containsKey(valueField)) {
-          value = map[valueField];
-        }
       }
     }
     return FeatureProperties(
-        identifier: identifier,
-        name: name,
-        value: value,
-        values: values,
-        color: color);
+        identifier: identifier, name: name, values: values, color: color);
   }
 
   _addFeature({required MapGeometry geometry, FeatureProperties? properties}) {

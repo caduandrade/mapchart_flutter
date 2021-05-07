@@ -28,7 +28,7 @@ class MapChartDataSource {
 
   MapChartDataSource._(this.features, this.bounds, this.pointsCount);
 
-  static  MapChartDataSource fromFeatures(List<MapFeature> features) {
+  static MapChartDataSource fromFeatures(List<MapFeature> features) {
     Rect boundsFromGeometry = Rect.zero;
     int pointsCount = 0;
     if (features.isNotEmpty) {
@@ -50,12 +50,11 @@ class MapChartDataSource {
 
   static Future<MapChartDataSource> fromGeoJSON(
       {required String geojson,
-        String? identifierField,
-        String? nameField,
-        List<String>? valueFields,
-        String? colorField,
-        ColorFieldFormat colorFieldFormat = ColorFieldFormat.hex}) async {
-
+      String? identifierField,
+      String? nameField,
+      List<String>? valueFields,
+      String? colorField,
+      ColorFieldFormat colorFieldFormat = ColorFieldFormat.hex}) async {
     MapFeatureReader reader = MapFeatureReader(
         identifierField: identifierField,
         nameField: nameField,
@@ -63,7 +62,7 @@ class MapChartDataSource {
         colorField: colorField,
         colorFieldFormat: colorFieldFormat);
 
-    List<MapFeature> features= await reader.read(geojson);
+    List<MapFeature> features = await reader.read(geojson);
     return fromFeatures(features);
   }
 
@@ -97,12 +96,11 @@ class SimplifiedPath {
 }
 
 class FeatureProperties {
-  FeatureProperties({this.identifier, this.name, this.values, this.value, this.color});
+  FeatureProperties({this.identifier, this.name, this.values, this.color});
 
   final dynamic? identifier;
   final dynamic? name;
   final Map<String, dynamic>? values;
-  final dynamic? value;
   final Color? color;
 }
 
