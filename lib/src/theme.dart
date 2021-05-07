@@ -2,46 +2,88 @@ import 'package:flutter/material.dart';
 import 'package:mapchart/src/data_source.dart';
 
 class MapChartTheme {
-  MapChartTheme(
-      {this.color = const Color(0xFFE0E0E0), //grey 300
-      this.contourColor = const Color(0xFF9E9E9E), // grey 500
-      this.hoverContourColor,
-      this.contourThickness = 1,
-      this.hoverColor,
-      this.colors,
-      this.hoverColors});
+  MapChartTheme._(
+      {Color? color,
+      Color? contourColor,
+      Color? hoverContourColor,
+      double? contourThickness,
+      Color? hoverColor,
+      Map<dynamic, Color>? colors,
+      Map<dynamic, Color>? hoverColors})
+      : this._color = color != null ? color : Color(0xFFE0E0E0),
+        this.contourColor =
+            contourColor != null ? contourColor : Color(0xFF9E9E9E),
+        this.hoverContourColor = hoverContourColor,
+        this.contourThickness = contourThickness != null ? contourThickness : 1,
+        this._hoverColor = hoverColor,
+        this._colors = colors,
+        this._hoverColors = hoverColors;
 
-  final Color color;
+  /// Creates a theme with default colors.
+  factory MapChartTheme(
+      {Color? color,
+      Color? contourColor,
+      Color? hoverContourColor,
+      double? contourThickness,
+      Color? hoverColor}) {
+    return MapChartTheme._(
+        color: color,
+        contourColor: contourColor,
+        hoverContourColor: hoverContourColor,
+        contourThickness: contourThickness,
+        hoverColor: hoverColor);
+  }
+
+  /// Creates a theme with colors by identifier.
+  factory MapChartTheme.byId(
+      {Color? color,
+      Color? contourColor,
+      Color? hoverContourColor,
+      double? contourThickness,
+      Color? hoverColor,
+      Map<dynamic, Color>? colors,
+      Map<dynamic, Color>? hoverColors}) {
+    return MapChartTheme._(
+        color: color,
+        contourColor: contourColor,
+        hoverContourColor: hoverContourColor,
+        contourThickness: contourThickness,
+        hoverColor: hoverColor,
+        colors: colors,
+        hoverColors: hoverColors);
+  }
+
+  final Color _color;
   final Color? contourColor;
   final Color? hoverContourColor;
   final double contourThickness;
-  final Color? hoverColor;
-  final Map<dynamic, Color>? colors;
-  final Map<dynamic, Color>? hoverColors;
+  final Color? _hoverColor;
+  final Map<dynamic, Color>? _colors;
+  final Map<dynamic, Color>? _hoverColors;
 
   bool hasAnyHoverColor() {
     return hoverContourColor != null ||
-        hoverColor != null ||
-        (hoverColors != null && hoverColors!.isNotEmpty);
+        _hoverColor != null ||
+        (_hoverColors != null && _hoverColors!.isNotEmpty);
   }
 
   Color getColor(MapFeature feature) {
-    if (colors != null &&
+    if (_colors != null &&
         feature.properties != null &&
         feature.properties!.identifier != null &&
-        colors!.containsKey(feature.properties!.identifier)) {
-      return colors![feature.properties!.identifier]!;
+        _colors!.containsKey(feature.properties!.identifier)) {
+      return _colors![feature.properties!.identifier]!;
     }
-    return color;
+    return _color;
   }
 
   Color? getHoverColor(MapFeature feature) {
-    if (hoverColors != null &&
+    if (_hoverColors != null &&
         feature.properties != null &&
         feature.properties!.identifier != null &&
-        hoverColors!.containsKey(feature.properties!.identifier)) {
-      return hoverColors![feature.properties!.identifier]!;
+        _hoverColors!.containsKey(feature.properties!.identifier)) {
+      return _hoverColors![feature.properties!.identifier]!;
     }
-    return hoverColor;
+    return _hoverColor;
   }
 }

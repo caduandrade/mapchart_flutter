@@ -18,7 +18,7 @@ class EnableHoverByIdPageState extends ExamplePageState {
 
   @override
   Widget buildContent() {
-    MapChartTheme theme = MapChartTheme(
+    MapChartTheme theme = MapChartTheme.byId(
         colors: {'earth': Colors.green}, hoverColor: Colors.green[900]!);
 
     MapChart map = MapChart(
