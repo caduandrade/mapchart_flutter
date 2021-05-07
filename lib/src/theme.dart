@@ -3,7 +3,7 @@ import 'package:mapchart/mapchart.dart';
 import 'package:mapchart/src/data_source.dart';
 
 class MapChartTheme {
-  MapChartTheme._(
+  MapChartTheme(
       {Color? color,
       Color? contourColor,
       Color? hoverContourColor,
@@ -22,21 +22,6 @@ class MapChartTheme {
         this._hoverColors = hoverColors,
         this.gradientColors = gradientColors;
 
-  /// Creates a theme with default colors.
-  factory MapChartTheme(
-      {Color? color,
-      Color? contourColor,
-      Color? hoverContourColor,
-      double? contourThickness,
-      Color? hoverColor}) {
-    return MapChartTheme._(
-        color: color,
-        contourColor: contourColor,
-        hoverContourColor: hoverContourColor,
-        contourThickness: contourThickness,
-        hoverColor: hoverColor);
-  }
-
   /// Creates a theme with colors by identifier.
   factory MapChartTheme.id(
       {Color? color,
@@ -46,7 +31,7 @@ class MapChartTheme {
       Color? hoverColor,
       Map<dynamic, Color>? colors,
       Map<dynamic, Color>? hoverColors}) {
-    return MapChartTheme._(
+    return MapChartTheme(
         color: color,
         contourColor: contourColor,
         hoverContourColor: hoverContourColor,
@@ -68,7 +53,7 @@ class MapChartTheme {
     if (gradientColors.length < 2) {
       throw MapChartError('At least 2 colors are required for the gradient.');
     }
-    return MapChartTheme._(
+    return MapChartTheme(
         color: color,
         contourColor: contourColor,
         hoverContourColor: hoverContourColor,
