@@ -141,7 +141,7 @@ Sets a color for each property value in GeoJSON. If a color is not set, the defa
       dataSource: dataSource,
       theme: theme,
       hoverRule: (feature) {
-        return feature.properties?.getValue('Id') == 'earth';
+        return feature.getValue('Id') == 'earth';
       },
     );
 ```

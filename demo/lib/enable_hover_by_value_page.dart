@@ -29,7 +29,7 @@ class EnableHoverByValuePageState extends ExamplePageState {
       dataSource: dataSource,
       theme: theme,
       hoverRule: (feature) {
-        return feature.properties?.getValue('Id') == 'earth';
+        return feature.getValue('Id') == 'earth';
       },
     );
 

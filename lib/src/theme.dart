@@ -134,8 +134,8 @@ class _MapChartThemeValue extends MapChartTheme {
 
   @override
   Color getColor(MapFeature feature) {
-    if (_colors != null && feature.properties != null) {
-      dynamic? value = feature.properties!.getValue(key);
+    if (_colors != null) {
+      dynamic? value = feature.getValue(key);
       if (value != null && _colors!.containsKey(value)) {
         return _colors![value]!;
       }
@@ -145,8 +145,8 @@ class _MapChartThemeValue extends MapChartTheme {
 
   @override
   Color? getHoverColor(MapFeature feature) {
-    if (_hoverColors != null && feature.properties != null) {
-      dynamic? value = feature.properties!.getValue(key);
+    if (_hoverColors != null) {
+      dynamic? value = feature.getValue(key);
       if (value != null && _hoverColors!.containsKey(value)) {
         return _hoverColors![value]!;
       }
@@ -234,7 +234,7 @@ class _MapChartThemeGradient extends MapChartTheme {
 
   @override
   Color getColor(MapFeature feature) {
-    dynamic? value = feature.getPropertyValue(valueField);
+    dynamic? value = feature.getValue(valueField);
     double? doubleValue;
     if (value is int) {
       doubleValue = value.toDouble();

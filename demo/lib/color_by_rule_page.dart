@@ -21,7 +21,7 @@ class ColorByRulePageState extends ExamplePageState {
     MapChartTheme theme =
         MapChartTheme.rule(hoverColor: Colors.grey[700]!, colorRules: [
       (feature) {
-        if (feature.isPropertyValueLess('Distance', 100000000)) {
+        if (feature.isValueLess('Distance', 100000000)) {
           return Colors.green;
         }
         return null;

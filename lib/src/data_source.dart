@@ -6,11 +6,19 @@ import 'package:mapchart/src/matrices.dart';
 import 'package:mapchart/src/simplifier.dart';
 
 class MapFeature {
-  final int id;
-  final FeatureProperties? properties;
-  final MapGeometry geometry;
+  MapFeature(
+      {required this.id,
+      required this.geometry,
+      Map<String, dynamic>? properties,
+      this.color,
+      this.name})
+      : this._properties = properties;
 
-  MapFeature({required this.id, required this.geometry, this.properties});
+  final int id;
+  final dynamic? name;
+  final Map<String, dynamic>? _properties;
+  final Color? color;
+  final MapGeometry geometry;
 
   @override
   bool operator ==(Object other) =>
@@ -20,20 +28,20 @@ class MapFeature {
   @override
   int get hashCode => id.hashCode;
 
-  dynamic? getPropertyValue(String key) {
-    if (properties != null) {
-      return properties!.getValue(key);
+  dynamic? getValue(String key) {
+    if (_properties != null && _properties!.containsKey(key)) {
+      return _properties![key];
     }
     return null;
   }
 
-  bool isPropertyValueLess(String key, double value) {
-    double? v = getPropertyNumericValue(key);
-    return v!=null && v<value;
+  bool isValueLess(String key, double value) {
+    double? v = getNumericValue(key);
+    return v != null && v < value;
   }
 
-  double? getPropertyNumericValue(String key) {
-    dynamic? value = getPropertyValue(key);
+  double? getNumericValue(String key) {
+    dynamic? value = getValue(key);
     if (value is int) {
       return value.toDouble();
     } else if (value is double) {
@@ -85,8 +93,8 @@ class MapChartDataSource {
       pointsCount += feature.geometry.pointsCount;
       boundsFromGeometry =
           boundsFromGeometry.expandToInclude(feature.geometry.bounds);
-      if (feature.properties != null && feature.properties!.values != null) {
-        feature.properties!.values!.entries.forEach((entry) {
+      if (feature._properties != null) {
+        feature._properties!.entries.forEach((entry) {
           dynamic value = entry.value;
           double? doubleValue;
           if (value is int) {
@@ -157,21 +165,6 @@ class SimplifiedPath {
   final int pointsCount;
 
   SimplifiedPath(this.path, this.pointsCount);
-}
-
-class FeatureProperties {
-  FeatureProperties({this.name, this.values, this.color});
-
-  final dynamic? name;
-  final Map<String, dynamic>? values;
-  final Color? color;
-
-  dynamic? getValue(String key) {
-    if (values != null && values!.containsKey(key)) {
-      return values![key];
-    }
-    return null;
-  }
 }
 
 abstract class MapGeometry {
