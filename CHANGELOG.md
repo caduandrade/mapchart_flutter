@@ -1,11 +1,14 @@
 ## [0.3.0] - May 9, 2021
 
 * Thematization
+  * Color by rule
 * Click listener
 
 ## [0.2.0] - May 8, 2021
 
 * Thematization
+  * Default colors
+  * Color by value
 * Properties reader
 
 ## [0.1.0] - May 2, 2021

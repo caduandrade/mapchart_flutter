@@ -83,9 +83,9 @@ Sets a color for each property value in GeoJSON. If a color is not set, the defa
 
 ![colorbyvalue](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_value.gif)
 
-## Color by property value rule
+## Color by rule
 
-If the rule does not match, the default color is used.
+The feature color is obtained from the first rule that returns a non-null color. If all rules return a null color, the default color is used.
 
 ##### Mapping the property key
 
@@ -94,7 +94,7 @@ If the rule does not match, the default color is used.
         geojson: geojson, valueKeys: ['Distance']);
 ```
 
-##### Setting the colors for the property values
+##### Setting the rules
 
 ```dart
     MapChartTheme theme = MapChartTheme.rule(

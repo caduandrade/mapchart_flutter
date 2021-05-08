@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapchart/mapchart.dart';
 import 'package:mapchart/src/data_source.dart';
 
+/// Rule to obtain a color of a feature.
 typedef ColorRule = Color? Function(MapFeature feature);
 
 class MapChartTheme {
@@ -41,6 +42,9 @@ class MapChartTheme {
   }
 
   /// Creates a theme with colors by rule.
+  /// The feature color is obtained from the first rule that returns
+  /// a non-null color.
+  /// If all rules return a null color, the default color is used.
   static MapChartTheme rule(
       {Color? color,
       Color? contourColor,
