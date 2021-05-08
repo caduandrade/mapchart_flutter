@@ -34,21 +34,6 @@ class MapFeature {
     }
     return null;
   }
-
-  bool isValueLess(String key, double value) {
-    double? v = getNumericValue(key);
-    return v != null && v < value;
-  }
-
-  double? getNumericValue(String key) {
-    dynamic? value = getValue(key);
-    if (value is int) {
-      return value.toDouble();
-    } else if (value is double) {
-      return value;
-    }
-    return null;
-  }
 }
 
 class ValueLimits {

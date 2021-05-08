@@ -18,15 +18,21 @@ class ColorByRulePageState extends ExamplePageState {
 
   @override
   Widget buildContent() {
-    MapChartTheme theme =
-        MapChartTheme.rule(hoverColor: Colors.grey[700]!, colorRules: [
-      (feature) {
-        if (feature.isValueLess('Distance', 100000000)) {
-          return Colors.green;
-        }
-        return null;
-      }
-    ]);
+    MapChartTheme theme = MapChartTheme.rule(
+        contourColor: Colors.white,
+        hoverColor: Colors.grey[700]!,
+        colorRules: [
+          (feature) {
+            return feature.getValue('Distance') < 100000000
+                ? Colors.green
+                : null;
+          },
+          (feature) {
+            return feature.getValue('Distance') < 200000000
+                ? Colors.blue
+                : null;
+          }
+        ]);
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 

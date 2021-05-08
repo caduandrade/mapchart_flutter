@@ -81,7 +81,42 @@ Sets a color for each property value in GeoJSON. If a color is not set, the defa
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 ```
 
-![colorbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_value.gif)
+![colorbyvalue](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_value.gif)
+
+## Color by property value rule
+
+If the rule does not match, the default color is used.
+
+##### Mapping the property key
+
+```dart
+    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
+        geojson: geojson, valueKeys: ['Distance']);
+```
+
+##### Setting the colors for the property values
+
+```dart
+    MapChartTheme theme = MapChartTheme.rule(
+        contourColor: Colors.white,
+        hoverColor: Colors.grey[700]!,
+        colorRules: [
+          (feature) {
+            return feature.getValue('Distance') < 100000000
+                ? Colors.green
+                : null;
+          },
+          (feature) {
+            return feature.getValue('Distance') < 200000000
+                ? Colors.blue
+                : null;
+          }
+        ]);
+
+    MapChart map = MapChart(dataSource: dataSource, theme: theme);
+```
+
+![colorbyrule](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_rule.png)
 
 ## Contour
 
@@ -146,7 +181,7 @@ Sets a color for each property value in GeoJSON. If a color is not set, the defa
     );
 ```
 
-![hoverbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/enable_hover_by_value.gif)
+![hoverbyvalue](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/enable_hover_by_value.gif)
 
 ## Click listener
 
