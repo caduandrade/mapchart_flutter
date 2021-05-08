@@ -92,23 +92,23 @@ class MapDataReader {
   }
 }
 
-enum ColorFieldFormat { hex }
+enum ColorValueFormat { hex }
 
 class MapFeatureReader extends MapDataReader {
   MapFeatureReader(
-      {this.identifierField,
-      this.nameField,
-      this.valueFields,
-      this.colorField,
-      this.colorFieldFormat = ColorFieldFormat.hex});
+      {this.identifierKey,
+      this.nameKey,
+      this.valueKeys,
+      this.colorKey,
+      this.colorValueFormat = ColorValueFormat.hex});
 
   final List<MapFeature> _list = [];
 
-  final String? identifierField;
-  final String? nameField;
-  final List<String>? valueFields;
-  final String? colorField;
-  final ColorFieldFormat colorFieldFormat;
+  final String? identifierKey;
+  final String? nameKey;
+  final List<String>? valueKeys;
+  final String? colorKey;
+  final ColorValueFormat colorValueFormat;
 
   Future<List<MapFeature>> read(String geojson) async {
     Map<String, dynamic> map = json.decode(geojson);
@@ -141,10 +141,10 @@ class MapFeatureReader extends MapDataReader {
     Map<String, dynamic> geometryMap = map['geometry'];
     MapGeometry geometry = _readGeometry(true, geometryMap);
     FeatureProperties? properties;
-    if ((identifierField != null ||
-            nameField != null ||
-            valueFields != null ||
-            colorField != null) &&
+    if ((identifierKey != null ||
+            nameKey != null ||
+            valueKeys != null ||
+            colorKey != null) &&
         map.containsKey('properties')) {
       Map<String, dynamic> propertiesMap = map['properties'];
       properties = _readProperties(propertiesMap);
@@ -157,18 +157,18 @@ class MapFeatureReader extends MapDataReader {
     dynamic? name;
     Map<String, dynamic>? values;
     Color? color;
-    if (identifierField != null && map.containsKey(identifierField)) {
-      identifier = map[identifierField];
+    if (identifierKey != null && map.containsKey(identifierKey)) {
+      identifier = map[identifierKey];
     }
-    if (nameField != null && map.containsKey(nameField)) {
-      name = map[nameField];
+    if (nameKey != null && map.containsKey(nameKey)) {
+      name = map[nameKey];
     }
-    if (valueFields != null) {
-      if (valueFields!.isNotEmpty) {
+    if (valueKeys != null) {
+      if (valueKeys!.isNotEmpty) {
         Map<String, dynamic> valuesTmp = Map<String, dynamic>();
-        for (String valueField in valueFields!) {
-          if (map.containsKey(valueField)) {
-            valuesTmp[valueField] = map[valueField];
+        for (String valueKey in valueKeys!) {
+          if (map.containsKey(valueKey)) {
+            valuesTmp[valueKey] = map[valueKey];
           }
         }
         if (valuesTmp.isNotEmpty) {

@@ -42,8 +42,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     super.initState();
     _menuItems = [
       MenuItem('Get Started', _getStartedPage),
-      MenuItem('Color by id', _colorByIdPage),
       MenuItem('Default colors', _defaultColorsPage),
+      MenuItem('Color by id', _colorByIdPage),
       MenuItem('Contour', _contourPage),
       MenuItem('Hover listener', _hoverListenerPage),
       MenuItem('Enable hover by id', _enableHoverByIdPage)

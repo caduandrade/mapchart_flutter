@@ -18,7 +18,7 @@ class MapChartTheme {
         this._hoverColor = hoverColor;
 
   /// Creates a theme with colors by identifier.
-  static MapChartTheme id(
+  static MapChartTheme identifier(
       {Color? color,
       Color? contourColor,
       Color? hoverContourColor,

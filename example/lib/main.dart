@@ -26,7 +26,7 @@ class ExampleState extends State<ExampleWidget> {
 
   _loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.fromGeoJSON(geojson: geojson);
+        await MapChartDataSource.geoJSON(geojson: geojson);
     setState(() {
       _dataSource = dataSource;
     });

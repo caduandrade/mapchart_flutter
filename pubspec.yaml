@@ -1,5 +1,5 @@
 name: mapchart
-description: Vector map chart for Flutter. Displays geojson themed by values.
+description: Vector map chart for Flutter. Highly customizable. Compatible with GeoJSON. Pure Flutter.
 version: 0.2.0
 homepage: https://github.com/caduandrade/mapchart_flutter
 

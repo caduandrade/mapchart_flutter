@@ -20,15 +20,15 @@ class MapFeature {
   @override
   int get hashCode => id.hashCode;
 
-  dynamic? getPropertyValue(String field) {
+  dynamic? getPropertyValue(String key) {
     if (properties != null) {
-      return properties!.getValue(field);
+      return properties!.getValue(key);
     }
     return null;
   }
 
-  double? getPropertyNumericValue(String field) {
-    dynamic? value = getPropertyValue(field);
+  double? getPropertyNumericValue(String key) {
+    dynamic? value = getPropertyValue(key);
     if (value is int) {
       return value.toDouble();
     } else if (value is double) {
@@ -90,12 +90,12 @@ class MapChartDataSource {
             doubleValue = value;
           }
           if (doubleValue != null) {
-            String fieldName = entry.key;
-            if (limits.containsKey(fieldName)) {
-              ValueLimits valueLimits = limits[fieldName]!;
+            String key = entry.key;
+            if (limits.containsKey(key)) {
+              ValueLimits valueLimits = limits[key]!;
               valueLimits.expand(doubleValue);
             } else {
-              limits[fieldName] = ValueLimits(doubleValue);
+              limits[key] = ValueLimits(doubleValue);
             }
           }
         });
@@ -109,19 +109,19 @@ class MapChartDataSource {
         limits: limits.isNotEmpty ? limits : null);
   }
 
-  static Future<MapChartDataSource> fromGeoJSON(
+  static Future<MapChartDataSource> geoJSON(
       {required String geojson,
-      String? identifierField,
-      String? nameField,
-      List<String>? valueFields,
-      String? colorField,
-      ColorFieldFormat colorFieldFormat = ColorFieldFormat.hex}) async {
+      String? identifierKey,
+      String? nameKey,
+      List<String>? valueKeys,
+      String? colorKey,
+      ColorValueFormat colorValueFormat = ColorValueFormat.hex}) async {
     MapFeatureReader reader = MapFeatureReader(
-        identifierField: identifierField,
-        nameField: nameField,
-        valueFields: valueFields,
-        colorField: colorField,
-        colorFieldFormat: colorFieldFormat);
+        identifierKey: identifierKey,
+        nameKey: nameKey,
+        valueKeys: valueKeys,
+        colorKey: colorKey,
+        colorValueFormat: colorValueFormat);
 
     List<MapFeature> features = await reader.read(geojson);
     return fromFeatures(features);
@@ -164,9 +164,9 @@ class FeatureProperties {
   final Map<String, dynamic>? values;
   final Color? color;
 
-  dynamic? getValue(String field) {
-    if (values != null && values!.containsKey(field)) {
-      return values![field];
+  dynamic? getValue(String key) {
+    if (values != null && values!.containsKey(key)) {
+      return values![key];
     }
     return null;
   }

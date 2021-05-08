@@ -12,7 +12,7 @@ class HoverListenerPageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.fromGeoJSON(geojson: geojson);
+        await MapChartDataSource.geoJSON(geojson: geojson);
     return dataSource;
   }
 

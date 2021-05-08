@@ -11,14 +11,15 @@ class ColorByIdPage extends StatefulWidget {
 class ColorByIdPageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
-    MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
-        geojson: geojson, identifierField: 'Id');
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, identifierKey: 'Id');
     return dataSource;
   }
 
   @override
   Widget buildContent() {
-    MapChartTheme theme = MapChartTheme.id(contourColor: Colors.white, colors: {
+    MapChartTheme theme =
+        MapChartTheme.identifier(contourColor: Colors.white, colors: {
       'earth': Colors.green,
       'mars': Colors.red,
       'venus': Colors.orange

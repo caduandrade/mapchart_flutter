@@ -1,7 +1,7 @@
-## [0.2.0] - ?
+## [0.2.0] - May 8, 2021
 
 * Thematization
-* Reading properties
+* Properties reader
 
 ## [0.1.0] - May 2, 2021
 
