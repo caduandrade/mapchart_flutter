@@ -27,6 +27,11 @@ class MapFeature {
     return null;
   }
 
+  bool isPropertyValueLess(String key, double value) {
+    double? v = getPropertyNumericValue(key);
+    return v!=null && v<value;
+  }
+
   double? getPropertyNumericValue(String key) {
     dynamic? value = getPropertyValue(key);
     if (value is int) {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mapchart/mapchart.dart';
 import 'package:mapchart/src/data_source.dart';
 
+typedef ColorRule = Color? Function(MapFeature feature);
+
 class MapChartTheme {
   MapChartTheme(
       {Color? color,
@@ -36,6 +38,25 @@ class MapChartTheme {
         key: key,
         colors: colors,
         hoverColors: hoverColors);
+  }
+
+  /// Creates a theme with colors by rule.
+  static MapChartTheme rule(
+      {Color? color,
+      Color? contourColor,
+      Color? hoverContourColor,
+      double? contourThickness,
+      Color? hoverColor,
+      required List<ColorRule> colorRules,
+      List<ColorRule>? hoverColorRules}) {
+    return _MapChartThemeRule(
+        color: color,
+        contourColor: contourColor,
+        hoverContourColor: hoverContourColor,
+        contourThickness: contourThickness,
+        hoverColor: hoverColor,
+        colorRules: colorRules,
+        hoverColorRules: hoverColorRules);
   }
 
   /// Creates a theme with gradient colors.
@@ -131,6 +152,60 @@ class _MapChartThemeValue extends MapChartTheme {
       }
     }
     return super.getHoverColor(feature);
+  }
+}
+
+class _MapChartThemeRule extends MapChartTheme {
+  _MapChartThemeRule(
+      {Color? color,
+      Color? contourColor,
+      Color? hoverContourColor,
+      double? contourThickness,
+      Color? hoverColor,
+      required List<ColorRule> colorRules,
+      List<ColorRule>? hoverColorRules})
+      : this._colorRules = colorRules,
+        this._hoverColorRules = hoverColorRules,
+        super(
+            color: color,
+            contourColor: contourColor,
+            hoverContourColor: hoverContourColor,
+            contourThickness: contourThickness,
+            hoverColor: hoverColor);
+
+  final List<ColorRule> _colorRules;
+  final List<ColorRule>? _hoverColorRules;
+
+  @override
+  bool hasAnyHoverColor() {
+    //It is not possible to know in advance, it depends on the rule.
+    return true;
+  }
+
+  @override
+  Color getColor(MapFeature feature) {
+    Color? color;
+    for (ColorRule rule in _colorRules) {
+      color = rule(feature);
+      if (color != null) {
+        break;
+      }
+    }
+    return color != null ? color : super.getColor(feature);
+  }
+
+  @override
+  Color? getHoverColor(MapFeature feature) {
+    Color? color;
+    if (_hoverColorRules != null) {
+      for (ColorRule rule in _colorRules) {
+        color = rule(feature);
+        if (color != null) {
+          break;
+        }
+      }
+    }
+    return color != null ? color : super.getHoverColor(feature);
   }
 }
 

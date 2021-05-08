@@ -1,13 +1,14 @@
 import 'package:demo/click_listener_page.dart';
+import 'package:demo/color_by_rule_page.dart';
 import 'package:demo/color_by_value_page.dart';
 import 'package:demo/contour_page.dart';
+import 'package:demo/default_colors_page.dart';
 import 'package:demo/enable_hover_by_value_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'default_colors_page.dart';
 import 'menu.dart';
 
 void main() {
@@ -48,7 +49,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Contour', _contourPage),
       MenuItem('Hover listener', _hoverListenerPage),
       MenuItem('Enable hover by value', _enableHoverByValuePage),
-      MenuItem('Click listener', _clickListenerPage)
+      MenuItem('Click listener', _clickListenerPage),
+      MenuItem('Color by rule', _colorByRulePage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -126,5 +128,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ClickListenerPage _clickListenerPage() {
     return ClickListenerPage();
+  }
+
+  ColorByRulePage _colorByRulePage() {
+    return ColorByRulePage();
   }
 }
