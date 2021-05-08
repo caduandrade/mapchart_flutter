@@ -20,9 +20,9 @@ earth | Earth | Moon | 149600000
 mars | Mars | Phobos, Deimos | 227900000
 mercury | Mercury | | 57910000
 
-To view all content, use this [link](https://raw.githubusercontent.com/caduandrade/mapchart_flutter/main/demo/assets/example.json)
+To view the full content, use this [link](https://raw.githubusercontent.com/caduandrade/mapchart_flutter/main/demo/assets/example.json).
 
-The following examples will assume that GeoJSON has already been loaded into a String
+The following examples will assume that GeoJSON has already been loaded into a String.
 
 ##### Reading GeoJSON from String
 
@@ -54,7 +54,7 @@ The following examples will assume that GeoJSON has already been loaded into a S
 
 ## Color by id
 
-It allows mapping colors for each identifier in Json. The default color will be used if the color has not been mapped.
+Sets a color for each identifier in GeoJSON. If a color is not set for an identifier, the default color is used.
 
 ##### Mapping the identifier field
 
@@ -62,6 +62,8 @@ It allows mapping colors for each identifier in Json. The default color will be 
     MapChartDataSource dataSource = await MapChartDataSource.fromGeoJSON(
         geojson: geojson, identifierField: 'Id');
 ```
+
+##### Setting the colors for the identifiers
 
 ```dart
     MapChartTheme theme = MapChartTheme.id(contourColor: Colors.white, colors: {
