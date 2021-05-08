@@ -19,6 +19,23 @@ class MapFeature {
 
   @override
   int get hashCode => id.hashCode;
+
+  dynamic? getPropertyValue(String field) {
+    if (properties != null) {
+      return properties!.getValue(field);
+    }
+    return null;
+  }
+
+  double? getPropertyNumericValue(String field) {
+    dynamic? value = getPropertyValue(field);
+    if (value is int) {
+      return value.toDouble();
+    } else if (value is double) {
+      return value;
+    }
+    return null;
+  }
 }
 
 class ValueLimits {
@@ -68,8 +85,7 @@ class MapChartDataSource {
           dynamic value = entry.value;
           double? doubleValue;
           if (value is int) {
-            int intValue = value;
-            doubleValue = intValue.toDouble();
+            doubleValue = value.toDouble();
           } else if (value is double) {
             doubleValue = value;
           }
@@ -147,6 +163,13 @@ class FeatureProperties {
   final dynamic? name;
   final Map<String, dynamic>? values;
   final Color? color;
+
+  dynamic? getValue(String field) {
+    if (values != null && values!.containsKey(field)) {
+      return values![field];
+    }
+    return null;
+  }
 }
 
 abstract class MapGeometry {
