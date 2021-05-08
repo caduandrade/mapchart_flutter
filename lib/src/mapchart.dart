@@ -20,7 +20,8 @@ class MapChart extends StatefulWidget {
       this.borderThickness = 1,
       this.padding = 8,
       this.hoverRule,
-      this.hoverListener})
+      this.hoverListener,
+      this.clickListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
@@ -32,10 +33,13 @@ class MapChart extends StatefulWidget {
   final double? padding;
   final HoverRule? hoverRule;
   final HoverListener? hoverListener;
+  final FeatureClickListener? clickListener;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
 }
+
+typedef FeatureClickListener = Function(MapFeature feature);
 
 typedef HoverRule = bool Function(MapFeature feature);
 
@@ -134,12 +138,13 @@ class MapChartState extends State<MapChart> {
             mapMatrices: mapMatrices,
             theme: widget.theme);
 
-        CustomPaint customPaint =
-            CustomPaint(painter: mapPainter, child: Container());
+        Widget map = CustomPaint(painter: mapPainter, child: Container());
 
-        if (widget.theme.hasAnyHoverColor() || widget.hoverListener != null) {
-          return MouseRegion(
-            child: customPaint,
+        if (widget.theme.hasAnyHoverColor() ||
+            widget.hoverListener != null ||
+            widget.clickListener != null) {
+          map = MouseRegion(
+            child: map,
             onHover: (event) => _onHover(event, mapMatrices),
             onExit: (event) {
               if (_hover != null) {
@@ -148,10 +153,20 @@ class MapChartState extends State<MapChart> {
             },
           );
         }
-        return customPaint;
+        if (widget.clickListener != null) {
+          map = GestureDetector(child: map, onTap: () => _onClick());
+        }
+        return map;
       });
     }
+    // empty container without map
     return Container(child: content, decoration: decoration, padding: padding);
+  }
+
+  _onClick() {
+    if (_hover != null && widget.clickListener != null) {
+      widget.clickListener!(_hover!);
+    }
   }
 
   _onHover(PointerHoverEvent event, MapMatrices mapMatrices) {
@@ -183,9 +198,14 @@ class MapChartState extends State<MapChart> {
   }
 
   _updateHover(MapFeature? newHover) {
-    setState(() {
+    if (widget.theme.hasAnyHoverColor()) {
+      // repaint
+      setState(() {
+        _hover = newHover;
+      });
+    } else {
       _hover = newHover;
-    });
+    }
     if (widget.hoverListener != null) {
       widget.hoverListener!(newHover);
     }

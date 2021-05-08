@@ -1,3 +1,4 @@
+import 'package:demo/click_listener_page.dart';
 import 'package:demo/color_by_value_page.dart';
 import 'package:demo/contour_page.dart';
 import 'package:demo/enable_hover_by_value_page.dart';
@@ -46,7 +47,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Color by value', _colorByValuePage),
       MenuItem('Contour', _contourPage),
       MenuItem('Hover listener', _hoverListenerPage),
-      MenuItem('Enable hover by value', _enableHoverByValuePage)
+      MenuItem('Enable hover by value', _enableHoverByValuePage),
+      MenuItem('Click listener', _clickListenerPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -120,5 +122,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   EnableHoverByValuePage _enableHoverByValuePage() {
     return EnableHoverByValuePage();
+  }
+
+  ClickListenerPage _clickListenerPage() {
+    return ClickListenerPage();
   }
 }

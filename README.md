@@ -148,6 +148,17 @@ Sets a color for each property value in GeoJSON. If a color is not set, the defa
 
 ![hoverbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/enable_hover_by_value.gif)
 
+## Click listener
+
+```dart
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(hoverColor: Colors.grey[800]!),
+        clickListener: (feature) {
+          print(feature.id);
+        });
+```
+
 ## Agenda for the next few days
 
 * More theming features.
