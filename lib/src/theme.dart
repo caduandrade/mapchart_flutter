@@ -17,21 +17,23 @@ class MapChartTheme {
         this.contourThickness = contourThickness != null ? contourThickness : 1,
         this._hoverColor = hoverColor;
 
-  /// Creates a theme with colors by identifier.
-  static MapChartTheme identifier(
+  /// Creates a theme with colors by property value.
+  static MapChartTheme value(
       {Color? color,
       Color? contourColor,
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      required String key,
       Map<dynamic, Color>? colors,
       Map<dynamic, Color>? hoverColors}) {
-    return _MapChartThemeId(
+    return _MapChartThemeValue(
         color: color,
         contourColor: contourColor,
         hoverContourColor: hoverContourColor,
         contourThickness: contourThickness,
         hoverColor: hoverColor,
+        key: key,
         colors: colors,
         hoverColors: hoverColors);
   }
@@ -81,13 +83,14 @@ class MapChartTheme {
   }
 }
 
-class _MapChartThemeId extends MapChartTheme {
-  _MapChartThemeId(
+class _MapChartThemeValue extends MapChartTheme {
+  _MapChartThemeValue(
       {Color? color,
       Color? contourColor,
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      required this.key,
       Map<dynamic, Color>? colors,
       Map<dynamic, Color>? hoverColors})
       : this._colors = colors,
@@ -99,6 +102,7 @@ class _MapChartThemeId extends MapChartTheme {
             contourThickness: contourThickness,
             hoverColor: hoverColor);
 
+  final String key;
   final Map<dynamic, Color>? _colors;
   final Map<dynamic, Color>? _hoverColors;
 
@@ -109,22 +113,22 @@ class _MapChartThemeId extends MapChartTheme {
 
   @override
   Color getColor(MapFeature feature) {
-    if (_colors != null &&
-        feature.properties != null &&
-        feature.properties!.identifier != null &&
-        _colors!.containsKey(feature.properties!.identifier)) {
-      return _colors![feature.properties!.identifier]!;
+    if (_colors != null && feature.properties != null) {
+      dynamic? value = feature.properties!.getValue(key);
+      if (value != null && _colors!.containsKey(value)) {
+        return _colors![value]!;
+      }
     }
     return super.getColor(feature);
   }
 
   @override
   Color? getHoverColor(MapFeature feature) {
-    if (_hoverColors != null &&
-        feature.properties != null &&
-        feature.properties!.identifier != null &&
-        _hoverColors!.containsKey(feature.properties!.identifier)) {
-      return _hoverColors![feature.properties!.identifier]!;
+    if (_hoverColors != null && feature.properties != null) {
+      dynamic? value = feature.properties!.getValue(key);
+      if (value != null && _hoverColors!.containsKey(value)) {
+        return _hoverColors![value]!;
+      }
     }
     return super.getHoverColor(feature);
   }

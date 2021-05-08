@@ -53,22 +53,22 @@ The following examples will assume that GeoJSON has already been loaded into a S
 
 ![defaultcolors](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/default_colors.png)
 
-## Color by identifier property value
+## Color by property value
 
-Sets a color for each identifier in GeoJSON. If a color is not set for an identifier, the default color is used.
+Sets a color for each property value in GeoJSON. If a color is not set, the default color is used.
 
-##### Mapping the identifier property key
+##### Mapping the property key
 
 ```dart
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, identifierKey: 'Id');
+        await MapChartDataSource.geoJSON(geojson: geojson, valueKeys: ['Id']);
 ```
 
-##### Setting the colors for the identifiers
+##### Setting the colors for the property values
 
 ```dart
     MapChartTheme theme =
-        MapChartTheme.identifier(contourColor: Colors.white, colors: {
+        MapChartTheme.value(contourColor: Colors.white, key: 'Id', colors: {
       'earth': Colors.green,
       'mars': Colors.red,
       'venus': Colors.orange
@@ -81,7 +81,7 @@ Sets a color for each identifier in GeoJSON. If a color is not set for an identi
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 ```
 
-![colorbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_id.gif)
+![colorbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_value.gif)
 
 ## Contour
 
@@ -122,27 +122,31 @@ Sets a color for each identifier in GeoJSON. If a color is not set for an identi
 
 #### Rule
 
-##### Enabling hover by identifier
+##### Enabling hover by property value
 
 ```dart
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, identifierKey: 'Id');
+        await MapChartDataSource.geoJSON(geojson: geojson, valueKeys: ['Id']);
 ```
 
 ```dart
-    MapChartTheme theme = MapChartTheme.identifier(
-        colors: {'earth': Colors.green}, hoverColor: Colors.green[900]!);
+    // coloring only the 'earth' feature
+    MapChartTheme theme = MapChartTheme.value(
+        key: 'Id',
+        colors: {'earth': Colors.green},
+        hoverColor: Colors.green[900]!);
 
+    // enabling hover only for the 'earth' feature
     MapChart map = MapChart(
       dataSource: dataSource,
       theme: theme,
       hoverRule: (feature) {
-        return feature.properties?.identifier == 'earth';
+        return feature.properties?.getValue('Id') == 'earth';
       },
     );
 ```
 
-![hoverbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/enable_hover_by_id.gif)
+![hoverbyid](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/enable_hover_by_value.gif)
 
 ## Agenda for the next few days
 

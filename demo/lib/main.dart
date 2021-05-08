@@ -1,6 +1,6 @@
-import 'package:demo/color_by_id_page.dart';
+import 'package:demo/color_by_value_page.dart';
 import 'package:demo/contour_page.dart';
-import 'package:demo/enable_hover_by_id_page.dart';
+import 'package:demo/enable_hover_by_value_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,10 +43,10 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     _menuItems = [
       MenuItem('Get Started', _getStartedPage),
       MenuItem('Default colors', _defaultColorsPage),
-      MenuItem('Color by id', _colorByIdPage),
+      MenuItem('Color by value', _colorByValuePage),
       MenuItem('Contour', _contourPage),
       MenuItem('Hover listener', _hoverListenerPage),
-      MenuItem('Enable hover by id', _enableHoverByIdPage)
+      MenuItem('Enable hover by value', _enableHoverByValuePage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -102,8 +102,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     return GetStartedPage();
   }
 
-  ColorByIdPage _colorByIdPage() {
-    return ColorByIdPage();
+  ColorByValuePage _colorByValuePage() {
+    return ColorByValuePage();
   }
 
   DefaultColorsPage _defaultColorsPage() {
@@ -118,7 +118,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     return FeatureHoverListenerPage();
   }
 
-  EnableHoverByIdPage _enableHoverByIdPage() {
-    return EnableHoverByIdPage();
+  EnableHoverByValuePage _enableHoverByValuePage() {
+    return EnableHoverByValuePage();
   }
 }

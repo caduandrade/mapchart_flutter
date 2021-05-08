@@ -111,13 +111,11 @@ class MapChartDataSource {
 
   static Future<MapChartDataSource> geoJSON(
       {required String geojson,
-      String? identifierKey,
       String? nameKey,
       List<String>? valueKeys,
       String? colorKey,
       ColorValueFormat colorValueFormat = ColorValueFormat.hex}) async {
     MapFeatureReader reader = MapFeatureReader(
-        identifierKey: identifierKey,
         nameKey: nameKey,
         valueKeys: valueKeys,
         colorKey: colorKey,
@@ -157,9 +155,8 @@ class SimplifiedPath {
 }
 
 class FeatureProperties {
-  FeatureProperties({this.identifier, this.name, this.values, this.color});
+  FeatureProperties({this.name, this.values, this.color});
 
-  final dynamic? identifier;
   final dynamic? name;
   final Map<String, dynamic>? values;
   final Color? color;

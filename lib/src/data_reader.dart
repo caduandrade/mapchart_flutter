@@ -96,15 +96,13 @@ enum ColorValueFormat { hex }
 
 class MapFeatureReader extends MapDataReader {
   MapFeatureReader(
-      {this.identifierKey,
-      this.nameKey,
+      {this.nameKey,
       this.valueKeys,
       this.colorKey,
       this.colorValueFormat = ColorValueFormat.hex});
 
   final List<MapFeature> _list = [];
 
-  final String? identifierKey;
   final String? nameKey;
   final List<String>? valueKeys;
   final String? colorKey;
@@ -141,10 +139,7 @@ class MapFeatureReader extends MapDataReader {
     Map<String, dynamic> geometryMap = map['geometry'];
     MapGeometry geometry = _readGeometry(true, geometryMap);
     FeatureProperties? properties;
-    if ((identifierKey != null ||
-            nameKey != null ||
-            valueKeys != null ||
-            colorKey != null) &&
+    if ((nameKey != null || valueKeys != null || colorKey != null) &&
         map.containsKey('properties')) {
       Map<String, dynamic> propertiesMap = map['properties'];
       properties = _readProperties(propertiesMap);
@@ -153,13 +148,9 @@ class MapFeatureReader extends MapDataReader {
   }
 
   FeatureProperties _readProperties(Map<String, dynamic> map) {
-    dynamic? identifier;
     dynamic? name;
     Map<String, dynamic>? values;
     Color? color;
-    if (identifierKey != null && map.containsKey(identifierKey)) {
-      identifier = map[identifierKey];
-    }
     if (nameKey != null && map.containsKey(nameKey)) {
       name = map[nameKey];
     }
@@ -176,8 +167,7 @@ class MapFeatureReader extends MapDataReader {
         }
       }
     }
-    return FeatureProperties(
-        identifier: identifier, name: name, values: values, color: color);
+    return FeatureProperties(name: name, values: values, color: color);
   }
 
   _addFeature({required MapGeometry geometry, FeatureProperties? properties}) {

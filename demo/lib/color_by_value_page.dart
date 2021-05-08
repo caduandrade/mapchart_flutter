@@ -3,23 +3,23 @@ import 'package:mapchart/mapchart.dart';
 
 import 'example_page.dart';
 
-class ColorByIdPage extends StatefulWidget {
+class ColorByValuePage extends StatefulWidget {
   @override
-  ColorByIdPageState createState() => ColorByIdPageState();
+  ColorByValuePageState createState() => ColorByValuePageState();
 }
 
-class ColorByIdPageState extends ExamplePageState {
+class ColorByValuePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, identifierKey: 'Id');
+        await MapChartDataSource.geoJSON(geojson: geojson, valueKeys: ['Id']);
     return dataSource;
   }
 
   @override
   Widget buildContent() {
     MapChartTheme theme =
-        MapChartTheme.identifier(contourColor: Colors.white, colors: {
+        MapChartTheme.value(contourColor: Colors.white, key: 'Id', colors: {
       'earth': Colors.green,
       'mars': Colors.red,
       'venus': Colors.orange

@@ -206,8 +206,6 @@ class MapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    DateTime start = DateTime.now();
-
     // drawing the buffer
 
     canvas.save();
@@ -256,10 +254,6 @@ class MapPainter extends CustomPainter {
         canvas.restore();
       }
     }
-
-    DateTime end = DateTime.now();
-    Duration duration = end.difference(start);
-    // print('paint time: ' + duration.inMilliseconds.toString());
   }
 
   @override
