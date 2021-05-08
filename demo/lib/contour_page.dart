@@ -43,7 +43,7 @@ class ContourPageState extends ExamplePageState {
   Widget _hoverContourColor() {
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(hoverContourColor: Colors.red, hoverColor: null));
+        theme: MapChartTheme(hoverContourColor: Colors.red));
 
     return map;
   }

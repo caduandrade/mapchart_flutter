@@ -99,7 +99,7 @@ Sets a color for each identifier in GeoJSON. If a color is not set for an identi
 ```dart
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(hoverContourColor: Colors.red, hoverColor: null));
+        theme: MapChartTheme(hoverContourColor: Colors.red));
 ```
 
 ![contourhovercolor](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/hover_contour.png)
