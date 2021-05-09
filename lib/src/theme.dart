@@ -6,6 +6,9 @@ import 'package:mapchart/src/data_source.dart';
 typedef ColorRule = Color? Function(MapFeature feature);
 
 class MapChartTheme {
+  /// Theme for [MapChart]
+  /// The default [hoverColor] value is null.
+  /// The default [contourThickness] value is 1.
   MapChartTheme(
       {Color? color,
       Color? contourColor,

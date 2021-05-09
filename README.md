@@ -1,4 +1,4 @@
-[![pub](https://img.shields.io/pub/v/mapchart.svg)](https://pub.dev/packages/mapchart) ![pub2](https://img.shields.io/badge/final%20version-as%20soon%20as%20possible-blue)
+[![pub](https://img.shields.io/pub/v/mapchart.svg)](https://pub.dev/packages/mapchart) ![pub2](https://img.shields.io/badge/Flutter-%E2%9D%A4-red) ![pub3](https://img.shields.io/badge/final%20version-as%20soon%20as%20possible-blue)
 
 # Map Chart
 
@@ -26,6 +26,8 @@ To view the full content, use this [link](https://raw.githubusercontent.com/cadu
 The following examples will assume that GeoJSON has already been loaded into a String.
 
 ##### Reading GeoJSON from String
+
+No properties are loaded, only the geometries.
 
 ```dart
     MapChartDataSource dataSource =
@@ -58,6 +60,8 @@ The following examples will assume that GeoJSON has already been loaded into a S
 Sets a color for each property value in GeoJSON. If a color is not set, the default color is used.
 
 ##### Mapping the property key
+
+Only properties with a mapped key are loaded.
 
 ```dart
     MapChartDataSource dataSource =

@@ -107,6 +107,9 @@ class MapChartDataSource {
         limits: limits.isNotEmpty ? limits : null);
   }
 
+  /// Loads a [MapChartDataSource] from GeoJSON.
+  /// Geometries are always loaded.
+  /// Only properties with a key mapped in [valueKeys] are loaded.
   static Future<MapChartDataSource> geoJSON(
       {required String geojson,
       String? nameKey,
@@ -123,6 +126,8 @@ class MapChartDataSource {
     return fromFeatures(features);
   }
 
+  /// Loads a [MapChartDataSource] from geometries.
+  /// MapChartDataSource features will have no properties.
   factory MapChartDataSource.geometries(List<MapGeometry> geometries) {
     Rect boundsFromGeometry = Rect.zero;
     int pointsCount = 0;
