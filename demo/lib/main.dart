@@ -6,6 +6,7 @@ import 'package:demo/default_colors_page.dart';
 import 'package:demo/enable_hover_by_value_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
+import 'package:demo/gradient_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,7 +51,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Hover listener', _hoverListenerPage),
       MenuItem('Enable hover by value', _enableHoverByValuePage),
       MenuItem('Click listener', _clickListenerPage),
-      MenuItem('Color by rule', _colorByRulePage)
+      MenuItem('Color by rule', _colorByRulePage),
+      MenuItem('Gradient', _gradientPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -132,5 +134,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ColorByRulePage _colorByRulePage() {
     return ColorByRulePage();
+  }
+
+  GradientPage _gradientPage(){
+    return GradientPage();
   }
 }

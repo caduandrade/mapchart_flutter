@@ -12,7 +12,7 @@ class EnableHoverByValuePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
     return dataSource;
   }
 
@@ -20,16 +20,14 @@ class EnableHoverByValuePageState extends ExamplePageState {
   Widget buildContent() {
     // coloring only the 'earth' feature
     MapChartTheme theme = MapChartTheme.value(
-        key: 'Id',
-        colors: {'earth': Colors.green},
-        hoverColor: Colors.green[900]!);
+        key: 'Seq', colors: {4: Colors.green}, hoverColor: Colors.green[900]!);
 
     // enabling hover only for the 'earth' feature
     MapChart map = MapChart(
       dataSource: dataSource,
       theme: theme,
       hoverRule: (feature) {
-        return feature.getValue('Id') == 'earth';
+        return feature.getValue('Seq') == 4;
       },
     );
 

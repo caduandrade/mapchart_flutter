@@ -12,7 +12,7 @@ class ColorByRulePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Distance']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
     return dataSource;
   }
 
@@ -23,14 +23,12 @@ class ColorByRulePageState extends ExamplePageState {
         hoverColor: Colors.grey[700]!,
         colorRules: [
           (feature) {
-            return feature.getValue('Distance') < 100000000
-                ? Colors.green
-                : null;
+            double? value = feature.getDoubleValue('Seq');
+            return value != null && value < 3 ? Colors.green : null;
           },
           (feature) {
-            return feature.getValue('Distance') < 200000000
-                ? Colors.blue
-                : null;
+            double? value = feature.getDoubleValue('Seq');
+            return value != null && value > 9 ? Colors.blue : null;
           }
         ]);
 

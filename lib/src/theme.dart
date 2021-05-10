@@ -73,11 +73,11 @@ class MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
-      required double minValue,
-      required double maxValue,
-      required String valueField,
-      required List<Color> gradientColors}) {
-    if (gradientColors.length < 2) {
+      required double min,
+      required double max,
+      required String key,
+      required List<Color> colors}) {
+    if (colors.length < 2) {
       throw MapChartError('At least 2 colors are required for the gradient.');
     }
     return _MapChartThemeGradient(
@@ -86,10 +86,10 @@ class MapChartTheme {
         hoverContourColor: hoverContourColor,
         contourThickness: contourThickness,
         hoverColor: hoverColor,
-        minValue: minValue,
-        maxValue: maxValue,
-        valueField: valueField,
-        gradientColors: gradientColors);
+        min: min,
+        max: max,
+        key: key,
+        colors: colors);
   }
 
   final Color _color;
@@ -223,10 +223,10 @@ class _MapChartThemeGradient extends MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
-      required this.minValue,
-      required this.maxValue,
-      required this.valueField,
-      required this.gradientColors})
+      required this.min,
+      required this.max,
+      required this.key,
+      required this.colors})
       : super(
             color: color,
             contourColor: contourColor,
@@ -234,19 +234,38 @@ class _MapChartThemeGradient extends MapChartTheme {
             contourThickness: contourThickness,
             hoverColor: hoverColor);
 
-  final double minValue;
-  final double maxValue;
-  final String valueField;
-  final List<Color> gradientColors;
+  final double min;
+  final double max;
+  final String key;
+  final List<Color> colors;
 
   @override
   Color getColor(MapFeature feature) {
-    dynamic? value = feature.getValue(valueField);
-    double? doubleValue;
-    if (value is int) {
-      doubleValue = value.toDouble();
-    } else if (value is double) {
-      doubleValue = value;
+    dynamic? dynamicValue = feature.getValue(key);
+    double? value;
+    if (dynamicValue is int) {
+      value = dynamicValue.toDouble();
+    } else if (dynamicValue is double) {
+      value = dynamicValue;
+    }
+    if (value != null) {
+      if (value <= min) {
+        return colors.first;
+      }
+      if (value >= max) {
+        return colors.last;
+      }
+
+      double size = max - min;
+
+      int stepsCount = colors.length - 1;
+      double stepSize = size / stepsCount;
+      int stepIndex = (value - min) ~/ stepSize;
+
+      double currentStepRange = (stepIndex * stepSize) + stepSize;
+      double positionInStep = value - min - (stepIndex * stepSize);
+      double t = positionInStep / currentStepRange;
+      return Color.lerp(colors[stepIndex], colors[stepIndex + 1], t)!;
     }
 
     return super.getColor(feature);

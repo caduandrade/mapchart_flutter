@@ -12,21 +12,23 @@ class ColorByValuePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
     return dataSource;
   }
 
   @override
   Widget buildContent() {
     MapChartTheme theme =
-        MapChartTheme.value(contourColor: Colors.white, key: 'Id', colors: {
-      'earth': Colors.green,
-      'mars': Colors.red,
-      'venus': Colors.orange
+        MapChartTheme.value(contourColor: Colors.white, key: 'Seq', colors: {
+      2: Colors.green,
+      4: Colors.red,
+      6: Colors.orange,
+      8: Colors.blue
     }, hoverColors: {
-      'earth': Colors.green[900]!,
-      'mars': Colors.red[900]!,
-      'venus': Colors.orange[900]!
+      2: Colors.green[900]!,
+      4: Colors.red[900]!,
+      6: Colors.orange[900]!,
+      8: Colors.blue[900]!
     });
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);

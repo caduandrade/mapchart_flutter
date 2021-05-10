@@ -34,6 +34,18 @@ class MapFeature {
     }
     return null;
   }
+
+  double? getDoubleValue(String key) {
+    dynamic? d = getValue(key);
+    if (d != null) {
+      if (d is double) {
+        return d;
+      } else if (d is int) {
+        return d.toDouble();
+      }
+    }
+    return null;
+  }
 }
 
 class ValueLimits {
