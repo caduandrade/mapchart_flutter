@@ -48,11 +48,11 @@ class MapFeature {
   }
 }
 
-class ValueLimits {
+class PropertyLimits {
   double _max;
   double _min;
 
-  ValueLimits(double value)
+  PropertyLimits(double value)
       : this._max = value,
         this._min = value;
 
@@ -75,7 +75,7 @@ class MapChartDataSource {
   final UnmodifiableMapView<int, MapFeature> features;
   final Rect bounds;
   final int pointsCount;
-  final Map<String, ValueLimits>? limits;
+  final Map<String, PropertyLimits>? limits;
 
   static MapChartDataSource fromFeatures(List<MapFeature> features) {
     Rect boundsFromGeometry = Rect.zero;
@@ -83,7 +83,7 @@ class MapChartDataSource {
     if (features.isNotEmpty) {
       boundsFromGeometry = features.first.geometry.bounds;
     }
-    Map<String, ValueLimits> limits = Map<String, ValueLimits>();
+    Map<String, PropertyLimits> limits = Map<String, PropertyLimits>();
     Map<int, MapFeature> featuresMap = Map<int, MapFeature>();
     for (MapFeature feature in features) {
       featuresMap[feature.id] = feature;
@@ -102,10 +102,10 @@ class MapChartDataSource {
           if (doubleValue != null) {
             String key = entry.key;
             if (limits.containsKey(key)) {
-              ValueLimits valueLimits = limits[key]!;
-              valueLimits.expand(doubleValue);
+              PropertyLimits propertyLimits = limits[key]!;
+              propertyLimits.expand(doubleValue);
             } else {
-              limits[key] = ValueLimits(doubleValue);
+              limits[key] = PropertyLimits(doubleValue);
             }
           }
         });
