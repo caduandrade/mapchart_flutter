@@ -53,6 +53,14 @@ class MapChartState extends State<MapChart> {
   Size? _lastBuildSize;
   MapResolutionBuilder? _mapResolutionBuilder;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.dataSource != null) {
+      widget.theme.initialize(widget.dataSource!);
+    }
+  }
+
   _updateMapResolution(MapMatrices mapMatrices, Size size) {
     if (_lastBuildSize == size) {
       if (_mapResolutionBuilder != null) {

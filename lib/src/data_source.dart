@@ -70,12 +70,13 @@ class MapChartDataSource {
       {required this.features,
       required this.bounds,
       required this.pointsCount,
-      this.limits});
+      Map<String, PropertyLimits>? limits})
+      : this._limits = limits;
 
   final UnmodifiableMapView<int, MapFeature> features;
   final Rect bounds;
   final int pointsCount;
-  final Map<String, PropertyLimits>? limits;
+  final Map<String, PropertyLimits>? _limits;
 
   static MapChartDataSource fromFeatures(List<MapFeature> features) {
     Rect boundsFromGeometry = Rect.zero;
@@ -159,6 +160,13 @@ class MapChartDataSource {
         features: UnmodifiableMapView<int, MapFeature>(featuresMap),
         bounds: boundsFromGeometry,
         pointsCount: pointsCount);
+  }
+
+  PropertyLimits? getPropertyLimits(String key) {
+    if (_limits != null && _limits!.containsKey(key)) {
+      return _limits![key]!;
+    }
+    return null;
   }
 }
 

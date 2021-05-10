@@ -1,3 +1,4 @@
+import 'package:demo/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:mapchart/mapchart.dart';
 
@@ -17,12 +18,30 @@ class GradientPageState extends ExamplePageState {
   }
 
   @override
-  Widget buildContent() {
+  List<MenuItem> buildMenuItems() {
+    return [
+      MenuItem('Auto min max', _autoMinMax),
+      MenuItem('Min max', _minMax)
+    ];
+  }
+
+  Widget _autoMinMax() {
     MapChartTheme theme = MapChartTheme.gradient(
         contourColor: Colors.white,
         key: 'Seq',
-        min: 1,
-        max: 11,
+        colors: [Colors.blue, Colors.yellow, Colors.red]);
+
+    MapChart map = MapChart(dataSource: dataSource, theme: theme);
+
+    return map;
+  }
+
+  Widget _minMax() {
+    MapChartTheme theme = MapChartTheme.gradient(
+        contourColor: Colors.white,
+        key: 'Seq',
+        min: 3,
+        max: 9,
         colors: [Colors.blue, Colors.yellow, Colors.red]);
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
