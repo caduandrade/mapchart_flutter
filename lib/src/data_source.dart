@@ -109,16 +109,16 @@ class MapChartDataSource {
 
   /// Loads a [MapChartDataSource] from GeoJSON.
   /// Geometries are always loaded.
-  /// Only properties with a key mapped in [valueKeys] are loaded.
+  /// Only properties with a key mapped in [keys] are loaded.
   static Future<MapChartDataSource> geoJSON(
       {required String geojson,
       String? nameKey,
-      List<String>? valueKeys,
+      List<String>? keys,
       String? colorKey,
       ColorValueFormat colorValueFormat = ColorValueFormat.hex}) async {
     MapFeatureReader reader = MapFeatureReader(
         nameKey: nameKey,
-        valueKeys: valueKeys,
+        keys: keys,
         colorKey: colorKey,
         colorValueFormat: colorValueFormat);
 

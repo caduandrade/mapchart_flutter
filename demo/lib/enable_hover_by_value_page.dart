@@ -12,7 +12,7 @@ class EnableHoverByValuePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, valueKeys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
     return dataSource;
   }
 

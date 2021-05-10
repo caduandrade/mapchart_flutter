@@ -105,14 +105,14 @@ class _Properties {
 class MapFeatureReader extends MapDataReader {
   MapFeatureReader(
       {this.nameKey,
-      this.valueKeys,
+      this.keys,
       this.colorKey,
       this.colorValueFormat = ColorValueFormat.hex});
 
   final List<MapFeature> _list = [];
 
   final String? nameKey;
-  final List<String>? valueKeys;
+  final List<String>? keys;
   final String? colorKey;
   final ColorValueFormat colorValueFormat;
 
@@ -147,7 +147,7 @@ class MapFeatureReader extends MapDataReader {
     Map<String, dynamic> geometryMap = map['geometry'];
     MapGeometry geometry = _readGeometry(true, geometryMap);
     _Properties? properties;
-    if ((nameKey != null || valueKeys != null || colorKey != null) &&
+    if ((nameKey != null || keys != null || colorKey != null) &&
         map.containsKey('properties')) {
       Map<String, dynamic> propertiesMap = map['properties'];
       properties = _readProperties(propertiesMap);
@@ -162,12 +162,12 @@ class MapFeatureReader extends MapDataReader {
     if (nameKey != null && map.containsKey(nameKey)) {
       name = map[nameKey];
     }
-    if (valueKeys != null) {
-      if (valueKeys!.isNotEmpty) {
+    if (keys != null) {
+      if (keys!.isNotEmpty) {
         Map<String, dynamic> valuesTmp = Map<String, dynamic>();
-        for (String valueKey in valueKeys!) {
-          if (map.containsKey(valueKey)) {
-            valuesTmp[valueKey] = map[valueKey];
+        for (String key in keys!) {
+          if (map.containsKey(key)) {
+            valuesTmp[key] = map[key];
           }
         }
         if (valuesTmp.isNotEmpty) {

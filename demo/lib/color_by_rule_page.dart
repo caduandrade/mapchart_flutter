@@ -11,8 +11,8 @@ class ColorByRulePage extends StatefulWidget {
 class ColorByRulePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
-    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
-        geojson: geojson, valueKeys: ['Distance']);
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Distance']);
     return dataSource;
   }
 

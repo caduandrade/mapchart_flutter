@@ -1,4 +1,4 @@
-[![pub](https://img.shields.io/pub/v/mapchart.svg)](https://pub.dev/packages/mapchart) ![pub2](https://img.shields.io/badge/Flutter-%E2%9D%A4-red) ![pub3](https://img.shields.io/badge/final%20version-as%20soon%20as%20possible-blue)
+[![pub](https://img.shields.io/pub/v/mapchart.svg)](https://pub.dev/packages/mapchart) [![pub2](https://img.shields.io/badge/Flutter-%E2%9D%A4-red)](https://flutter.dev/) ![pub3](https://img.shields.io/badge/final%20version-as%20soon%20as%20possible-blue)
 
 # Map Chart
 
@@ -65,7 +65,7 @@ Only properties with a mapped key are loaded.
 
 ```dart
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, valueKeys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
 ```
 
 ##### Setting the colors for the property values
@@ -94,8 +94,8 @@ The feature color is obtained from the first rule that returns a non-null color.
 ##### Mapping the property key
 
 ```dart
-    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
-        geojson: geojson, valueKeys: ['Distance']);
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Distance']);
 ```
 
 ##### Setting the rules
@@ -165,7 +165,7 @@ The feature color is obtained from the first rule that returns a non-null color.
 
 ```dart
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, valueKeys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
 ```
 
 ```dart
