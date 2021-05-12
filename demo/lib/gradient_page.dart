@@ -27,6 +27,7 @@ class GradientPageState extends ExamplePageState {
 
   Widget _autoMinMax() {
     MapChartTheme theme = MapChartTheme.gradient(
+        dataSource: dataSource!,
         contourColor: Colors.white,
         key: 'Seq',
         colors: [Colors.blue, Colors.yellow, Colors.red]);
@@ -38,6 +39,7 @@ class GradientPageState extends ExamplePageState {
 
   Widget _minMax() {
     MapChartTheme theme = MapChartTheme.gradient(
+        dataSource: dataSource!,
         contourColor: Colors.white,
         key: 'Seq',
         min: 3,

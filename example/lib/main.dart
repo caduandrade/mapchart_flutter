@@ -25,8 +25,8 @@ class ExampleState extends State<ExampleWidget> {
   }
 
   _loadDataSource(String geojson) async {
-    MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson);
+    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
+        geojson: geojson, keys: ['GEOCODIGO'], parseToNumber: ['GEOCODIGO']);
     setState(() {
       _dataSource = dataSource;
     });
@@ -56,9 +56,11 @@ class ExampleState extends State<ExampleWidget> {
   Widget _buildMapChart() {
     return MapChart(
         dataSource: _dataSource,
-        theme: MapChartTheme(
-            color: Colors.green,
-            contourColor: Colors.green[900],
-            hoverColor: Colors.green[800]));
+        theme: MapChartTheme.gradient(
+            contourColor: Colors.green[800],
+            hoverColor: Colors.green[900],
+            dataSource: _dataSource!,
+            key: 'GEOCODIGO',
+            colors: [Colors.yellow, Colors.lightGreen]));
   }
 }

@@ -106,13 +106,15 @@ class MapFeatureReader extends MapDataReader {
   MapFeatureReader(
       {this.nameKey,
       this.keys,
+      this.parseToNumber,
       this.colorKey,
       this.colorValueFormat = ColorValueFormat.hex});
 
   final List<MapFeature> _list = [];
 
   final String? nameKey;
-  final List<String>? keys;
+  final Set<String>? keys;
+  final Set<String>? parseToNumber;
   final String? colorKey;
   final ColorValueFormat colorValueFormat;
 
@@ -167,7 +169,13 @@ class MapFeatureReader extends MapDataReader {
         Map<String, dynamic> valuesTmp = Map<String, dynamic>();
         for (String key in keys!) {
           if (map.containsKey(key)) {
-            valuesTmp[key] = map[key];
+            dynamic value = map[key];
+            if (parseToNumber != null &&
+                parseToNumber!.contains(key) &&
+                value is String) {
+              value = double.parse(value);
+            }
+            valuesTmp[key] = value;
           }
         }
         if (valuesTmp.isNotEmpty) {

@@ -127,11 +127,13 @@ class MapChartDataSource {
       {required String geojson,
       String? nameKey,
       List<String>? keys,
+      List<String>? parseToNumber,
       String? colorKey,
       ColorValueFormat colorValueFormat = ColorValueFormat.hex}) async {
     MapFeatureReader reader = MapFeatureReader(
         nameKey: nameKey,
-        keys: keys,
+        keys: keys != null ? keys.toSet() : null,
+        parseToNumber: parseToNumber != null ? parseToNumber.toSet() : null,
         colorKey: colorKey,
         colorValueFormat: colorValueFormat);
 

@@ -80,6 +80,7 @@ class MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      required MapChartDataSource dataSource,
       double? min,
       double? max,
       required String key,
@@ -87,6 +88,23 @@ class MapChartTheme {
     if (colors.length < 2) {
       throw MapChartError('At least 2 colors are required for the gradient.');
     }
+
+    PropertyLimits? propertyLimits = dataSource.getPropertyLimits(key);
+    if (propertyLimits != null) {
+      if (min == null) {
+        min = propertyLimits.min;
+      }
+      if (max == null) {
+        max = propertyLimits.max;
+      }
+    }
+    if (min == null) {
+      throw MapChartError('Min value has not been set');
+    }
+    if (max == null) {
+      throw MapChartError('Max value has not been set');
+    }
+
     return _MapChartThemeGradient(
         color: color,
         contourColor: contourColor,
@@ -116,8 +134,6 @@ class MapChartTheme {
   Color? getHoverColor(MapFeature feature) {
     return _hoverColor;
   }
-
-  initialize(MapChartDataSource dataSource) {}
 }
 
 class _MapChartThemeValue extends MapChartTheme {
@@ -232,8 +248,8 @@ class _MapChartThemeGradient extends MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
-      this.min,
-      this.max,
+      required this.min,
+      required this.max,
       required this.key,
       required this.colors})
       : super(
@@ -243,30 +259,10 @@ class _MapChartThemeGradient extends MapChartTheme {
             contourThickness: contourThickness,
             hoverColor: hoverColor);
 
-  double? min;
-  double? max;
+  double min;
+  double max;
   final String key;
   final List<Color> colors;
-
-  @override
-  initialize(MapChartDataSource dataSource) {
-    super.initialize(dataSource);
-    PropertyLimits? propertyLimits = dataSource.getPropertyLimits(key);
-    if (propertyLimits != null) {
-      if (min == null) {
-        min = propertyLimits.min;
-      }
-      if (max == null) {
-        max = propertyLimits.max;
-      }
-    }
-    if (min == null) {
-      throw MapChartError('Min value has not been set');
-    }
-    if (max == null) {
-      throw MapChartError('Max value has not been set');
-    }
-  }
 
   @override
   Color getColor(MapFeature feature) {
@@ -278,21 +274,21 @@ class _MapChartThemeGradient extends MapChartTheme {
       value = dynamicValue;
     }
     if (value != null) {
-      if (value <= min!) {
+      if (value <= min) {
         return colors.first;
       }
-      if (value >= max!) {
+      if (value >= max) {
         return colors.last;
       }
 
-      double size = max! - min!;
+      double size = max - min;
 
       int stepsCount = colors.length - 1;
       double stepSize = size / stepsCount;
-      int stepIndex = (value - min!) ~/ stepSize;
+      int stepIndex = (value - min) ~/ stepSize;
 
       double currentStepRange = (stepIndex * stepSize) + stepSize;
-      double positionInStep = value - min! - (stepIndex * stepSize);
+      double positionInStep = value - min - (stepIndex * stepSize);
       double t = positionInStep / currentStepRange;
       return Color.lerp(colors[stepIndex], colors[stepIndex + 1], t)!;
     }
