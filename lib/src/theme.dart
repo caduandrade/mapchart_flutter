@@ -67,6 +67,13 @@ class MapChartTheme {
   }
 
   /// Creates a theme with gradient colors.
+  /// The gradient is created given the colors and limit values of the
+  /// chosen property.
+  /// The property must have numeric values.
+  /// If the [min] is set, all smaller values will return the first
+  /// color of the gradient.
+  // If the [max] is set, all larger values will return the last color
+  // of the gradient.
   static MapChartTheme gradient(
       {Color? color,
       Color? contourColor,

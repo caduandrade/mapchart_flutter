@@ -11,8 +11,8 @@ class ColorByRulePage extends StatefulWidget {
 class ColorByRulePageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
-    MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
+    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
+        geojson: geojson, keys: ['Name', 'Seq']);
     return dataSource;
   }
 
@@ -22,6 +22,10 @@ class ColorByRulePageState extends ExamplePageState {
         contourColor: Colors.white,
         hoverColor: Colors.grey[700]!,
         colorRules: [
+          (feature) {
+            String? value = feature.getValue('Name');
+            return value == 'Faraday' ? Colors.red : null;
+          },
           (feature) {
             double? value = feature.getDoubleValue('Seq');
             return value != null && value < 3 ? Colors.green : null;

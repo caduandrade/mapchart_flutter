@@ -1,3 +1,8 @@
+## [0.4.0] - ?
+
+* Thematization
+  * Gradient
+
 ## [0.3.0] - May 9, 2021
 
 * Thematization

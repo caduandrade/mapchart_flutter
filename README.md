@@ -14,12 +14,19 @@
 
 A simplified GeoJSON will be used in the examples to demonstrate the different possibilities of themes. This GeoJSON has only 4 features with the following properties:
 
-Id | Name | Satellites | Distance
---- | --- | --- | ---
-venus | Venus | | 108200000
-earth | Earth | Moon | 149600000
-mars | Mars | Phobos, Deimos | 227900000
-mercury | Mercury | | 57910000
+Name | Seq
+--- | ---
+Einstein | 1
+Newton | 2
+Galileu | 3
+Darwin | 4
+Pasteur | 5
+Faraday | 6
+Arquimedes | 7
+Tesla | 8
+Lavoisier | 9
+Kepler | 10
+Turing | 11
 
 To view the full content, use this [link](https://raw.githubusercontent.com/caduandrade/mapchart_flutter/main/demo/assets/example.json).
 
@@ -65,27 +72,29 @@ Only properties with a mapped key are loaded.
 
 ```dart
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
 ```
 
 ##### Setting the colors for the property values
 
 ```dart
     MapChartTheme theme =
-        MapChartTheme.value(contourColor: Colors.white, key: 'Id', colors: {
-      'earth': Colors.green,
-      'mars': Colors.red,
-      'venus': Colors.orange
+        MapChartTheme.value(contourColor: Colors.white, key: 'Seq', colors: {
+      2: Colors.green,
+      4: Colors.red,
+      6: Colors.orange,
+      8: Colors.blue
     }, hoverColors: {
-      'earth': Colors.green[900]!,
-      'mars': Colors.red[900]!,
-      'venus': Colors.orange[900]!
+      2: Colors.green[900]!,
+      4: Colors.red[900]!,
+      6: Colors.orange[900]!,
+      8: Colors.blue[900]!
     });
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 ```
 
-![colorbyvalue](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_value.gif)
+![colorbyvalue](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_value.png)
 
 ## Color by rule
 
@@ -94,8 +103,8 @@ The feature color is obtained from the first rule that returns a non-null color.
 ##### Mapping the property key
 
 ```dart
-    MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Distance']);
+    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
+        geojson: geojson, keys: ['Name', 'Seq']);
 ```
 
 ##### Setting the rules
@@ -106,14 +115,16 @@ The feature color is obtained from the first rule that returns a non-null color.
         hoverColor: Colors.grey[700]!,
         colorRules: [
           (feature) {
-            return feature.getValue('Distance') < 100000000
-                ? Colors.green
-                : null;
+            String? value = feature.getValue('Name');
+            return value == 'Faraday' ? Colors.red : null;
           },
           (feature) {
-            return feature.getValue('Distance') < 200000000
-                ? Colors.blue
-                : null;
+            double? value = feature.getDoubleValue('Seq');
+            return value != null && value < 3 ? Colors.green : null;
+          },
+          (feature) {
+            double? value = feature.getDoubleValue('Seq');
+            return value != null && value > 9 ? Colors.blue : null;
           }
         ]);
 
@@ -121,6 +132,54 @@ The feature color is obtained from the first rule that returns a non-null color.
 ```
 
 ![colorbyrule](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/color_by_rule.png)
+
+## Gradient
+
+The gradient is created given the colors and limit values of the chosen property.
+The property must have numeric values.
+
+#### Auto min/max values
+
+Uses the min and max values read from data source.
+
+```dart
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
+```
+
+```dart
+    MapChartTheme theme = MapChartTheme.gradient(
+        contourColor: Colors.white,
+        key: 'Seq',
+        colors: [Colors.blue, Colors.yellow, Colors.red]);
+
+    MapChart map = MapChart(dataSource: dataSource, theme: theme);
+```
+
+![gradientauto](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/gradient_auto.png)
+
+#### Setting min or max values manually.
+
+If the min value is set, all smaller values will return the first color of the gradient.
+If the max value is set, all larger values will return the last color of the gradient.
+
+```dart
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
+```
+
+```dart
+    MapChartTheme theme = MapChartTheme.gradient(
+        contourColor: Colors.white,
+        key: 'Seq',
+        min: 3,
+        max: 9,
+        colors: [Colors.blue, Colors.yellow, Colors.red]);
+
+    MapChart map = MapChart(dataSource: dataSource, theme: theme);
+```
+
+![gradientminmax](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/gradient_min_max.png)
 
 ## Contour
 
@@ -165,22 +224,20 @@ The feature color is obtained from the first rule that returns a non-null color.
 
 ```dart
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Id']);
+        await MapChartDataSource.geoJSON(geojson: geojson, keys: ['Seq']);
 ```
 
 ```dart
-    // coloring only the 'earth' feature
+    // coloring only the 'Darwin' feature
     MapChartTheme theme = MapChartTheme.value(
-        key: 'Id',
-        colors: {'earth': Colors.green},
-        hoverColor: Colors.green[900]!);
+        key: 'Seq', colors: {4: Colors.green}, hoverColor: Colors.green[900]!);
 
-    // enabling hover only for the 'earth' feature
+    // enabling hover only for the 'Darwin' feature
     MapChart map = MapChart(
       dataSource: dataSource,
       theme: theme,
       hoverRule: (feature) {
-        return feature.getValue('Id') == 'earth';
+        return feature.getValue('Seq') == 4;
       },
     );
 ```

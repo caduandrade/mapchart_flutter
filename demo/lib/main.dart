@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:demo/click_listener_page.dart';
 import 'package:demo/color_by_rule_page.dart';
 import 'package:demo/color_by_value_page.dart';
@@ -7,10 +8,10 @@ import 'package:demo/enable_hover_by_value_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:demo/gradient_page.dart';
+import 'package:demo/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'menu.dart';
 
 void main() {
   runApp(MapChartApp());
@@ -58,10 +59,24 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       _currentExampleBuilder = _menuItems.first.builder;
     }
     rootBundle.loadString('assets/example.json').then((json) {
+      // _printProperties(json);
       setState(() {
         geojson = json;
       });
     });
+  }
+
+  _printProperties(String geojson) async {
+    print('Name | Seq');
+    print('--- | ---');
+    Map<String, dynamic> map = await json.decode(geojson);
+    List features = map['features']!;
+    for (Map<String, dynamic> feature in features) {
+      Map<String, dynamic> properties = feature['properties'];
+      String name = properties['Name'];
+      int seq = properties['Seq'];
+      print('$name | $seq');
+    }
   }
 
   @override
@@ -136,7 +151,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     return ColorByRulePage();
   }
 
-  GradientPage _gradientPage(){
+  GradientPage _gradientPage() {
     return GradientPage();
   }
 }
