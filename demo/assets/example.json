@@ -5,7 +5,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 1,
-        "Name": "Einstein"
+        "Name": "Einstein",
+        "Rnd": "73"
       },
       "geometry": {
         "type": "Polygon",
@@ -39,7 +40,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 2,
-        "Name": "Newton"
+        "Name": "Newton",
+        "Rnd": "92"
       },
       "geometry": {
         "type": "Polygon",
@@ -73,7 +75,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 3,
-        "Name": "Galileu"
+        "Name": "Galileu",
+        "Rnd": "10"
       },
       "geometry": {
         "type": "Polygon",
@@ -107,7 +110,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 4,
-        "Name": "Darwin"
+        "Name": "Darwin",
+        "Rnd": "52"
       },
       "geometry": {
         "type": "Polygon",
@@ -141,7 +145,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 5,
-        "Name": "Pasteur"
+        "Name": "Pasteur",
+        "Rnd": "77"
       },
       "geometry": {
         "type": "Polygon",
@@ -175,7 +180,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 6,
-        "Name": "Faraday"
+        "Name": "Faraday",
+        "Rnd": "32"
       },
       "geometry": {
         "type": "Polygon",
@@ -209,7 +215,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 7,
-        "Name": "Arquimedes"
+        "Name": "Arquimedes",
+        "Rnd": "87"
       },
       "geometry": {
         "type": "Polygon",
@@ -243,7 +250,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 8,
-        "Name": "Tesla"
+        "Name": "Tesla",
+        "Rnd": "17"
       },
       "geometry": {
         "type": "Polygon",
@@ -277,7 +285,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 9,
-        "Name": "Lavoisier"
+        "Name": "Lavoisier",
+        "Rnd": "49"
       },
       "geometry": {
         "type": "Polygon",
@@ -311,7 +320,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 10,
-        "Name": "Kepler"
+        "Name": "Kepler",
+        "Rnd": "32"
       },
       "geometry": {
         "type": "Polygon",
@@ -345,7 +355,8 @@
       "type": "Feature",
       "properties": {
         "Seq": 11,
-        "Name": "Turing"
+        "Name": "Turing",
+        "Rnd": "93"
       },
       "geometry": {
         "type": "Polygon",

@@ -14,19 +14,19 @@
 
 A simplified GeoJSON will be used in the examples to demonstrate the different possibilities of themes. This GeoJSON has only 4 features with the following properties:
 
-Name | Seq
---- | ---
-Einstein | 1
-Newton | 2
-Galileu | 3
-Darwin | 4
-Pasteur | 5
-Faraday | 6
-Arquimedes | 7
-Tesla | 8
-Lavoisier | 9
-Kepler | 10
-Turing | 11
+Name | Seq | Rnd
+--- | --- | ---
+"Einstein" | 1 | "73"
+"Newton" | 2 | "92"
+"Galileu" | 3 | "10"
+"Darwin" | 4 | "52"
+"Pasteur" | 5 | "77"
+"Faraday" | 6 | "32"
+"Arquimedes" | 7 | "87"
+"Tesla" | 8 | "17"
+"Lavoisier" | 9 | "49"
+"Kepler" | 10 | "32"
+"Turing" | 11 | "93"
 
 To view the full content, use this [link](https://raw.githubusercontent.com/caduandrade/mapchart_flutter/main/demo/assets/example.json).
 
@@ -48,6 +48,15 @@ No properties are loaded, only the geometries.
 ```
 
 ![getstarted](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/get_started.png)
+
+##### Reading GeoJSON properties
+
+The parser allows reads numeric values in quotes as numbers.
+
+```dart
+    MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
+        geojson: geojson, keys: ['Seq', 'Rnd'], parseToNumber: ['Rnd']);
+```
 
 ## Changing the default colors
 
@@ -161,8 +170,8 @@ Uses the min and max values read from data source.
 
 #### Setting min or max values manually
 
-If the min value is set, all smaller values will return the first color of the gradient.
-If the max value is set, all larger values will return the last color of the gradient.
+If the min value is set, all smaller values will return the first gradient color.
+If the max value is set, all larger values will return the last gradient color.
 
 ```dart
     MapChartDataSource dataSource =

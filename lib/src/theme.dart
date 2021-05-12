@@ -71,9 +71,9 @@ class MapChartTheme {
   /// chosen property.
   /// The property must have numeric values.
   /// If the [min] is set, all smaller values will return the first
-  /// color of the gradient.
-  // If the [max] is set, all larger values will return the last color
-  // of the gradient.
+  /// gradient color.
+  // If the [max] is set, all larger values will return the last
+  // gradient color.
   static MapChartTheme gradient(
       {Color? color,
       Color? contourColor,

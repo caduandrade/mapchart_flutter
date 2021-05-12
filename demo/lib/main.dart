@@ -9,6 +9,7 @@ import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:demo/gradient_page.dart';
 import 'package:demo/menu.dart';
+import 'package:demo/parser_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,7 +54,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Enable hover by value', _enableHoverByValuePage),
       MenuItem('Click listener', _clickListenerPage),
       MenuItem('Color by rule', _colorByRulePage),
-      MenuItem('Gradient', _gradientPage)
+      MenuItem('Gradient', _gradientPage),
+      MenuItem('Parser', _parserPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -67,15 +69,16 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
   }
 
   _printProperties(String geojson) async {
-    print('Name | Seq');
-    print('--- | ---');
+    print('Name | Seq | Rnd');
+    print('--- | --- | ---');
     Map<String, dynamic> map = await json.decode(geojson);
     List features = map['features']!;
     for (Map<String, dynamic> feature in features) {
       Map<String, dynamic> properties = feature['properties'];
       String name = properties['Name'];
       int seq = properties['Seq'];
-      print('$name | $seq');
+      String rnd = properties['Rnd'];
+      print('"$name" | $seq | "$rnd"');
     }
   }
 
@@ -153,5 +156,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   GradientPage _gradientPage() {
     return GradientPage();
+  }
+
+  ParserPage _parserPage() {
+    return ParserPage();
   }
 }
