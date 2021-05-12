@@ -1,5 +1,7 @@
 ## [0.4.0] - ?
 
+* Properties reader
+  * Parser (String to numeric)
 * Thematization
   * Gradient
 

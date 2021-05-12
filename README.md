@@ -158,7 +158,7 @@ Uses the min and max values read from data source.
 
 ```dart
     MapChartTheme theme = MapChartTheme.gradient(
-        dataSource: dataSource!,
+        dataSource: dataSource,
         contourColor: Colors.white,
         key: 'Seq',
         colors: [Colors.blue, Colors.yellow, Colors.red]);
@@ -170,8 +170,8 @@ Uses the min and max values read from data source.
 
 #### Setting min or max values manually
 
-If the min value is set, all smaller values will return the first gradient color.
-If the max value is set, all larger values will return the last gradient color.
+If the min value is set, all smaller values will be displayed with the first gradient color.
+If the max value is set, all larger values will be displayed with the last gradient color.
 
 ```dart
     MapChartDataSource dataSource =
@@ -180,7 +180,6 @@ If the max value is set, all larger values will return the last gradient color.
 
 ```dart
     MapChartTheme theme = MapChartTheme.gradient(
-        dataSource: dataSource!,
         contourColor: Colors.white,
         key: 'Seq',
         min: 3,

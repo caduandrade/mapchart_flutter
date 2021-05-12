@@ -70,17 +70,17 @@ class MapChartTheme {
   /// The gradient is created given the colors and limit values of the
   /// chosen property.
   /// The property must have numeric values.
-  /// If the [min] is set, all smaller values will return the first
+  /// If the [min] is set, all smaller values will be displayed with the first
   /// gradient color.
-  // If the [max] is set, all larger values will return the last
-  // gradient color.
+  /// If the [max] is set, all larger values will be displayed with the last
+  /// gradient color.
   static MapChartTheme gradient(
       {Color? color,
       Color? contourColor,
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
-      required MapChartDataSource dataSource,
+      MapChartDataSource? dataSource,
       double? min,
       double? max,
       required String key,
@@ -89,7 +89,7 @@ class MapChartTheme {
       throw MapChartError('At least 2 colors are required for the gradient.');
     }
 
-    PropertyLimits? propertyLimits = dataSource.getPropertyLimits(key);
+    PropertyLimits? propertyLimits = dataSource?.getPropertyLimits(key);
     if (propertyLimits != null) {
       if (min == null) {
         min = propertyLimits.min;

@@ -276,6 +276,39 @@ class MapPainter extends CustomPainter {
     }
   }
 
+
+  Color findInvert(Color color) {
+    final luminance = color.computeLuminance();
+    if (luminance > 0.55) {
+      return const Color(0xFF000000).withOpacity(0.7);
+    }
+    return const Color(0xFFFFFFFF);
+  }
+
+  void paint2(Canvas canvas, Size size) {
+
+    final textStyle = TextStyle(
+      color: Colors.black,
+      fontSize: 30,
+    );
+    final textSpan = TextSpan(
+      text: 'Hello, world.',
+      style: textStyle,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(
+      minWidth: 0,
+      maxWidth: size.width,
+    );
+    final xCenter = (size.width - textPainter.width) / 2;
+    final yCenter = (size.height - textPainter.height) / 2;
+    final offset = Offset(xCenter, yCenter);
+    textPainter.paint(canvas, offset);
+  }
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
