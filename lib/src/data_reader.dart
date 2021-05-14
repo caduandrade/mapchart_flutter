@@ -102,6 +102,10 @@ class _Properties {
   final Color? color;
 }
 
+/// [MapFeature] reader
+/// The [keys] argument defines which properties must be loaded.
+/// The [parseToNumber] argument defines which properties will have numeric
+/// values in quotes parsed to numbers.
 class MapFeatureReader extends MapDataReader {
   MapFeatureReader(
       {this.nameKey,

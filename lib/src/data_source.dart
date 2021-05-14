@@ -122,7 +122,9 @@ class MapChartDataSource {
 
   /// Loads a [MapChartDataSource] from GeoJSON.
   /// Geometries are always loaded.
-  /// Only properties with a key mapped in [keys] are loaded.
+  /// The [keys] argument defines which properties must be loaded.
+  /// The [parseToNumber] argument defines which properties will have
+  /// numeric values in quotes parsed to numbers.
   static Future<MapChartDataSource> geoJSON(
       {required String geojson,
       String? nameKey,

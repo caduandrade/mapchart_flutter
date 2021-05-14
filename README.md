@@ -51,7 +51,8 @@ No properties are loaded, only the geometries.
 
 ##### Reading GeoJSON properties
 
-The parser allows reads numeric values in quotes as numbers.
+The `keys` argument defines which properties must be loaded.
+The `parseToNumber` argument defines which properties will have numeric values in quotes parsed to numbers.
 
 ```dart
     MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
@@ -76,8 +77,6 @@ The parser allows reads numeric values in quotes as numbers.
 Sets a color for each property value in GeoJSON. If a color is not set, the default color is used.
 
 ##### Mapping the property key
-
-Only properties with a mapped key are loaded.
 
 ```dart
     MapChartDataSource dataSource =
@@ -170,8 +169,8 @@ Uses the min and max values read from data source.
 
 #### Setting min or max values manually
 
-If the min value is set, all smaller values will be displayed with the first gradient color.
-If the max value is set, all larger values will be displayed with the last gradient color.
+If the `min` value is set, all lower values will be displayed using the first gradient color.
+If the `max` value is set, all higher values will be displayed using the last gradient color.
 
 ```dart
     MapChartDataSource dataSource =
