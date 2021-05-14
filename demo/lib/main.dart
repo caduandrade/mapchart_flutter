@@ -55,7 +55,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
     }
-    rootBundle.loadString('example.json').then((json) {
+    rootBundle.loadString('assets/example.json').then((json) {
       setState(() {
         geojson = json;
       });
