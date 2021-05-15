@@ -276,7 +276,6 @@ class MapPainter extends CustomPainter {
     }
   }
 
-
   Color findInvert(Color color) {
     final luminance = color.computeLuminance();
     if (luminance > 0.55) {
@@ -286,7 +285,6 @@ class MapPainter extends CustomPainter {
   }
 
   void paint2(Canvas canvas, Size size) {
-
     final textStyle = TextStyle(
       color: Colors.black,
       fontSize: 30,
