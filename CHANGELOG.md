@@ -1,4 +1,4 @@
-## [0.4.0] - ?
+## [0.4.0] - May 15, 2021
 
 * Properties reader
   * Parser (String to numeric)
