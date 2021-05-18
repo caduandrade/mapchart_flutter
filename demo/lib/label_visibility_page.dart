@@ -1,3 +1,4 @@
+import 'package:demo/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:mapchart/mapchart.dart';
 
@@ -16,9 +17,24 @@ class LabelVisibilityPageState extends ExamplePageState {
     return dataSource;
   }
 
-  @override
-  Widget buildContent() {
-    MapChart map = MapChart(dataSource: dataSource, labelVisible: true);
+  List<MenuItem> buildMenuItems() {
+    return [
+      MenuItem('All visible', _allVisible),
+      MenuItem('Visible rule', _visibleRule)
+    ];
+  }
+
+  Widget _allVisible() {
+    MapChart map =
+        MapChart(dataSource: dataSource, labelVisibility: (feature) => true);
+
+    return map;
+  }
+
+  Widget _visibleRule() {
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        labelVisibility: (feature) => feature.label == 'Darwin');
 
     return map;
   }

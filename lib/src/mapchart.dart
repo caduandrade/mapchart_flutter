@@ -21,7 +21,7 @@ class MapChart extends StatefulWidget {
       this.padding = 8,
       this.hoverRule,
       this.hoverListener,
-      this.labelVisible = false,
+      this.labelVisibility,
       this.clickListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
@@ -35,13 +35,15 @@ class MapChart extends StatefulWidget {
   final HoverRule? hoverRule;
   final HoverListener? hoverListener;
   final FeatureClickListener? clickListener;
-  final bool labelVisible;
+  final LabelVisibility? labelVisibility;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
 }
 
 typedef FeatureClickListener = Function(MapFeature feature);
+
+typedef LabelVisibility = bool Function(MapFeature feature);
 
 typedef HoverRule = bool Function(MapFeature feature);
 
@@ -136,7 +138,7 @@ class MapChartState extends State<MapChart> {
             hover: _hover,
             mapMatrices: mapMatrices,
             theme: widget.theme,
-            labelVisible: widget.labelVisible);
+            labelVisibility: widget.labelVisibility);
 
         Widget map = CustomPaint(painter: mapPainter, child: Container());
 
@@ -218,7 +220,7 @@ class MapPainter extends CustomPainter {
       required this.mapMatrices,
       required this.dataSource,
       required this.theme,
-      required this.labelVisible,
+      this.labelVisibility,
       this.hover});
 
   final MapMatrices mapMatrices;
@@ -226,7 +228,7 @@ class MapPainter extends CustomPainter {
   final MapFeature? hover;
   final MapChartDataSource dataSource;
   final MapResolution mapResolution;
-  final bool labelVisible;
+  final LabelVisibility? labelVisibility;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -279,9 +281,9 @@ class MapPainter extends CustomPainter {
       }
     }
 
-    if (labelVisible) {
+    if (labelVisibility != null) {
       for (MapFeature feature in dataSource.features.values) {
-        if (feature.label != null) {
+        if (feature.label != null && labelVisibility!(feature)) {
           Color color = textColor(theme.getColor(feature));
           TextStyle textStyle = TextStyle(
             color: color,
