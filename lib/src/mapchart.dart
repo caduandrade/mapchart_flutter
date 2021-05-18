@@ -21,7 +21,7 @@ class MapChart extends StatefulWidget {
       this.padding = 8,
       this.hoverRule,
       this.hoverListener,
-      this.nameVisible = true,
+      this.labelVisible = false,
       this.clickListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
@@ -35,7 +35,7 @@ class MapChart extends StatefulWidget {
   final HoverRule? hoverRule;
   final HoverListener? hoverListener;
   final FeatureClickListener? clickListener;
-  final bool nameVisible;
+  final bool labelVisible;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
@@ -136,7 +136,7 @@ class MapChartState extends State<MapChart> {
             hover: _hover,
             mapMatrices: mapMatrices,
             theme: widget.theme,
-            nameVisible: widget.nameVisible);
+            labelVisible: widget.labelVisible);
 
         Widget map = CustomPaint(painter: mapPainter, child: Container());
 
@@ -218,7 +218,7 @@ class MapPainter extends CustomPainter {
       required this.mapMatrices,
       required this.dataSource,
       required this.theme,
-      required this.nameVisible,
+      required this.labelVisible,
       this.hover});
 
   final MapMatrices mapMatrices;
@@ -226,7 +226,7 @@ class MapPainter extends CustomPainter {
   final MapFeature? hover;
   final MapChartDataSource dataSource;
   final MapResolution mapResolution;
-  final bool nameVisible;
+  final bool labelVisible;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -279,9 +279,9 @@ class MapPainter extends CustomPainter {
       }
     }
 
-    if (nameVisible) {
+    if (labelVisible) {
       for (MapFeature feature in dataSource.features.values) {
-        if (feature.name != null) {
+        if (feature.label != null) {
           Color color = textColor(theme.getColor(feature));
           TextStyle textStyle = TextStyle(
             color: color,
@@ -290,7 +290,7 @@ class MapPainter extends CustomPainter {
           Path path = mapResolution.paths[feature.id]!;
           Rect bounds = MatrixUtils.transformRect(
               mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());
-          drawText(canvas, bounds.center, feature.name!, textStyle);
+          drawText(canvas, bounds.center, feature.label!, textStyle);
         }
       }
     }

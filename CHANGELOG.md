@@ -1,6 +1,6 @@
 ## [0.5.0] - ?
 
-* Drawing the features names
+* Drawing features labels
 
 ## [0.4.0] - May 15, 2021
 

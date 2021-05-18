@@ -11,11 +11,11 @@ class MapFeature {
       required this.geometry,
       Map<String, dynamic>? properties,
       this.color,
-      this.name})
+      this.label})
       : this._properties = properties;
 
   final int id;
-  final String? name;
+  final String? label;
   final Map<String, dynamic>? _properties;
   final Color? color;
   final MapGeometry geometry;
@@ -127,13 +127,13 @@ class MapChartDataSource {
   /// numeric values in quotes parsed to numbers.
   static Future<MapChartDataSource> geoJSON(
       {required String geojson,
-      String? nameKey,
+      String? labelKey,
       List<String>? keys,
       List<String>? parseToNumber,
       String? colorKey,
       ColorValueFormat colorValueFormat = ColorValueFormat.hex}) async {
     MapFeatureReader reader = MapFeatureReader(
-        nameKey: nameKey,
+        labelKey: labelKey,
         keys: keys != null ? keys.toSet() : null,
         parseToNumber: parseToNumber != null ? parseToNumber.toSet() : null,
         colorKey: colorKey,
