@@ -15,7 +15,7 @@ class MapFeature {
       : this._properties = properties;
 
   final int id;
-  final dynamic? name;
+  final String? name;
   final Map<String, dynamic>? _properties;
   final Color? color;
   final MapGeometry geometry;

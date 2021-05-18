@@ -162,11 +162,12 @@ class MapFeatureReader extends MapDataReader {
   }
 
   _Properties _readProperties(Map<String, dynamic> map) {
-    dynamic? name;
+    String? name;
     Map<String, dynamic>? values;
     Color? color;
     if (nameKey != null && map.containsKey(nameKey)) {
-      name = map[nameKey];
+      // converting dynamic to String
+      name = map[nameKey].toString();
     }
     if (keys != null) {
       if (keys!.isNotEmpty) {

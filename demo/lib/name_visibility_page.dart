@@ -18,13 +18,7 @@ class NameVisibilityPageState extends ExamplePageState {
 
   @override
   Widget buildContent() {
-    MapChart map = MapChart(
-        dataSource: dataSource,
-        nameVisible: true,
-        theme: MapChartTheme(
-            color: Colors.yellow,
-            contourColor: Colors.red,
-            hoverColor: Colors.orange));
+    MapChart map = MapChart(dataSource: dataSource, nameVisible: true);
 
     return map;
   }

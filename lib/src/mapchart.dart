@@ -71,10 +71,6 @@ class MapChartState extends State<MapChart> {
   }
 
   _onFinish(MapResolution newMapResolution) {
-    print('simplified points: ' +
-        newMapResolution.pointsCount.toString() +
-        ' of ' +
-        widget.dataSource!.pointsCount.toString());
     setState(() {
       _mapResolution = newMapResolution;
       _mapResolutionBuilder = null;
@@ -284,12 +280,13 @@ class MapPainter extends CustomPainter {
     }
 
     if (nameVisible) {
-      TextStyle textStyle = TextStyle(
-        color: Colors.black,
-        fontSize: 11,
-      );
       for (MapFeature feature in dataSource.features.values) {
         if (feature.name != null) {
+          Color color = textColor(theme.getColor(feature));
+          TextStyle textStyle = TextStyle(
+            color: color,
+            fontSize: 11,
+          );
           Path path = mapResolution.paths[feature.id]!;
           Rect bounds = MatrixUtils.transformRect(
               mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());
