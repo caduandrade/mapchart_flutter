@@ -1,6 +1,8 @@
 ## [0.5.0] - ?
 
 * Drawing features labels
+* Bugfix
+  * Map resolution memory leak
 
 ## [0.4.0] - May 15, 2021
 

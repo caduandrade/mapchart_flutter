@@ -58,7 +58,7 @@ class MapChartState extends State<MapChart> {
   MapResolutionBuilder? _mapResolutionBuilder;
 
   _updateMapResolution(MapMatrices mapMatrices, Size size) {
-    if (_lastBuildSize == size) {
+    if (mounted && _lastBuildSize == size) {
       if (_mapResolutionBuilder != null) {
         _mapResolutionBuilder!.stop();
       }
@@ -73,10 +73,12 @@ class MapChartState extends State<MapChart> {
   }
 
   _onFinish(MapResolution newMapResolution) {
-    setState(() {
-      _mapResolution = newMapResolution;
-      _mapResolutionBuilder = null;
-    });
+    if (mounted) {
+      setState(() {
+        _mapResolution = newMapResolution;
+        _mapResolutionBuilder = null;
+      });
+    }
   }
 
   @override
