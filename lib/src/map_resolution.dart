@@ -52,14 +52,11 @@ class MapResolutionBuilder {
   _State _state = _State.waiting;
   Map<int, MapFeature> _pendingFeatures = Map<int, MapFeature>();
 
-  DateTime? _initialTime;
-
   stop() {
     _state = _State.stopped;
   }
 
   start() async {
-    _initialTime = DateTime.now();
     if (_state == _State.waiting) {
       _state = _State.running;
       _pendingFeatures.addAll(dataSource.features);
@@ -71,19 +68,6 @@ class MapResolutionBuilder {
     if (_state == _State.stopped) {
       return;
     }
-    /*
-    if(_pendingFeatures.length>0) {
-      final int id = _pendingFeatures.keys.first;
-      final MapChartFeature feature = _pendingFeatures.remove(id)!;
-      Future((){
-        print('simplifing $id');
-        MapGeometry geometry = feature.geometry;
-        _paths[id] = geometry.toPath(mapMatrices.canvasMatrix, simplifier);
-        _nextPath();
-      });
-    } else {
-      _createBuffer();
-    }*/
 
     int pointsCount = 0;
     while (_pendingFeatures.length > 0) {
@@ -96,11 +80,6 @@ class MapResolutionBuilder {
       _paths[id] = simplifiedPath.path;
       _colors[id] = theme.getColor(feature);
     }
-
-    Duration duration = DateTime.now().difference(_initialTime!);
-    print('MapResolution - simplified geometries created in: ' +
-        duration.inMilliseconds.toString() +
-        'ms');
 
     _createBuffer(pointsCount);
   }

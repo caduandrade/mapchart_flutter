@@ -1,3 +1,7 @@
+## [0.5.0] - ?
+
+* Drawing the features names
+
 ## [0.4.0] - May 15, 2021
 
 * Properties reader

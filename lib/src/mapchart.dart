@@ -21,6 +21,7 @@ class MapChart extends StatefulWidget {
       this.padding = 8,
       this.hoverRule,
       this.hoverListener,
+      this.nameVisible = true,
       this.clickListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
@@ -34,6 +35,7 @@ class MapChart extends StatefulWidget {
   final HoverRule? hoverRule;
   final HoverListener? hoverListener;
   final FeatureClickListener? clickListener;
+  final bool nameVisible;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
@@ -133,10 +135,12 @@ class MapChartState extends State<MapChart> {
         }
 
         MapPainter mapPainter = MapPainter(
+            dataSource: widget.dataSource!,
             mapResolution: _mapResolution!,
             hover: _hover,
             mapMatrices: mapMatrices,
-            theme: widget.theme);
+            theme: widget.theme,
+            nameVisible: widget.nameVisible);
 
         Widget map = CustomPaint(painter: mapPainter, child: Container());
 
@@ -156,7 +160,7 @@ class MapChartState extends State<MapChart> {
         if (widget.clickListener != null) {
           map = GestureDetector(child: map, onTap: () => _onClick());
         }
-        return map;
+        return ClipRect(child: map);
       });
     }
     // empty container without map
@@ -216,13 +220,17 @@ class MapPainter extends CustomPainter {
   MapPainter(
       {required this.mapResolution,
       required this.mapMatrices,
+      required this.dataSource,
       required this.theme,
+      required this.nameVisible,
       this.hover});
 
   final MapMatrices mapMatrices;
   final MapChartTheme theme;
   final MapFeature? hover;
+  final MapChartDataSource dataSource;
   final MapResolution mapResolution;
+  final bool nameVisible;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -274,37 +282,49 @@ class MapPainter extends CustomPainter {
         canvas.restore();
       }
     }
+
+    if (nameVisible) {
+      TextStyle textStyle = TextStyle(
+        color: Colors.black,
+        fontSize: 11,
+      );
+      for (MapFeature feature in dataSource.features.values) {
+        if (feature.name != null) {
+          Path path = mapResolution.paths[feature.id]!;
+          Rect bounds = MatrixUtils.transformRect(
+              mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());
+          drawText(canvas, bounds.center, feature.name!, textStyle);
+        }
+      }
+    }
   }
 
-  Color findInvert(Color color) {
+  Color textColor(Color color) {
     final luminance = color.computeLuminance();
     if (luminance > 0.55) {
-      return const Color(0xFF000000).withOpacity(0.7);
+      return const Color(0xFF000000);
     }
     return const Color(0xFFFFFFFF);
   }
 
-  void paint2(Canvas canvas, Size size) {
-    final textStyle = TextStyle(
-      color: Colors.black,
-      fontSize: 30,
-    );
-    final textSpan = TextSpan(
-      text: 'Hello, world.',
+  void drawText(
+      Canvas canvas, Offset center, String text, TextStyle textStyle) {
+    TextSpan textSpan = TextSpan(
+      text: text,
       style: textStyle,
     );
-    final textPainter = TextPainter(
+    TextPainter textPainter = TextPainter(
       text: textSpan,
       textDirection: TextDirection.ltr,
     );
+
     textPainter.layout(
       minWidth: 0,
-      maxWidth: size.width,
     );
-    final xCenter = (size.width - textPainter.width) / 2;
-    final yCenter = (size.height - textPainter.height) / 2;
-    final offset = Offset(xCenter, yCenter);
-    textPainter.paint(canvas, offset);
+
+    double xCenter = center.dx - (textPainter.width / 2);
+    double yCenter = center.dy - (textPainter.height / 2);
+    textPainter.paint(canvas, Offset(xCenter, yCenter));
   }
 
   @override

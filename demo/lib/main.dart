@@ -9,6 +9,7 @@ import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:demo/gradient_page.dart';
 import 'package:demo/menu.dart';
+import 'package:demo/name_visibility_page.dart';
 import 'package:demo/parser_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,8 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Click listener', _clickListenerPage),
       MenuItem('Color by rule', _colorByRulePage),
       MenuItem('Gradient', _gradientPage),
-      MenuItem('Parser', _parserPage)
+      MenuItem('Parser', _parserPage),
+      MenuItem('Name visibility', _nameVisibilityPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -160,5 +162,9 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ParserPage _parserPage() {
     return ParserPage();
+  }
+
+  NameVisibilityPage _nameVisibilityPage() {
+    return NameVisibilityPage();
   }
 }
