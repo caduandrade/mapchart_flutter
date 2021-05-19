@@ -27,15 +27,13 @@ class ContourPageState extends ExamplePageState {
   }
 
   Widget _thickness() {
-    MapChart map = MapChart(
-        dataSource: dataSource, theme: MapChartTheme(contourThickness: 3));
+    MapChart map = MapChart(dataSource: dataSource, contourThickness: 3);
 
     return map;
   }
 
   Widget _noContour() {
-    MapChart map = MapChart(
-        dataSource: dataSource, theme: MapChartTheme(contourThickness: 0));
+    MapChart map = MapChart(dataSource: dataSource, contourThickness: 0);
 
     return map;
   }

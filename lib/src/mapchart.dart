@@ -11,6 +11,7 @@ import 'package:mapchart/src/data_source.dart';
 import 'package:mapchart/src/theme.dart';
 
 class MapChart extends StatefulWidget {
+  /// The default [contourThickness] value is 1.
   MapChart(
       {Key? key,
       this.dataSource,
@@ -18,16 +19,17 @@ class MapChart extends StatefulWidget {
       MapChartTheme? theme,
       this.borderColor = Colors.black54,
       this.borderThickness = 1,
+      this.contourThickness = 1,
       this.padding = 8,
       this.hoverRule,
       this.hoverListener,
-      this.labelVisibility,
       this.clickListener})
       : this.theme = theme != null ? theme : MapChartTheme(),
         super(key: key);
 
   final MapChartDataSource? dataSource;
   final MapChartTheme theme;
+  final double contourThickness;
   final int delayToRefreshResolution;
   final Color? borderColor;
   final double? borderThickness;
@@ -35,15 +37,21 @@ class MapChart extends StatefulWidget {
   final HoverRule? hoverRule;
   final HoverListener? hoverListener;
   final FeatureClickListener? clickListener;
-  final LabelVisibility? labelVisibility;
 
   @override
   State<StatefulWidget> createState() => MapChartState();
 }
 
-typedef FeatureClickListener = Function(MapFeature feature);
+/// Propagates [MapChart] configurations to other classes.
+class MapChartConfig {
+  MapChartConfig(this.dataSource, this.theme, this.contourThickness);
 
-typedef LabelVisibility = bool Function(MapFeature feature);
+  final MapChartDataSource? dataSource;
+  final MapChartTheme theme;
+  final double contourThickness;
+}
+
+typedef FeatureClickListener = Function(MapFeature feature);
 
 typedef HoverRule = bool Function(MapFeature feature);
 
@@ -65,6 +73,7 @@ class MapChartState extends State<MapChart> {
       _mapResolutionBuilder = MapResolutionBuilder(
           dataSource: widget.dataSource!,
           theme: widget.theme,
+          contourThickness: widget.contourThickness,
           mapMatrices: mapMatrices,
           simplifier: IntegerSimplifier(),
           onFinish: _onFinish);
@@ -139,8 +148,8 @@ class MapChartState extends State<MapChart> {
             mapResolution: _mapResolution!,
             hover: _hover,
             mapMatrices: mapMatrices,
-            theme: widget.theme,
-            labelVisibility: widget.labelVisibility);
+            contourThickness: widget.contourThickness,
+            theme: widget.theme);
 
         Widget map = CustomPaint(painter: mapPainter, child: Container());
 
@@ -221,16 +230,16 @@ class MapPainter extends CustomPainter {
       {required this.mapResolution,
       required this.mapMatrices,
       required this.dataSource,
+      required this.contourThickness,
       required this.theme,
-      this.labelVisibility,
       this.hover});
 
   final MapMatrices mapMatrices;
+  final double contourThickness;
   final MapChartTheme theme;
   final MapFeature? hover;
   final MapChartDataSource dataSource;
   final MapResolution mapResolution;
-  final LabelVisibility? labelVisibility;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -269,11 +278,11 @@ class MapPainter extends CustomPainter {
           canvas.drawPath(path, paint);
         }
 
-        if (theme.contourThickness > 0 && theme.hoverContourColor != null) {
+        if (contourThickness > 0 && theme.hoverContourColor != null) {
           var paint = Paint()
             ..style = PaintingStyle.stroke
             ..color = theme.hoverContourColor!
-            ..strokeWidth = theme.contourThickness / canvasMatrix.scale
+            ..strokeWidth = contourThickness / canvasMatrix.scale
             ..isAntiAlias = true;
 
           canvas.drawPath(path, paint);
@@ -283,9 +292,9 @@ class MapPainter extends CustomPainter {
       }
     }
 
-    if (labelVisibility != null) {
+    if (theme.labelVisibility != null) {
       for (MapFeature feature in dataSource.features.values) {
-        if (feature.label != null && labelVisibility!(feature)) {
+        if (feature.label != null && theme.labelVisibility!(feature)) {
           Color featureColor = theme.getColor(feature);
           Color labelColor = _labelColorFrom(featureColor);
           TextStyle labelStyle = theme.getLabelStyle(

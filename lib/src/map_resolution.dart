@@ -36,12 +36,14 @@ class MapResolutionBuilder {
   MapResolutionBuilder(
       {required this.dataSource,
       required this.theme,
+      required this.contourThickness,
       required this.mapMatrices,
       required this.simplifier,
       required this.onFinish});
 
   final MapChartDataSource dataSource;
   final MapChartTheme theme;
+  final double contourThickness;
   final MapMatrices mapMatrices;
   final GeometrySimplifier simplifier;
 
@@ -114,11 +116,11 @@ class MapResolutionBuilder {
       canvas.drawPath(path, paint);
     });
 
-    if (theme.contourThickness > 0 && theme.contourColor != null) {
+    if (contourThickness > 0 && theme.contourColor != null) {
       var paint = Paint()
         ..style = PaintingStyle.stroke
         ..color = theme.contourColor!
-        ..strokeWidth = theme.contourThickness / bufferCreationMatrix.scale
+        ..strokeWidth = contourThickness / bufferCreationMatrix.scale
         ..isAntiAlias = true;
 
       for (Path path in _paths.values) {

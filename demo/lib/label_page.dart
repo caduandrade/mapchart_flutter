@@ -26,8 +26,9 @@ class LabelPageState extends ExamplePageState {
   }
 
   Widget _allVisible() {
-    MapChart map =
-        MapChart(dataSource: dataSource, labelVisibility: (feature) => true);
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(labelVisibility: (feature) => true));
 
     return map;
   }
@@ -35,7 +36,8 @@ class LabelPageState extends ExamplePageState {
   Widget _visibleRule() {
     MapChart map = MapChart(
         dataSource: dataSource,
-        labelVisibility: (feature) => feature.label == 'Darwin');
+        theme: MapChartTheme(
+            labelVisibility: (feature) => feature.label == 'Darwin'));
 
     return map;
   }
@@ -43,27 +45,28 @@ class LabelPageState extends ExamplePageState {
   Widget _labelStyle() {
     MapChart map = MapChart(
         dataSource: dataSource,
-        labelVisibility: (feature) => true,
-    theme: MapChartTheme(labelStyleBuilder: (feature, featureColor, labelColor, hover) {
-     if(feature.label=='Darwin'){
-       return TextStyle(
-         color: labelColor,
-         fontWeight: FontWeight.bold,
-         fontSize: 11,
-       );
-     }
-     if(hover){
-       return TextStyle(
-         color: labelColor,
-         decoration: TextDecoration.underline,
-         fontSize: 11,
-       );
-     }
-     return TextStyle(
-       color: labelColor,
-       fontSize: 11,
-     );
-    }));
+        theme: MapChartTheme(
+            labelVisibility: (feature) => true,
+            labelStyleBuilder: (feature, featureColor, labelColor, hover) {
+              if (feature.label == 'Darwin') {
+                return TextStyle(
+                  color: labelColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                );
+              }
+              if (hover) {
+                return TextStyle(
+                  color: labelColor,
+                  decoration: TextDecoration.underline,
+                  fontSize: 11,
+                );
+              }
+              return TextStyle(
+                color: labelColor,
+                fontSize: 11,
+              );
+            }));
 
     return map;
   }

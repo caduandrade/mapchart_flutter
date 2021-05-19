@@ -195,8 +195,7 @@ If the `max` value is set, all higher values will be displayed using the last gr
 #### Thickness
 
 ```dart
-    MapChart map = MapChart(
-        dataSource: dataSource, theme: MapChartTheme(contourThickness: 3));
+    MapChart map = MapChart(dataSource: dataSource, contourThickness: 3);
 ```
 
 ![contourthickness](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/contour_thickness.png)
