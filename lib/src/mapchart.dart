@@ -286,22 +286,21 @@ class MapPainter extends CustomPainter {
     if (labelVisibility != null) {
       for (MapFeature feature in dataSource.features.values) {
         if (feature.label != null && labelVisibility!(feature)) {
-          Color color = textColor(theme.getColor(feature));
-          TextStyle textStyle = TextStyle(
-            color: color,
-            fontSize: 11,
-          );
+          Color featureColor = theme.getColor(feature);
+          Color labelColor = _labelColorFrom(featureColor);
+          TextStyle labelStyle = theme.getLabelStyle(
+              feature, featureColor, labelColor, (hover == feature));
           Path path = mapResolution.paths[feature.id]!;
           Rect bounds = MatrixUtils.transformRect(
               mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());
-          drawText(canvas, bounds.center, feature.label!, textStyle);
+          drawText(canvas, bounds.center, feature.label!, labelStyle);
         }
       }
     }
   }
 
-  Color textColor(Color color) {
-    final luminance = color.computeLuminance();
+  Color _labelColorFrom(Color featureColor) {
+    final luminance = featureColor.computeLuminance();
     if (luminance > 0.55) {
       return const Color(0xFF000000);
     }

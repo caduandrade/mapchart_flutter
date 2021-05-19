@@ -5,6 +5,9 @@ import 'package:mapchart/src/data_source.dart';
 /// Rule to obtain a color of a feature.
 typedef ColorRule = Color? Function(MapFeature feature);
 
+typedef LabelStyleBuilder = TextStyle Function(
+    MapFeature feature, Color featureColor, Color labelColor, bool hover);
+
 class MapChartTheme {
   /// Theme for [MapChart]
   /// The default [hoverColor] value is null.
@@ -15,13 +18,14 @@ class MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
-      List<Color>? gradientColors})
+      LabelStyleBuilder? labelStyleBuilder})
       : this._color = color != null ? color : Color(0xFFE0E0E0),
         this.contourColor =
             contourColor != null ? contourColor : Color(0xFF9E9E9E),
         this.hoverContourColor = hoverContourColor,
         this.contourThickness = contourThickness != null ? contourThickness : 1,
-        this._hoverColor = hoverColor;
+        this._hoverColor = hoverColor,
+        this.labelStyleBuilder = labelStyleBuilder;
 
   /// Creates a theme with colors by property value.
   static MapChartTheme value(
@@ -30,6 +34,7 @@ class MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      LabelStyleBuilder? labelStyleBuilder,
       required String key,
       Map<dynamic, Color>? colors,
       Map<dynamic, Color>? hoverColors}) {
@@ -39,6 +44,7 @@ class MapChartTheme {
         hoverContourColor: hoverContourColor,
         contourThickness: contourThickness,
         hoverColor: hoverColor,
+        labelStyleBuilder: labelStyleBuilder,
         key: key,
         colors: colors,
         hoverColors: hoverColors);
@@ -54,6 +60,7 @@ class MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      LabelStyleBuilder? labelStyleBuilder,
       required List<ColorRule> colorRules,
       List<ColorRule>? hoverColorRules}) {
     return _MapChartThemeRule(
@@ -62,6 +69,7 @@ class MapChartTheme {
         hoverContourColor: hoverContourColor,
         contourThickness: contourThickness,
         hoverColor: hoverColor,
+        labelStyleBuilder: labelStyleBuilder,
         colorRules: colorRules,
         hoverColorRules: hoverColorRules);
   }
@@ -80,6 +88,7 @@ class MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      LabelStyleBuilder? labelStyleBuilder,
       MapChartDataSource? dataSource,
       double? min,
       double? max,
@@ -111,6 +120,7 @@ class MapChartTheme {
         hoverContourColor: hoverContourColor,
         contourThickness: contourThickness,
         hoverColor: hoverColor,
+        labelStyleBuilder: labelStyleBuilder,
         min: min,
         max: max,
         key: key,
@@ -122,6 +132,7 @@ class MapChartTheme {
   final Color? hoverContourColor;
   final double contourThickness;
   final Color? _hoverColor;
+  final LabelStyleBuilder? labelStyleBuilder;
 
   bool hasAnyHoverColor() {
     return hoverContourColor != null || _hoverColor != null;
@@ -134,6 +145,17 @@ class MapChartTheme {
   Color? getHoverColor(MapFeature feature) {
     return _hoverColor;
   }
+
+  TextStyle getLabelStyle(
+      MapFeature feature, Color featureColor, Color labelColor, bool hover) {
+    if (labelStyleBuilder != null) {
+      return labelStyleBuilder!(feature, featureColor, labelColor, hover);
+    }
+    return TextStyle(
+      color: labelColor,
+      fontSize: 11,
+    );
+  }
 }
 
 class _MapChartThemeValue extends MapChartTheme {
@@ -143,6 +165,7 @@ class _MapChartThemeValue extends MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      LabelStyleBuilder? labelStyleBuilder,
       required this.key,
       Map<dynamic, Color>? colors,
       Map<dynamic, Color>? hoverColors})
@@ -153,7 +176,8 @@ class _MapChartThemeValue extends MapChartTheme {
             contourColor: contourColor,
             hoverContourColor: hoverContourColor,
             contourThickness: contourThickness,
-            hoverColor: hoverColor);
+            hoverColor: hoverColor,
+            labelStyleBuilder: labelStyleBuilder);
 
   final String key;
   final Map<dynamic, Color>? _colors;
@@ -194,6 +218,7 @@ class _MapChartThemeRule extends MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      LabelStyleBuilder? labelStyleBuilder,
       required List<ColorRule> colorRules,
       List<ColorRule>? hoverColorRules})
       : this._colorRules = colorRules,
@@ -203,7 +228,8 @@ class _MapChartThemeRule extends MapChartTheme {
             contourColor: contourColor,
             hoverContourColor: hoverContourColor,
             contourThickness: contourThickness,
-            hoverColor: hoverColor);
+            hoverColor: hoverColor,
+            labelStyleBuilder: labelStyleBuilder);
 
   final List<ColorRule> _colorRules;
   final List<ColorRule>? _hoverColorRules;
@@ -248,6 +274,7 @@ class _MapChartThemeGradient extends MapChartTheme {
       Color? hoverContourColor,
       double? contourThickness,
       Color? hoverColor,
+      LabelStyleBuilder? labelStyleBuilder,
       required this.min,
       required this.max,
       required this.key,
@@ -257,7 +284,8 @@ class _MapChartThemeGradient extends MapChartTheme {
             contourColor: contourColor,
             hoverContourColor: hoverContourColor,
             contourThickness: contourThickness,
-            hoverColor: hoverColor);
+            hoverColor: hoverColor,
+            labelStyleBuilder: labelStyleBuilder);
 
   double min;
   double max;

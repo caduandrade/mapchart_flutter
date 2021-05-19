@@ -9,7 +9,7 @@ import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:demo/gradient_page.dart';
 import 'package:demo/menu.dart';
-import 'package:demo/label_visibility_page.dart';
+import 'package:demo/label_page.dart';
 import 'package:demo/parser_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Color by rule', _colorByRulePage),
       MenuItem('Gradient', _gradientPage),
       MenuItem('Parser', _parserPage),
-      MenuItem('Label visibility', _labelVisibilityPage)
+      MenuItem('Label', _labelPage)
     ];
     if (_menuItems.isNotEmpty) {
       _currentExampleBuilder = _menuItems.first.builder;
@@ -164,7 +164,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
     return ParserPage();
   }
 
-  LabelVisibilityPage _labelVisibilityPage() {
-    return LabelVisibilityPage();
+  LabelPage _labelPage() {
+    return LabelPage();
   }
 }
