@@ -297,8 +297,11 @@ class MapPainter extends CustomPainter {
         if (feature.label != null && theme.labelVisibility!(feature)) {
           Color featureColor = theme.getColor(feature);
           Color labelColor = _labelColorFrom(featureColor);
-          TextStyle labelStyle = theme.getLabelStyle(
-              feature, featureColor, labelColor, (hover == feature));
+          if (hover == feature) {
+            //TODO override with hover labelStyle
+          }
+          TextStyle labelStyle =
+              theme.getLabelStyle(feature, featureColor, labelColor);
           Path path = mapResolution.paths[feature.id]!;
           Rect bounds = MatrixUtils.transformRect(
               mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());

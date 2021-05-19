@@ -8,7 +8,7 @@ typedef LabelVisibility = bool Function(MapFeature feature);
 typedef ColorRule = Color? Function(MapFeature feature);
 
 typedef LabelStyleBuilder = TextStyle Function(
-    MapFeature feature, Color featureColor, Color labelColor, bool hover);
+    MapFeature feature, Color featureColor, Color labelColor);
 
 class MapChartTheme {
   /// Theme for [MapChart]
@@ -147,9 +147,9 @@ class MapChartTheme {
   }
 
   TextStyle getLabelStyle(
-      MapFeature feature, Color featureColor, Color labelColor, bool hover) {
+      MapFeature feature, Color featureColor, Color labelColor) {
     if (labelStyleBuilder != null) {
-      return labelStyleBuilder!(feature, featureColor, labelColor, hover);
+      return labelStyleBuilder!(feature, featureColor, labelColor);
     }
     return TextStyle(
       color: labelColor,

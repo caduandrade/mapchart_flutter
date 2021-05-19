@@ -47,18 +47,11 @@ class LabelPageState extends ExamplePageState {
         dataSource: dataSource,
         theme: MapChartTheme(
             labelVisibility: (feature) => true,
-            labelStyleBuilder: (feature, featureColor, labelColor, hover) {
+            labelStyleBuilder: (feature, featureColor, labelColor) {
               if (feature.label == 'Darwin') {
                 return TextStyle(
                   color: labelColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                );
-              }
-              if (hover) {
-                return TextStyle(
-                  color: labelColor,
-                  decoration: TextDecoration.underline,
                   fontSize: 11,
                 );
               }
