@@ -12,41 +12,31 @@ typedef LabelStyleBuilder = TextStyle Function(
 
 class MapChartTheme {
   /// Theme for [MapChart]
-  /// The default [hoverColor] value is null.
   MapChartTheme(
       {Color? color,
-      Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
+      this.contourColor,
       this.labelVisibility,
       LabelStyleBuilder? labelStyleBuilder})
-      : this._color = color != null ? color : Color(0xFFE0E0E0),
-        this.contourColor =
-            contourColor != null ? contourColor : Color(0xFF9E9E9E),
-        this.hoverContourColor = hoverContourColor,
-        this._hoverColor = hoverColor,
+      : this._color = color,
         this.labelStyleBuilder = labelStyleBuilder;
+
+  static const Color defaultColor = Color(0xFFE0E0E0);
+  static const Color defaultContourColor = Color(0xFF9E9E9E);
 
   /// Creates a theme with colors by property value.
   static MapChartTheme value(
       {Color? color,
       Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
       required String key,
-      Map<dynamic, Color>? colors,
-      Map<dynamic, Color>? hoverColors}) {
+      Map<dynamic, Color>? colors}) {
     return _MapChartThemeValue(
         color: color,
         contourColor: contourColor,
-        hoverContourColor: hoverContourColor,
-        hoverColor: hoverColor,
         labelStyleBuilder: labelStyleBuilder,
         key: key,
-        colors: colors,
-        hoverColors: hoverColors);
+        colors: colors);
   }
 
   /// Creates a theme with colors by rule.
@@ -56,21 +46,15 @@ class MapChartTheme {
   static MapChartTheme rule(
       {Color? color,
       Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
-      required List<ColorRule> colorRules,
-      List<ColorRule>? hoverColorRules}) {
+      required List<ColorRule> colorRules}) {
     return _MapChartThemeRule(
         color: color,
         contourColor: contourColor,
-        hoverContourColor: hoverContourColor,
-        hoverColor: hoverColor,
         labelVisibility: labelVisibility,
         labelStyleBuilder: labelStyleBuilder,
-        colorRules: colorRules,
-        hoverColorRules: hoverColorRules);
+        colorRules: colorRules);
   }
 
   /// Creates a theme with gradient colors.
@@ -84,8 +68,6 @@ class MapChartTheme {
   static MapChartTheme gradient(
       {Color? color,
       Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
       MapChartDataSource? dataSource,
@@ -116,8 +98,6 @@ class MapChartTheme {
     return _MapChartThemeGradient(
         color: color,
         contourColor: contourColor,
-        hoverContourColor: hoverContourColor,
-        hoverColor: hoverColor,
         labelVisibility: labelVisibility,
         labelStyleBuilder: labelStyleBuilder,
         min: min,
@@ -126,35 +106,24 @@ class MapChartTheme {
         colors: colors);
   }
 
-  final Color _color;
+  final Color? _color;
   final Color? contourColor;
-  final Color? hoverContourColor;
-
-  final Color? _hoverColor;
   final LabelVisibility? labelVisibility;
   final LabelStyleBuilder? labelStyleBuilder;
 
-  bool hasAnyHoverColor() {
-    return hoverContourColor != null || _hoverColor != null;
+  bool hasValue() {
+    return _color != null || contourColor != null || labelVisibility != null;
   }
 
   Color getColor(MapFeature feature) {
-    return _color;
+    if (_color != null) {
+      return _color!;
+    }
+    return MapChartTheme.defaultColor;
   }
 
   Color? getHoverColor(MapFeature feature) {
-    return _hoverColor;
-  }
-
-  TextStyle getLabelStyle(
-      MapFeature feature, Color featureColor, Color labelColor) {
-    if (labelStyleBuilder != null) {
-      return labelStyleBuilder!(feature, featureColor, labelColor);
-    }
-    return TextStyle(
-      color: labelColor,
-      fontSize: 11,
-    );
+    return _color;
   }
 }
 
@@ -162,52 +131,49 @@ class _MapChartThemeValue extends MapChartTheme {
   _MapChartThemeValue(
       {Color? color,
       Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
       required this.key,
-      Map<dynamic, Color>? colors,
-      Map<dynamic, Color>? hoverColors})
+      Map<dynamic, Color>? colors})
       : this._colors = colors,
-        this._hoverColors = hoverColors,
         super(
             color: color,
             contourColor: contourColor,
-            hoverContourColor: hoverContourColor,
-            hoverColor: hoverColor,
             labelVisibility: labelVisibility,
             labelStyleBuilder: labelStyleBuilder);
 
   final String key;
   final Map<dynamic, Color>? _colors;
-  final Map<dynamic, Color>? _hoverColors;
 
-  bool hasAnyHoverColor() {
-    return (_hoverColors != null && _hoverColors!.isNotEmpty) ||
-        super.hasAnyHoverColor();
+  bool hasValue() {
+    return (_colors != null && _colors!.isNotEmpty) || super.hasValue();
   }
 
   @override
   Color getColor(MapFeature feature) {
-    if (_colors != null) {
-      dynamic? value = feature.getValue(key);
-      if (value != null && _colors!.containsKey(value)) {
-        return _colors![value]!;
-      }
+    Color? color = _getColor(feature);
+    if (color != null) {
+      return color;
     }
     return super.getColor(feature);
   }
 
   @override
   Color? getHoverColor(MapFeature feature) {
-    if (_hoverColors != null) {
-      dynamic? value = feature.getValue(key);
-      if (value != null && _hoverColors!.containsKey(value)) {
-        return _hoverColors![value]!;
-      }
+    Color? color = _getColor(feature);
+    if (color != null) {
+      return color;
     }
     return super.getHoverColor(feature);
+  }
+
+  Color? _getColor(MapFeature feature) {
+    if (_colors != null) {
+      dynamic? value = feature.getValue(key);
+      if (value != null && _colors!.containsKey(value)) {
+        return _colors![value]!;
+      }
+    }
   }
 }
 
@@ -215,33 +181,25 @@ class _MapChartThemeRule extends MapChartTheme {
   _MapChartThemeRule(
       {Color? color,
       Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
-      required List<ColorRule> colorRules,
-      List<ColorRule>? hoverColorRules})
+      required List<ColorRule> colorRules})
       : this._colorRules = colorRules,
-        this._hoverColorRules = hoverColorRules,
         super(
             color: color,
             contourColor: contourColor,
-            hoverContourColor: hoverContourColor,
-            hoverColor: hoverColor,
             labelVisibility: labelVisibility,
             labelStyleBuilder: labelStyleBuilder);
 
   final List<ColorRule> _colorRules;
-  final List<ColorRule>? _hoverColorRules;
 
   @override
-  bool hasAnyHoverColor() {
+  bool hasValue() {
     //It is not possible to know in advance, it depends on the rule.
     return true;
   }
 
-  @override
-  Color getColor(MapFeature feature) {
+  Color? _getColor(MapFeature feature) {
     Color? color;
     for (ColorRule rule in _colorRules) {
       color = rule(feature);
@@ -249,20 +207,18 @@ class _MapChartThemeRule extends MapChartTheme {
         break;
       }
     }
+    return color;
+  }
+
+  @override
+  Color getColor(MapFeature feature) {
+    Color? color = _getColor(feature);
     return color != null ? color : super.getColor(feature);
   }
 
   @override
   Color? getHoverColor(MapFeature feature) {
-    Color? color;
-    if (_hoverColorRules != null) {
-      for (ColorRule rule in _colorRules) {
-        color = rule(feature);
-        if (color != null) {
-          break;
-        }
-      }
-    }
+    Color? color = _getColor(feature);
     return color != null ? color : super.getHoverColor(feature);
   }
 }
@@ -271,8 +227,6 @@ class _MapChartThemeGradient extends MapChartTheme {
   _MapChartThemeGradient(
       {Color? color,
       Color? contourColor,
-      Color? hoverContourColor,
-      Color? hoverColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
       required this.min,
@@ -282,8 +236,6 @@ class _MapChartThemeGradient extends MapChartTheme {
       : super(
             color: color,
             contourColor: contourColor,
-            hoverContourColor: hoverContourColor,
-            hoverColor: hoverColor,
             labelVisibility: labelVisibility,
             labelStyleBuilder: labelStyleBuilder);
 

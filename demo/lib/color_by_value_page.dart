@@ -18,18 +18,15 @@ class ColorByValuePageState extends ExamplePageState {
 
   @override
   Widget buildContent() {
-    MapChartTheme theme =
-        MapChartTheme.value(contourColor: Colors.white, key: 'Seq', colors: {
-      2: Colors.green,
-      4: Colors.red,
-      6: Colors.orange,
-      8: Colors.blue
-    }, hoverColors: {
-      2: Colors.green[900]!,
-      4: Colors.red[900]!,
-      6: Colors.orange[900]!,
-      8: Colors.blue[900]!
-    });
+    MapChartTheme theme = MapChartTheme.value(
+        contourColor: Colors.white,
+        key: 'Seq',
+        colors: {
+          2: Colors.green,
+          4: Colors.red,
+          6: Colors.orange,
+          8: Colors.blue
+        });
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 

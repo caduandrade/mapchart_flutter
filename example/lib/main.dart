@@ -58,9 +58,9 @@ class ExampleState extends State<ExampleWidget> {
         dataSource: _dataSource,
         theme: MapChartTheme.gradient(
             contourColor: Colors.green[800],
-            hoverColor: Colors.green[900],
             dataSource: _dataSource!,
             key: 'GEOCODIGO',
-            colors: [Colors.yellow, Colors.lightGreen]));
+            colors: [Colors.yellow, Colors.lightGreen]),
+        hoverTheme: MapChartTheme(color: Colors.green[900]));
   }
 }

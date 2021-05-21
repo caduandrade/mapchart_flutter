@@ -20,7 +20,7 @@ class ClickListenerPageState extends ExamplePageState {
   Widget buildContent() {
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(hoverColor: Colors.grey[800]!),
+        hoverTheme: MapChartTheme(color: Colors.grey[800]!),
         clickListener: (feature) {
           print(feature.id);
         });

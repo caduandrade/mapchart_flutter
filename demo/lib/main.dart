@@ -8,6 +8,7 @@ import 'package:demo/enable_hover_by_value_page.dart';
 import 'package:demo/get_started_page.dart';
 import 'package:demo/feature_hover_listener_page.dart';
 import 'package:demo/gradient_page.dart';
+import 'package:demo/hover_page.dart';
 import 'package:demo/menu.dart';
 import 'package:demo/label_page.dart';
 import 'package:demo/parser_page.dart';
@@ -57,6 +58,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Color by rule', _colorByRulePage),
       MenuItem('Gradient', _gradientPage),
       MenuItem('Parser', _parserPage),
+      MenuItem('Hover', _hoverPage),
       MenuItem('Label', _labelPage)
     ];
     if (_menuItems.isNotEmpty) {
@@ -162,6 +164,10 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ParserPage _parserPage() {
     return ParserPage();
+  }
+
+  HoverPage _hoverPage() {
+    return HoverPage();
   }
 
   LabelPage _labelPage() {

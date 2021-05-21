@@ -19,13 +19,15 @@ class EnableHoverByValuePageState extends ExamplePageState {
   @override
   Widget buildContent() {
     // coloring only the 'Darwin' feature
-    MapChartTheme theme = MapChartTheme.value(
-        key: 'Seq', colors: {4: Colors.green}, hoverColor: Colors.green[900]!);
+    MapChartTheme theme =
+        MapChartTheme.value(key: 'Seq', colors: {4: Colors.green});
+    MapChartTheme hoverTheme = MapChartTheme(color: Colors.green[900]!);
 
     // enabling hover only for the 'Darwin' feature
     MapChart map = MapChart(
       dataSource: dataSource,
       theme: theme,
+      hoverTheme: hoverTheme,
       hoverRule: (feature) {
         return feature.getValue('Seq') == 4;
       },

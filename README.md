@@ -59,15 +59,12 @@ The `parseToNumber` argument defines which properties will have numeric values i
         geojson: geojson, keys: ['Seq', 'Rnd'], parseToNumber: ['Rnd']);
 ```
 
-## Changing the default colors
+## Default colors
 
 ```dart
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(
-            color: Colors.yellow,
-            contourColor: Colors.red,
-            hoverColor: Colors.orange));
+        theme: MapChartTheme(color: Colors.yellow, contourColor: Colors.red));
 ```
 
 ![defaultcolors](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/default_colors.png)
@@ -86,18 +83,15 @@ Sets a color for each property value in GeoJSON. If a color is not set, the defa
 ##### Setting the colors for the property values
 
 ```dart
-    MapChartTheme theme =
-        MapChartTheme.value(contourColor: Colors.white, key: 'Seq', colors: {
-      2: Colors.green,
-      4: Colors.red,
-      6: Colors.orange,
-      8: Colors.blue
-    }, hoverColors: {
-      2: Colors.green[900]!,
-      4: Colors.red[900]!,
-      6: Colors.orange[900]!,
-      8: Colors.blue[900]!
-    });
+    MapChartTheme theme = MapChartTheme.value(
+        contourColor: Colors.white,
+        key: 'Seq',
+        colors: {
+          2: Colors.green,
+          4: Colors.red,
+          6: Colors.orange,
+          8: Colors.blue
+        });
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 ```
@@ -118,23 +112,21 @@ The feature color is obtained from the first rule that returns a non-null color.
 ##### Setting the rules
 
 ```dart
-    MapChartTheme theme = MapChartTheme.rule(
-        contourColor: Colors.white,
-        hoverColor: Colors.grey[700]!,
-        colorRules: [
-          (feature) {
-            String? value = feature.getValue('Name');
-            return value == 'Faraday' ? Colors.red : null;
-          },
-          (feature) {
-            double? value = feature.getDoubleValue('Seq');
-            return value != null && value < 3 ? Colors.green : null;
-          },
-          (feature) {
-            double? value = feature.getDoubleValue('Seq');
-            return value != null && value > 9 ? Colors.blue : null;
-          }
-        ]);
+    MapChartTheme theme =
+        MapChartTheme.rule(contourColor: Colors.white, colorRules: [
+      (feature) {
+        String? value = feature.getValue('Name');
+        return value == 'Faraday' ? Colors.red : null;
+      },
+      (feature) {
+        double? value = feature.getDoubleValue('Seq');
+        return value != null && value < 3 ? Colors.green : null;
+      },
+      (feature) {
+        double? value = feature.getDoubleValue('Seq');
+        return value != null && value > 9 ? Colors.blue : null;
+      }
+    ]);
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 ```
@@ -200,17 +192,26 @@ If the `max` value is set, all higher values will be displayed using the last gr
 
 ![contourthickness](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/contour_thickness.png)
 
-#### Hover contour color
+## Hover
+
+#### Color
+
+```dart
+    MapChart map = MapChart(
+        dataSource: dataSource, hoverTheme: MapChartTheme(color: Colors.green));
+```
+
+![hovercolor](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/hover_color.png)
+
+#### Contour color
 
 ```dart
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(hoverContourColor: Colors.red));
+        hoverTheme: MapChartTheme(contourColor: Colors.red));
 ```
 
 ![contourhovercolor](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/hover_contour.png)
-
-## Hover
 
 #### Listener
 
@@ -237,13 +238,15 @@ If the `max` value is set, all higher values will be displayed using the last gr
 
 ```dart
     // coloring only the 'Darwin' feature
-    MapChartTheme theme = MapChartTheme.value(
-        key: 'Seq', colors: {4: Colors.green}, hoverColor: Colors.green[900]!);
+    MapChartTheme theme =
+        MapChartTheme.value(key: 'Seq', colors: {4: Colors.green});
+    MapChartTheme hoverTheme = MapChartTheme(color: Colors.green[900]!);
 
     // enabling hover only for the 'Darwin' feature
     MapChart map = MapChart(
       dataSource: dataSource,
       theme: theme,
+      hoverTheme: hoverTheme,
       hoverRule: (feature) {
         return feature.getValue('Seq') == 4;
       },
@@ -257,7 +260,7 @@ If the `max` value is set, all higher values will be displayed using the last gr
 ```dart
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(hoverColor: Colors.grey[800]!),
+        hoverTheme: MapChartTheme(color: Colors.grey[800]!),
         clickListener: (feature) {
           print(feature.id);
         });

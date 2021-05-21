@@ -17,6 +17,7 @@ class MapChart extends StatefulWidget {
       this.dataSource,
       this.delayToRefreshResolution = 1000,
       MapChartTheme? theme,
+      this.hoverTheme,
       this.borderColor = Colors.black54,
       this.borderThickness = 1,
       this.contourThickness = 1,
@@ -29,6 +30,7 @@ class MapChart extends StatefulWidget {
 
   final MapChartDataSource? dataSource;
   final MapChartTheme theme;
+  final MapChartTheme? hoverTheme;
   final double contourThickness;
   final int delayToRefreshResolution;
   final Color? borderColor;
@@ -149,11 +151,12 @@ class MapChartState extends State<MapChart> {
             hover: _hover,
             mapMatrices: mapMatrices,
             contourThickness: widget.contourThickness,
-            theme: widget.theme);
+            theme: widget.theme,
+            hoverTheme: widget.hoverTheme);
 
         Widget map = CustomPaint(painter: mapPainter, child: Container());
 
-        if (widget.theme.hasAnyHoverColor() ||
+        if ((widget.hoverTheme != null && widget.hoverTheme!.hasValue()) ||
             widget.hoverListener != null ||
             widget.clickListener != null) {
           map = MouseRegion(
@@ -211,7 +214,7 @@ class MapChartState extends State<MapChart> {
   }
 
   _updateHover(MapFeature? newHover) {
-    if (widget.theme.hasAnyHoverColor()) {
+    if (widget.hoverTheme != null && widget.hoverTheme!.hasValue()) {
       // repaint
       setState(() {
         _hover = newHover;
@@ -232,11 +235,13 @@ class MapPainter extends CustomPainter {
       required this.dataSource,
       required this.contourThickness,
       required this.theme,
+      this.hoverTheme,
       this.hover});
 
   final MapMatrices mapMatrices;
   final double contourThickness;
   final MapChartTheme theme;
+  final MapChartTheme? hoverTheme;
   final MapFeature? hover;
   final MapChartDataSource dataSource;
   final MapResolution mapResolution;
@@ -253,9 +258,9 @@ class MapPainter extends CustomPainter {
     canvas.restore();
 
     // drawing the hover
-    if (hover != null) {
-      Color? hoverColor = theme.getHoverColor(hover!);
-      if (hoverColor != null || theme.hoverContourColor != null) {
+    if (hover != null && hoverTheme != null) {
+      Color? hoverColor = hoverTheme!.getHoverColor(hover!);
+      if (hoverColor != null || hoverTheme!.contourColor != null) {
         canvas.save();
 
         CanvasMatrix canvasMatrix = mapMatrices.canvasMatrix;
@@ -278,10 +283,17 @@ class MapPainter extends CustomPainter {
           canvas.drawPath(path, paint);
         }
 
-        if (contourThickness > 0 && theme.hoverContourColor != null) {
+        if (contourThickness > 0) {
+          Color contourColor = MapChartTheme.defaultContourColor;
+          if (hoverTheme != null && hoverTheme!.contourColor != null) {
+            contourColor = hoverTheme!.contourColor!;
+          } else if (theme.contourColor != null) {
+            contourColor = theme.contourColor!;
+          }
+
           var paint = Paint()
             ..style = PaintingStyle.stroke
-            ..color = theme.hoverContourColor!
+            ..color = contourColor
             ..strokeWidth = contourThickness / canvasMatrix.scale
             ..isAntiAlias = true;
 
@@ -292,23 +304,61 @@ class MapPainter extends CustomPainter {
       }
     }
 
-    if (theme.labelVisibility != null) {
+    if (theme.labelVisibility != null ||
+        (hoverTheme != null && hoverTheme!.labelVisibility != null)) {
       for (MapFeature feature in dataSource.features.values) {
-        if (feature.label != null && theme.labelVisibility!(feature)) {
-          Color featureColor = theme.getColor(feature);
-          Color labelColor = _labelColorFrom(featureColor);
-          if (hover == feature) {
-            //TODO override with hover labelStyle
+        if (feature.label != null) {
+          LabelVisibility? labelVisibility;
+          if (hoverTheme != null &&
+              hoverTheme!.labelVisibility != null &&
+              hover == feature) {
+            labelVisibility = hoverTheme!.labelVisibility;
+          } else {
+            labelVisibility = theme.labelVisibility;
           }
-          TextStyle labelStyle =
-              theme.getLabelStyle(feature, featureColor, labelColor);
-          Path path = mapResolution.paths[feature.id]!;
-          Rect bounds = MatrixUtils.transformRect(
-              mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());
-          drawText(canvas, bounds.center, feature.label!, labelStyle);
+
+          if (labelVisibility != null && labelVisibility(feature)) {
+            Color? featureColor;
+            LabelStyleBuilder? labelStyleBuilder;
+
+            if (hoverTheme != null && hover == feature) {
+              featureColor = hoverTheme!.getHoverColor(feature);
+              labelStyleBuilder = hoverTheme!.labelStyleBuilder;
+            }
+
+            if (featureColor == null) {
+              featureColor = theme.getColor(feature);
+            }
+            if (labelStyleBuilder == null) {
+              labelStyleBuilder = theme.labelStyleBuilder;
+            }
+
+            _drawLabel(canvas, feature, featureColor, labelStyleBuilder);
+          }
         }
       }
     }
+  }
+
+  _drawLabel(Canvas canvas, MapFeature feature, Color featureColor,
+      LabelStyleBuilder? labelStyleBuilder) {
+    Color labelColor = _labelColorFrom(featureColor);
+
+    TextStyle? labelStyle;
+    if (labelStyleBuilder != null) {
+      labelStyle = labelStyleBuilder(feature, featureColor, labelColor);
+    }
+    if (labelStyle == null) {
+      labelStyle = TextStyle(
+        color: labelColor,
+        fontSize: 11,
+      );
+    }
+
+    Path path = mapResolution.paths[feature.id]!;
+    Rect bounds = MatrixUtils.transformRect(
+        mapMatrices.canvasMatrix.geometryToScreen, path.getBounds());
+    _drawText(canvas, bounds.center, feature.label!, labelStyle);
   }
 
   Color _labelColorFrom(Color featureColor) {
@@ -319,7 +369,7 @@ class MapPainter extends CustomPainter {
     return const Color(0xFFFFFFFF);
   }
 
-  void drawText(
+  void _drawText(
       Canvas canvas, Offset center, String text, TextStyle textStyle) {
     TextSpan textSpan = TextSpan(
       text: text,

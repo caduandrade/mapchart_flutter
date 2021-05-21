@@ -18,23 +18,21 @@ class ColorByRulePageState extends ExamplePageState {
 
   @override
   Widget buildContent() {
-    MapChartTheme theme = MapChartTheme.rule(
-        contourColor: Colors.white,
-        hoverColor: Colors.grey[700]!,
-        colorRules: [
-          (feature) {
-            String? value = feature.getValue('Name');
-            return value == 'Faraday' ? Colors.red : null;
-          },
-          (feature) {
-            double? value = feature.getDoubleValue('Seq');
-            return value != null && value < 3 ? Colors.green : null;
-          },
-          (feature) {
-            double? value = feature.getDoubleValue('Seq');
-            return value != null && value > 9 ? Colors.blue : null;
-          }
-        ]);
+    MapChartTheme theme =
+        MapChartTheme.rule(contourColor: Colors.white, colorRules: [
+      (feature) {
+        String? value = feature.getValue('Name');
+        return value == 'Faraday' ? Colors.red : null;
+      },
+      (feature) {
+        double? value = feature.getDoubleValue('Seq');
+        return value != null && value < 3 ? Colors.green : null;
+      },
+      (feature) {
+        double? value = feature.getDoubleValue('Seq');
+        return value != null && value > 9 ? Colors.blue : null;
+      }
+    ]);
 
     MapChart map = MapChart(dataSource: dataSource, theme: theme);
 

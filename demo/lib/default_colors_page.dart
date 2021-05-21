@@ -20,10 +20,7 @@ class DefaultColorsPageState extends ExamplePageState {
   Widget buildContent() {
     MapChart map = MapChart(
         dataSource: dataSource,
-        theme: MapChartTheme(
-            color: Colors.yellow,
-            contourColor: Colors.red,
-            hoverColor: Colors.orange));
+        theme: MapChartTheme(color: Colors.yellow, contourColor: Colors.red));
 
     return map;
   }

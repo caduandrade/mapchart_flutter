@@ -21,7 +21,8 @@ class LabelPageState extends ExamplePageState {
     return [
       MenuItem('All visible', _allVisible),
       MenuItem('Visible rule', _visibleRule),
-      MenuItem('Label style', _labelStyle)
+      MenuItem('Label style', _labelStyle),
+      MenuItem('Hover label style', _hoverLabelStyle)
     ];
   }
 
@@ -60,6 +61,14 @@ class LabelPageState extends ExamplePageState {
                 fontSize: 11,
               );
             }));
+
+    return map;
+  }
+
+  Widget _hoverLabelStyle() {
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        hoverTheme: MapChartTheme(labelVisibility: (feature) => true));
 
     return map;
   }

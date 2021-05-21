@@ -116,10 +116,12 @@ class MapResolutionBuilder {
       canvas.drawPath(path, paint);
     });
 
-    if (contourThickness > 0 && theme.contourColor != null) {
+    if (contourThickness > 0) {
       var paint = Paint()
         ..style = PaintingStyle.stroke
-        ..color = theme.contourColor!
+        ..color = theme.contourColor != null
+            ? theme.contourColor!
+            : MapChartTheme.defaultContourColor
         ..strokeWidth = contourThickness / bufferCreationMatrix.scale
         ..isAntiAlias = true;
 
