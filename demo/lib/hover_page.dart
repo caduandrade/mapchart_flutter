@@ -13,13 +13,18 @@ class HoverPageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource =
-        await MapChartDataSource.geoJSON(geojson: geojson);
+        await MapChartDataSource.geoJSON(geojson: geojson, labelKey: 'Name');
     return dataSource;
   }
 
   @override
   List<MenuItem> buildMenuItems() {
-    return [MenuItem('Color', _color), MenuItem('Contour', _contourColor)];
+    return [
+      MenuItem('Color', _color),
+      MenuItem('Contour', _contourColor),
+      MenuItem('Label', _label),
+      MenuItem('Override', _override)
+    ];
   }
 
   Widget _color() {
@@ -33,6 +38,28 @@ class HoverPageState extends ExamplePageState {
     MapChart map = MapChart(
         dataSource: dataSource,
         hoverTheme: MapChartTheme(contourColor: Colors.red));
+
+    return map;
+  }
+
+  Widget _label() {
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        hoverTheme: MapChartTheme(labelVisibility: (feature) => true));
+
+    return map;
+  }
+
+  Widget _override() {
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(
+            color: Colors.white, labelVisibility: (feature) => false),
+        hoverTheme: MapChartTheme.rule(colorRules: [
+          (feature) {
+            return feature.label == 'Galileu' ? Colors.blue : null;
+          }
+        ], labelVisibility: (feature) => feature.label == 'Galileu'));
 
     return map;
   }

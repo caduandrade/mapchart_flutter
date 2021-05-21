@@ -192,6 +192,58 @@ If the `max` value is set, all higher values will be displayed using the last gr
 
 ![contourthickness](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/contour_thickness.png)
 
+## Label
+
+#### Mapping label property
+
+```dart
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, labelKey: 'Name');
+```
+
+#### Visibility
+
+```dart
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(labelVisibility: (feature) => true));
+```
+
+![labelvisible](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/label_visible.png)
+
+```dart
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(
+            labelVisibility: (feature) => feature.label == 'Darwin'));
+```
+
+![labelrule](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/label_rule.png)
+
+#### Style
+
+```dart
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme(
+            labelVisibility: (feature) => true,
+            labelStyleBuilder: (feature, featureColor, labelColor) {
+              if (feature.label == 'Darwin') {
+                return TextStyle(
+                  color: labelColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                );
+              }
+              return TextStyle(
+                color: labelColor,
+                fontSize: 11,
+              );
+            }));
+```
+
+![labelstyle](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/label_style.png)
+
 ## Hover
 
 #### Color
@@ -212,6 +264,21 @@ If the `max` value is set, all higher values will be displayed using the last gr
 ```
 
 ![contourhovercolor](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/hover_contour.png)
+
+#### Label
+
+```dart
+    MapChartDataSource dataSource =
+        await MapChartDataSource.geoJSON(geojson: geojson, labelKey: 'Name');
+```
+
+```dart
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        hoverTheme: MapChartTheme(labelVisibility: (feature) => true));
+```
+
+![labelhover](https://raw.githubusercontent.com/caduandrade/images/main/mapchart/label_hover.png)
 
 #### Listener
 
