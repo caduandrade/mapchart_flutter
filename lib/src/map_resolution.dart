@@ -80,7 +80,7 @@ class MapResolutionBuilder {
           geometry.toPath(mapMatrices.canvasMatrix, simplifier);
       pointsCount += simplifiedPath.pointsCount;
       _paths[id] = simplifiedPath.path;
-      _colors[id] = theme.getColor(feature);
+      _colors[id] = theme.getColor(dataSource, feature);
     }
 
     _createBuffer(pointsCount);

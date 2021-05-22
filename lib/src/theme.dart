@@ -11,15 +11,6 @@ typedef LabelStyleBuilder = TextStyle Function(
     MapFeature feature, Color featureColor, Color labelColor);
 
 class MapChartTheme {
-  /// Theme for [MapChart]
-  MapChartTheme(
-      {Color? color,
-      this.contourColor,
-      this.labelVisibility,
-      LabelStyleBuilder? labelStyleBuilder})
-      : this._color = color,
-        this.labelStyleBuilder = labelStyleBuilder;
-
   static const Color defaultColor = Color(0xFFE0E0E0);
   static const Color defaultContourColor = Color(0xFF9E9E9E);
 
@@ -70,29 +61,12 @@ class MapChartTheme {
       Color? contourColor,
       LabelVisibility? labelVisibility,
       LabelStyleBuilder? labelStyleBuilder,
-      MapChartDataSource? dataSource,
       double? min,
       double? max,
       required String key,
       required List<Color> colors}) {
     if (colors.length < 2) {
       throw MapChartError('At least 2 colors are required for the gradient.');
-    }
-
-    PropertyLimits? propertyLimits = dataSource?.getPropertyLimits(key);
-    if (propertyLimits != null) {
-      if (min == null) {
-        min = propertyLimits.min;
-      }
-      if (max == null) {
-        max = propertyLimits.max;
-      }
-    }
-    if (min == null) {
-      throw MapChartError('Min value has not been set');
-    }
-    if (max == null) {
-      throw MapChartError('Max value has not been set');
     }
 
     return _MapChartThemeGradient(
@@ -106,6 +80,15 @@ class MapChartTheme {
         colors: colors);
   }
 
+  /// Theme for [MapChart]
+  MapChartTheme(
+      {Color? color,
+      this.contourColor,
+      this.labelVisibility,
+      LabelStyleBuilder? labelStyleBuilder})
+      : this._color = color,
+        this.labelStyleBuilder = labelStyleBuilder;
+
   final Color? _color;
   final Color? contourColor;
   final LabelVisibility? labelVisibility;
@@ -115,14 +98,14 @@ class MapChartTheme {
     return _color != null || contourColor != null || labelVisibility != null;
   }
 
-  Color getColor(MapFeature feature) {
+  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
     if (_color != null) {
       return _color!;
     }
     return MapChartTheme.defaultColor;
   }
 
-  Color? getHoverColor(MapFeature feature) {
+  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
     return _color;
   }
 }
@@ -150,21 +133,21 @@ class _MapChartThemeValue extends MapChartTheme {
   }
 
   @override
-  Color getColor(MapFeature feature) {
+  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
     Color? color = _getColor(feature);
     if (color != null) {
       return color;
     }
-    return super.getColor(feature);
+    return super.getColor(dataSource, feature);
   }
 
   @override
-  Color? getHoverColor(MapFeature feature) {
+  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
     Color? color = _getColor(feature);
     if (color != null) {
       return color;
     }
-    return super.getHoverColor(feature);
+    return super.getHoverColor(dataSource, feature);
   }
 
   Color? _getColor(MapFeature feature) {
@@ -211,15 +194,15 @@ class _MapChartThemeRule extends MapChartTheme {
   }
 
   @override
-  Color getColor(MapFeature feature) {
+  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
     Color? color = _getColor(feature);
-    return color != null ? color : super.getColor(feature);
+    return color != null ? color : super.getColor(dataSource, feature);
   }
 
   @override
-  Color? getHoverColor(MapFeature feature) {
+  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
     Color? color = _getColor(feature);
-    return color != null ? color : super.getHoverColor(feature);
+    return color != null ? color : super.getHoverColor(dataSource, feature);
   }
 }
 
@@ -239,45 +222,61 @@ class _MapChartThemeGradient extends MapChartTheme {
             labelVisibility: labelVisibility,
             labelStyleBuilder: labelStyleBuilder);
 
-  double min;
-  double max;
+  final double? min;
+  final double? max;
   final String key;
   final List<Color> colors;
 
   @override
-  Color getColor(MapFeature feature) {
-    dynamic? dynamicValue = feature.getValue(key);
-    double? value;
-    if (dynamicValue is int) {
-      value = dynamicValue.toDouble();
-    } else if (dynamicValue is double) {
-      value = dynamicValue;
-    }
-    if (value != null) {
-      if (value <= min) {
-        return colors.first;
+  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
+    double? min = this.min;
+    double? max = this.max;
+
+    if (min == null || max == null) {
+      PropertyLimits? propertyLimits = dataSource?.getPropertyLimits(key);
+      if (propertyLimits != null) {
+        if (min == null) {
+          min = propertyLimits.min;
+        }
+        if (max == null) {
+          max = propertyLimits.max;
+        }
       }
-      if (value >= max) {
-        return colors.last;
-      }
-
-      double size = max - min;
-
-      int stepsCount = colors.length - 1;
-      double stepSize = size / stepsCount;
-      int stepIndex = (value - min) ~/ stepSize;
-
-      double currentStepRange = (stepIndex * stepSize) + stepSize;
-      double positionInStep = value - min - (stepIndex * stepSize);
-      double t = positionInStep / currentStepRange;
-      return Color.lerp(colors[stepIndex], colors[stepIndex + 1], t)!;
     }
 
-    return super.getColor(feature);
+    if (min != null && max != null) {
+      dynamic? dynamicValue = feature.getValue(key);
+      double? value;
+      if (dynamicValue is int) {
+        value = dynamicValue.toDouble();
+      } else if (dynamicValue is double) {
+        value = dynamicValue;
+      }
+      if (value != null) {
+        if (value <= min) {
+          return colors.first;
+        }
+        if (value >= max) {
+          return colors.last;
+        }
+
+        double size = max - min;
+
+        int stepsCount = colors.length - 1;
+        double stepSize = size / stepsCount;
+        int stepIndex = (value - min) ~/ stepSize;
+
+        double currentStepRange = (stepIndex * stepSize) + stepSize;
+        double positionInStep = value - min - (stepIndex * stepSize);
+        double t = positionInStep / currentStepRange;
+        return Color.lerp(colors[stepIndex], colors[stepIndex + 1], t)!;
+      }
+    }
+    return super.getColor(dataSource, feature);
   }
 
   @override
-  Color? getHoverColor(MapFeature feature) {
-    return super.getHoverColor(feature);
+  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
+    return super.getHoverColor(dataSource, feature);
   }
 }

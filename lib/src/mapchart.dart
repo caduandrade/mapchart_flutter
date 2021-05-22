@@ -259,7 +259,7 @@ class MapPainter extends CustomPainter {
 
     // drawing the hover
     if (hover != null && hoverTheme != null) {
-      Color? hoverColor = hoverTheme!.getHoverColor(hover!);
+      Color? hoverColor = hoverTheme!.getHoverColor(dataSource, hover!);
       if (hoverColor != null || hoverTheme!.contourColor != null) {
         canvas.save();
 
@@ -322,12 +322,12 @@ class MapPainter extends CustomPainter {
             LabelStyleBuilder? labelStyleBuilder;
 
             if (hoverTheme != null && hover == feature) {
-              featureColor = hoverTheme!.getHoverColor(feature);
+              featureColor = hoverTheme!.getHoverColor(dataSource, feature);
               labelStyleBuilder = hoverTheme!.labelStyleBuilder;
             }
 
             if (featureColor == null) {
-              featureColor = theme.getColor(feature);
+              featureColor = theme.getColor(dataSource, feature);
             }
             if (labelStyleBuilder == null) {
               labelStyleBuilder = theme.labelStyleBuilder;

@@ -31,7 +31,6 @@ class GradientPageState extends ExamplePageState {
     }
 
     MapChartTheme theme = MapChartTheme.gradient(
-        dataSource: dataSource,
         contourColor: Colors.white,
         key: 'Seq',
         colors: [Colors.blue, Colors.yellow, Colors.red]);

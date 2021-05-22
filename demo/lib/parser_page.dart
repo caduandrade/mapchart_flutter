@@ -24,7 +24,6 @@ class ParserPageState extends ExamplePageState {
     MapChart map = MapChart(
         dataSource: dataSource,
         theme: MapChartTheme.gradient(
-            dataSource: dataSource,
             labelVisibility: (feature) => true,
             key: 'Rnd',
             colors: [Colors.blue, Colors.red]));
