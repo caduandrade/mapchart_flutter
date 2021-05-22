@@ -23,8 +23,23 @@ class HoverPageState extends ExamplePageState {
       MenuItem('Color', _color),
       MenuItem('Contour', _contourColor),
       MenuItem('Label', _label),
-      MenuItem('Override', _override)
+      MenuItem('Override', _override),
+      MenuItem('Listener', _listener)
     ];
+  }
+
+  Widget _listener() {
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        hoverTheme: MapChartTheme(color: Colors.grey[700]),
+        hoverListener: (MapFeature? feature) {
+          if (feature != null) {
+            int id = feature.id;
+            print('Hover - Feature id: $id');
+          }
+        });
+
+    return map;
   }
 
   Widget _color() {

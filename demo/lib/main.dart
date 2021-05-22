@@ -6,7 +6,6 @@ import 'package:demo/contour_page.dart';
 import 'package:demo/default_colors_page.dart';
 import 'package:demo/enable_hover_by_value_page.dart';
 import 'package:demo/get_started_page.dart';
-import 'package:demo/feature_hover_listener_page.dart';
 import 'package:demo/gradient_page.dart';
 import 'package:demo/hover_page.dart';
 import 'package:demo/menu.dart';
@@ -52,7 +51,6 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       MenuItem('Default colors', _defaultColorsPage),
       MenuItem('Color by value', _colorByValuePage),
       MenuItem('Contour', _contourPage),
-      MenuItem('Hover listener', _hoverListenerPage),
       MenuItem('Enable hover by value', _enableHoverByValuePage),
       MenuItem('Click listener', _clickListenerPage),
       MenuItem('Color by rule', _colorByRulePage),
@@ -140,10 +138,6 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
 
   ContourPage _contourPage() {
     return ContourPage();
-  }
-
-  FeatureHoverListenerPage _hoverListenerPage() {
-    return FeatureHoverListenerPage();
   }
 
   EnableHoverByValuePage _enableHoverByValuePage() {
