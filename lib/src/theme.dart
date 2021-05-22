@@ -14,6 +14,15 @@ class MapChartTheme {
   static const Color defaultColor = Color(0xFFE0E0E0);
   static const Color defaultContourColor = Color(0xFF9E9E9E);
 
+  static Color getThemeOrDefaultColor(
+      MapChartDataSource? dataSource, MapFeature feature, MapChartTheme theme) {
+    Color? color = theme.getColor(dataSource, feature);
+    if (color != null) {
+      return color;
+    }
+    return MapChartTheme.defaultColor;
+  }
+
   /// Creates a theme with colors by property value.
   static MapChartTheme value(
       {Color? color,
@@ -98,14 +107,7 @@ class MapChartTheme {
     return _color != null || contourColor != null || labelVisibility != null;
   }
 
-  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
-    if (_color != null) {
-      return _color!;
-    }
-    return MapChartTheme.defaultColor;
-  }
-
-  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
+  Color? getColor(MapChartDataSource? dataSource, MapFeature feature) {
     return _color;
   }
 }
@@ -133,30 +135,14 @@ class _MapChartThemeValue extends MapChartTheme {
   }
 
   @override
-  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
-    Color? color = _getColor(feature);
-    if (color != null) {
-      return color;
-    }
-    return super.getColor(dataSource, feature);
-  }
-
-  @override
-  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
-    Color? color = _getColor(feature);
-    if (color != null) {
-      return color;
-    }
-    return super.getHoverColor(dataSource, feature);
-  }
-
-  Color? _getColor(MapFeature feature) {
+  Color? getColor(MapChartDataSource? dataSource, MapFeature feature) {
     if (_colors != null) {
       dynamic? value = feature.getValue(key);
       if (value != null && _colors!.containsKey(value)) {
         return _colors![value]!;
       }
     }
+    return super.getColor(dataSource, feature);
   }
 }
 
@@ -182,7 +168,8 @@ class _MapChartThemeRule extends MapChartTheme {
     return true;
   }
 
-  Color? _getColor(MapFeature feature) {
+  @override
+  Color? getColor(MapChartDataSource? dataSource, MapFeature feature) {
     Color? color;
     for (ColorRule rule in _colorRules) {
       color = rule(feature);
@@ -190,19 +177,7 @@ class _MapChartThemeRule extends MapChartTheme {
         break;
       }
     }
-    return color;
-  }
-
-  @override
-  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
-    Color? color = _getColor(feature);
     return color != null ? color : super.getColor(dataSource, feature);
-  }
-
-  @override
-  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
-    Color? color = _getColor(feature);
-    return color != null ? color : super.getHoverColor(dataSource, feature);
   }
 }
 
@@ -228,7 +203,13 @@ class _MapChartThemeGradient extends MapChartTheme {
   final List<Color> colors;
 
   @override
-  Color getColor(MapChartDataSource? dataSource, MapFeature feature) {
+  bool hasValue() {
+    //It is not possible to know in advance, it depends on the property values.
+    return true;
+  }
+
+  @override
+  Color? getColor(MapChartDataSource? dataSource, MapFeature feature) {
     double? min = this.min;
     double? max = this.max;
 
@@ -273,10 +254,5 @@ class _MapChartThemeGradient extends MapChartTheme {
       }
     }
     return super.getColor(dataSource, feature);
-  }
-
-  @override
-  Color? getHoverColor(MapChartDataSource? dataSource, MapFeature feature) {
-    return super.getHoverColor(dataSource, feature);
   }
 }
