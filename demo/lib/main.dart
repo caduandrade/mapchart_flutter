@@ -82,7 +82,7 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       String rnd = '';
       if (properties.containsKey('Rnd')) {
         rnd = properties['Rnd'];
-        rnd = "$rnd";
+        rnd = '"$rnd"';
       }
       print('"$name" | $seq | $rnd');
     }
