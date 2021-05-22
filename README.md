@@ -12,7 +12,7 @@
 
 ## Get started
 
-A simplified GeoJSON will be used in the examples to demonstrate the different possibilities of themes. This GeoJSON has only 4 features with the following properties:
+A simplified GeoJSON will be used in the examples to demonstrate the different possibilities of themes. This GeoJSON has only 3 features with the following properties:
 
 Name | Seq | Rnd
 --- | --- | ---
