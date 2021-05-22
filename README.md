@@ -16,17 +16,17 @@ A simplified GeoJSON will be used in the examples to demonstrate the different p
 
 Name | Seq | Rnd
 --- | --- | ---
-"Einstein" | 1 | "73"
-"Newton" | 2 | "92"
-"Galileu" | 3 | "10"
-"Darwin" | 4 | "52"
-"Pasteur" | 5 | "77"
-"Faraday" | 6 | "32"
-"Arquimedes" | 7 | "87"
-"Tesla" | 8 | "17"
-"Lavoisier" | 9 | "49"
-"Kepler" | 10 | "32"
-"Turing" | 11 | "93"
+"Einstein" | 1 | 73
+"Newton" | 2 | 92
+"Galileu" | 3 | 10
+"Darwin" | 4 |
+"Pasteur" | 5 | 77
+"Faraday" | 6 | 32
+"Arquimedes" | 7 | 87
+"Tesla" | 8 | 17
+"Lavoisier" | 9 |
+"Kepler" | 10 | 32
+"Turing" | 11 | 93
 
 To view the full content, use this [link](https://raw.githubusercontent.com/caduandrade/mapchart_flutter/main/demo/assets/example.json).
 

@@ -79,8 +79,12 @@ class MapChartDemoPageState extends State<MapChartDemoPage> {
       Map<String, dynamic> properties = feature['properties'];
       String name = properties['Name'];
       int seq = properties['Seq'];
-      String rnd = properties['Rnd'];
-      print('"$name" | $seq | "$rnd"');
+      String rnd = '';
+      if (properties.containsKey('Rnd')) {
+        rnd = properties['Rnd'];
+        rnd = "$rnd";
+      }
+      print('"$name" | $seq | $rnd');
     }
   }
 

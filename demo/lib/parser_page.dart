@@ -12,13 +12,22 @@ class ParserPageState extends ExamplePageState {
   @override
   Future<MapChartDataSource> loadDataSource(String geojson) async {
     MapChartDataSource dataSource = await MapChartDataSource.geoJSON(
-        geojson: geojson, keys: ['Seq', 'Rnd'], parseToNumber: ['Rnd']);
+        geojson: geojson,
+        keys: ['Seq', 'Rnd'],
+        parseToNumber: ['Rnd'],
+        labelKey: 'Rnd');
     return dataSource;
   }
 
   @override
   Widget buildContent() {
-    MapChart map = MapChart(dataSource: dataSource);
+    MapChart map = MapChart(
+        dataSource: dataSource,
+        theme: MapChartTheme.gradient(
+            dataSource: dataSource,
+            labelVisibility: (feature) => true,
+            key: 'Rnd',
+            colors: [Colors.blue, Colors.red]));
     return map;
   }
 }

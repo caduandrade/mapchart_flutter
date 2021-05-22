@@ -110,8 +110,7 @@
       "type": "Feature",
       "properties": {
         "Seq": 4,
-        "Name": "Darwin",
-        "Rnd": "52"
+        "Name": "Darwin"
       },
       "geometry": {
         "type": "Polygon",
@@ -285,8 +284,7 @@
       "type": "Feature",
       "properties": {
         "Seq": 9,
-        "Name": "Lavoisier",
-        "Rnd": "49"
+        "Name": "Lavoisier"
       },
       "geometry": {
         "type": "Polygon",
