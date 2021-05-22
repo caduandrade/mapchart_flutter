@@ -1,4 +1,4 @@
-## [0.5.0] - ?
+## [0.5.0] - May 22, 2021
 
 * Drawing features labels
 * Bugfix
