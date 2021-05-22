@@ -149,7 +149,6 @@ Uses the min and max values read from data source.
 
 ```dart
     MapChartTheme theme = MapChartTheme.gradient(
-        dataSource: dataSource,
         contourColor: Colors.white,
         key: 'Seq',
         colors: [Colors.blue, Colors.yellow, Colors.red]);
