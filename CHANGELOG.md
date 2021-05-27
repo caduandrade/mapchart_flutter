@@ -1,3 +1,7 @@
+## [0.6.0] - May 27, 2021
+
+* Migrated to https://pub.dev/packages/vector_map
+
 ## [0.5.0] - May 22, 2021
 
 * Drawing features labels
